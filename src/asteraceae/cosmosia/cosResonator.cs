@@ -1,22 +1,28 @@
 using System.Collections.Generic;
 using System.IO;
-using System;
-using System.Linq;
-using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 using SineVita.Basil.Muguet;
+using SineVita.Lonicera;
 
 
 namespace SineVita.Muguet.Asteraceae.Cosmosia {
     public class ResonatorCosmosia : Resonator// handles the resontor logic of objects which can qualify to be a resonator
     {   
-        // Constants
-        public int ResonatorParameterID { get; } //link to resonator helper to get all relevant resonator information
-        public int InactivityTolerance { get; } // ms
-        public byte InactivityThreshold { get; } // pulse intensity
-        public float ObjectSizeMutiplier { get; } // some parameters are affected by the size of the objectz: MaxIdyllAmount
-        public byte CriticalOverflowEffectIntensity{ get; }
-        public bool AddPulseLowerThanOrigin { get; }
+        // * static Constants
+        public static int InactivityTolerance { get; } = 2048; // ms
+        public static byte InactivityThreshold { get; } = 16; // pulse intensity
+        
+        // * class information
+        public int ResonatorParameterID { get; set; }
+        public float ObjectSizeMutiplier { get; set; }
+        public byte CriticalOverflowEffectIntensity { get; set; }
+        public bool AddPulseLowerThanOrigin { get; set; }
+        public ResonatorParameterCosmosia Parameter { get {
+            return ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID);
+        } }
 
+
+        // ! REPLACE ALL OF THIS USING LONICERA
         // 1.0 Input Layer Variables
         public List<Pulse> PulseInput { get; } = new List<Pulse> (); // initiate with null, List[0] = Root | // only managed by AddPulses and DeletePulses
         public List<int> PulseInactivityDuration { get; } = new List<int> (); // ms
@@ -44,17 +50,18 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         public List<MEDDuo> MagicalEffectDatas { get; } = new List<MEDDuo>(); // Magic Effect name | magic effect intensity | handles totaling up intensities as well // WINA ordered 
         public int CriticalOverflowDuration = 0;
     
-        // initializebasil
-        public ResonatorCosmosia(int resonatorParameterID, int inactivityTolerance = 2048, byte inactivityThreshold = 16, float objectSizeMutiplier = 1.0f, bool addPulseLowerThanOrigin = false)
+        // * Constructor
+        public ResonatorCosmosia(int resonatorParameterID, float objectSizeMutiplier = 1.0f, bool addPulseLowerThanOrigin = false)
         {
             ResonatorParameterID = resonatorParameterID;
-            InactivityTolerance = inactivityTolerance;
-            InactivityThreshold = inactivityThreshold;
             ObjectSizeMutiplier = objectSizeMutiplier;
             AddPulseLowerThanOrigin = addPulseLowerThanOrigin;
         }
-        // Process
-        public override void Process(double deltaTime) // FINALLY DONE
+
+
+// ! FIX ALL THIS USING LONICERA
+        // * Process
+        public void _Process(double deltaTime) // FINALLY DONE
         {
         // - - - Flowrate calculation - - - //
             //working capital
@@ -74,7 +81,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             float idyllPressureCurve = 0;
 
             // process constants (used more than once)
-            ResonatorParameterCosmosia resonatorParameter = ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID);
+            var resonatorParameter = Parameter;
 
             // calculate inflow rate - DONE
             for (int i = 0; i < PulseInput.Count; i++) { // add up inflow rate
@@ -190,7 +197,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         }
         
         // Necessary public functions and override 
-        public override void AddPulse(Pulse newPulse){ // DONE
+        public void _AddPulse(Pulse newPulse){ // DONE
             // check if higher than origin
             if (!AddPulseLowerThanOrigin && ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID).Origin.Frequency > newPulse.Pitch.Frequency) {return;}
 
@@ -232,7 +239,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             // }
             // _InsertItemsWINAOrderedLists(indexesToBeInserted);
         }
-        public override void DeletePulse(int pulseID){ // DONE - Sort out WINA related stuff as well
+        public void _DeletePulse(int pulseID){ // DONE - Sort out WINA related stuff as well
             int pitchIndexToBeRemoved = -1;
             for (int i = 0; i < PulseInput.Count; i++) {
                 if (PulseInput[i].PulseID == pulseID) {
@@ -243,21 +250,13 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
                     }
             } 
             if (pitchIndexToBeRemoved == -1){return;} // no pulses have been removed
-
-            // THEN CHANGE EVERYTHING IN WINA RELATED LIST
-            // int nodeCount = (int)Math.Floor(Math.Sqrt(2 * WINA.Count + 0.25) - 0.5);
-            // List<int> customIndexDeletionList = HarmonyHelper.IndexesToDeletedWINADeletePitch(nodeCount, pitchIndexToBeRemoved);
-            // _RemoveRangeWINAOrderedLists(customIndexDeletionList[0], customIndexDeletionList[1]);
-            // customIndexDeletionList.RemoveRange(0, 2);
-            // _RemoveAtWINAOrderedLists(customIndexDeletionList);
         }
-        public override void MutatePulse(Pulse newPulse) {} // NOT DONE
 
-        public override List<MagicalEffectData> GetMagicalEffects(byte intensityThreshold = 1) { // DONE
+        public List<MagicalEffectData> _GetMagicalEffects(byte intensityThreshold = 1) { // DONE
             List<MagicalEffectData> returnList = new List<MagicalEffectData>(); // append with all cosmosia data
             for (int i = 0; i < WINA.Count; i++){
-                if (MagicalEffectDatas[i].Outflow.Intensity >= intensityThreshold) {returnList.Add(MagicalEffectDatas[i].Outflow);}
-                if (MagicalEffectDatas[i].Overflow.Intensity >= intensityThreshold) {returnList.Add(MagicalEffectDatas[i].Overflow);}
+                    if (MagicalEffectDatas[i].Outflow.Intensity >= intensityThreshold) {returnList.Add(MagicalEffectDatas[i].Outflow);}
+                    if (MagicalEffectDatas[i].Overflow.Intensity >= intensityThreshold) {returnList.Add(MagicalEffectDatas[i].Overflow);}
             }
             return returnList;
         }
@@ -334,7 +333,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
                     N2R = true;
                     WINA.Insert(indexesToBeInserted[i], PitchInterval.CreateTargetInterval(ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID).Origin, PulseInput[POAIndices.Item2-1].Pitch));
                     byte effectIntensity = 0; // calculate at run time
-                    MagicalEffectDatas.Insert(indexesToBeInserted[i], ResonanceHelperCosmosia.PitchIntervalToMEDDuo(WINA[indexesToBeInserted[i]], N2R, effectIntensity, ResonatorParameterID));
+                    MagicalEffectDatas.Insert(indexesToBeInserted[i], ResonanceHelperCosmosia.IntervalToMEDDuo(WINA[indexesToBeInserted[i]], N2R, effectIntensity, ResonatorParameterID));
                 } 
                 else {
                     // PitchInterval.CreateTargetInterval(PulseInput[POAIndices.Item1-1].Pitch, PulseInput[POAIndices.Item2-1].Pitch)
@@ -342,17 +341,17 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
                     N2R = false;
                     WINA.Insert(indexesToBeInserted[i], PitchInterval.CreateTargetInterval(PulseInput[POAIndices.Item1-1].Pitch, PulseInput[POAIndices.Item2-1].Pitch));
                     byte effectIntensity = 0; // calculate at run time
-                    rootIsStructual = ResonanceHelperCosmosia.PitchIntervalIsStructual(PitchInterval.CreateTargetInterval(ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID).Origin, PulseInput[POAIndices.Item1-1].Pitch));
+                    rootIsStructual = ResonanceHelperCosmosia.IntervalIsStructual(PitchInterval.CreateTargetInterval(ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID).Origin, PulseInput[POAIndices.Item1-1].Pitch));
                     if (rootIsStructual) {
-                        MagicalEffectDatas.Insert(indexesToBeInserted[i], ResonanceHelperCosmosia.PitchIntervalToMEDDuo(WINA[indexesToBeInserted[i]], N2R, effectIntensity, ResonatorParameterID));
+                        MagicalEffectDatas.Insert(indexesToBeInserted[i], ResonanceHelperCosmosia.IntervalToMEDDuo(WINA[indexesToBeInserted[i]], N2R, effectIntensity, ResonatorParameterID));
                     }
                     else {
-                        MagicalEffectDatas.Insert(indexesToBeInserted[i], new MEDDuoNull());
+                        MagicalEffectDatas.Insert(indexesToBeInserted[i], new MEDDuo());
                     }
                 }
 
                 BasilMuguet.Log($"FreqRatio is: {WINA[i].FrequencyRatio}");
-                channelID = ResonanceHelperCosmosia.PitchIntervalToChannelID(WINA[i], N2R);
+                channelID = ResonanceHelperCosmosia.IntervalToChannelID(WINA[i], N2R);
                 if (channelID == 255) {
                     IntervalChannelID.Insert(indexesToBeInserted[i], channelID); // keep null ID here
                 } else {
@@ -361,32 +360,140 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
                 
             }
         }
+
+        // ! FIX ALL ABOVE USING LONICERA
+
+
+        // ! INFACT HERES THE FIXED VERSION BELOW
+
+        // * Class Variables
+        public Lonicera<CosmosiaPulse, CosmosiaChannel> Lonicera;
+
+        // * Process
+        public override void Process(double deltaTime) {
+
+        }
+
+        // * Pulse Manipulation - Do not update links
+        public override bool AddPulse(Pulse newPulse) {
+            if (!AddPulseLowerThanOrigin && ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID).Origin.Frequency > newPulse.Pitch.Frequency
+                || newPulse.Intensity < InactivityThreshold
+                || Lonicera.Nodes.Any(pulse => pulse != null && pulse.PulseID == newPulse.PulseID)
+            )
+            {return false;}
+
+            int findIndex() {
+                CosmosiaPulse? cachePulse;
+                for (int i = 0; i < PulseInput.Count; i++) {
+                    cachePulse = Lonicera.Nodes[i];
+                    if (cachePulse != null && cachePulse.Pitch.Frequency > newPulse.Pitch.Frequency) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            
+            int index = findIndex();
+            if (index != -1) {Lonicera.Insert(index, new CosmosiaPulse(newPulse), false);}
+            else {Lonicera.Add(new CosmosiaPulse(newPulse), false);} 
+            return true;
+        }
+        public override bool DeletePulse(int pulseId) {
+            int index = -1;
+            CosmosiaPulse? cachePulse;
+            for (int i = 0; i < Lonicera.NodeCount; i++) {
+                cachePulse = Lonicera.Nodes[i];
+                if (cachePulse != null && cachePulse.PulseID == pulseId) {
+                    index = i;
+                }
+            }
+            if (index == -1) {return false;}
+            Lonicera.RemoveAt(index);
+            return true;
+        }
+        public override bool MutatePulse(int oldId, Pulse newPulse) {
+            int index = -1;
+            CosmosiaPulse? cachePulse;
+            for (int i = 0; i < Lonicera.NodeCount; i++) {
+                cachePulse = Lonicera.Nodes[i];
+                if (cachePulse != null && cachePulse.PulseID == oldId) {
+                    index = i;
+                }
+            }
+            if (index == -1) {return false;}
+            Lonicera.MutateNode(index, new CosmosiaPulse(newPulse), false);
+            return true;
+        }
+        
+        
+        public override List<MagicalEffectData> GetMagicalEffects(byte intensityThreshold = 1) {
+            return null;
+        }
     }
+    
+    public class CosmosiaPulse : Pulse {
+        public int InactivityDuration = 0;
+        public CosmosiaPulse(Pitch pitch, byte intensity) : base(pitch, intensity) {}
+        public CosmosiaPulse(Pulse pulse) : base(pulse.Pitch, pulse.Intensity) {}
+    
+    }
+    
+    public class CosmosiaChannel
+    {
+        // * Core Channel Constants
+        public PitchInterval Interval;
+        public bool IsN2R;
+        
+        // * Derived Get Function
+        public bool IsN2N { get {
+            return !IsN2R;
+        } }
+        public byte ChannelId { get {
+            return ResonanceHelperCosmosia.IntervalToChannelID(Interval, IsN2R);
+        } }
+        
+        // * Class Variables
+        public byte Intensity;
+        public float FlowRateProportion;
+        public float ScaledFlowRate;
+        
+
+        // * Constructor
+        public CosmosiaChannel(Pulse pulse1, Pulse pulse2, bool isN2R) {
+            IsN2R = isN2R;
+            Interval = new PitchInterval(pulse1.Pitch, pulse2.Pitch);
+        }
+
+        // * Process
+
+        
+    }
+    
+    
+    
     public class MEDDuo
     {
-        public MagicalEffectDataCosmosia Outflow;
-        public MagicalEffectDataCosmosia Overflow;
-        public MEDDuo (MagicalEffectDataCosmosia outflow, MagicalEffectDataCosmosia overflow)
+        private bool isNull;
+        public MagicalEffectData? Outflow;
+        public MagicalEffectData? Overflow;
+        public MEDDuo (MagicalEffectData outflow, MagicalEffectData overflow)
         {
+            isNull = false;
             Outflow = outflow;
             Overflow = overflow;
         }
+        public MEDDuo() {
+            isNull = true;
+        }
 
         public void UpdateIntensity(byte intensity){
-            Outflow.Intensity = intensity;
-            Overflow.Intensity = intensity;
-
-            // Pulse Intensity(dB)(byte)
-            // Interval Intensity (byte) (geometric mean)
-            // SubgateflowRate (Idyll/second) (float)
-            // EffectIntensity (byte)
+            if (!isNull) {
+                if (Outflow != null) {Outflow.Intensity = intensity;}
+                if (Overflow != null) {Overflow.Intensity = intensity;}
+            }
         }
-
-        public MagicalEffectDataCosmosia GetMagicalEffect(bool isOverflow) {
+        public MagicalEffectData? GetMagicalEffect(bool isOverflow) {
             if (isOverflow) {return Overflow;} else {return Outflow;}
         }
-    }
-    public class MEDDuoNull : MEDDuo {
-        public MEDDuoNull() : base(new NullMagicalEffectDataCosmosia(), new NullMagicalEffectDataCosmosia()) { }
     }
 }

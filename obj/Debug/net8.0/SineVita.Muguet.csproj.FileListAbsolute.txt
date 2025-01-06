@@ -15,3 +15,4 @@ C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\ref\Si
 C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.csproj.AssemblyReference.cache
 C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\bin\Debug\net8.0\csLonicera.dll
 C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.5F959426.Up2Date
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.sourcelink.json

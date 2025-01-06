@@ -149,6 +149,12 @@ namespace SineVita.Muguet {
             if (round) {return (float)Math.Round(12 * Math.Log2(frequencyRatio));}
             else {return (float)(12 * Math.Log2(frequencyRatio));}
         }
+        public static float ToPitchIndex(PitchInterval interval, bool round = true) {
+            if (interval.Type == PitchType.TwelveToneEqual) {
+                return ((MidiPitchInterval)interval).PitchIntervalIndex;
+            }
+            else {return ToPitchIndex(interval.FrequencyRatio, round);}
+        }
     }
 
 }

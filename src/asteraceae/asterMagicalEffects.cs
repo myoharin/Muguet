@@ -7,12 +7,21 @@
 // it is a backend class that helps bridge and connect to the Peppermint magic effect manifestation implementation.
 
 namespace SineVita.Muguet.Asteraceae {
-    public abstract class MagicalEffectData {
+    public class MagicalEffectData {
         public int MagicEffectID { get; set; }
         public byte Intensity { get; set; } 
-        public MagicalEffectData(int magicalEffectID, byte intensity) {
+        public Dictionary<AsterArgumentType, float> Arguments;
+        public MagicalEffectData(int magicalEffectID, byte intensity, Dictionary<AsterArgumentType, float>? arguments = null) {
             MagicEffectID = magicalEffectID; // -1 meanis its a null value
             Intensity = intensity;
+            Arguments = arguments ?? new Dictionary<AsterArgumentType, float>();
         }
+    }
+    
+    public enum AsterArgumentType {
+        // * Cosmosia Variants
+        COS_N2R_DEGREE,
+        COS_N2N_TYPE,
+        COS_N2N_GRADE
     }
 }

@@ -4,9 +4,9 @@ namespace SineVita.Muguet.Asteraceae {
     public abstract class Resonator{
         public Resonator() {}
         public virtual void Process(double deltaTime) {}
-        public virtual void AddPulse(Pulse newPulse) {}
-        public virtual void DeletePulse(int pulseId) {}
-        public virtual void MutatePulse(int oldId, Pulse newPulse) {}
-        public virtual List<MagicalEffectData> GetMagicalEffects(byte intensityThreshold = 1) {return null;}
+        public virtual bool AddPulse(Pulse newPulse) {return false;}
+        public virtual bool DeletePulse(int pulseId) {return false;}
+        public virtual bool MutatePulse(int oldId, Pulse newPulse) {return false;}
+        public virtual List<MagicalEffectData> GetMagicalEffects(byte intensityThreshold = 1) {return new List<MagicalEffectData>();}
     }
 }

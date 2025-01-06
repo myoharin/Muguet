@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 namespace SineVita.Muguet.Asteraceae.Cosmosia
 {
-        public class ResonatorParameterCosmosia : ResonatorParameter // Muguet is the magic system it is currently operating under.
+    public class ResonatorParameterCosmosia : ResonatorParameter
     {
         // Meta data
         public int RunTimeLastFetched { get; set; } // milliseconds

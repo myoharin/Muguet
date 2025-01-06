@@ -122,9 +122,9 @@ namespace SineVita.Basil.Muguet
         public static void LogMidiIntervalsToChannel(){
             Log("\n--- --- --- Testing MidiToChannelID - N2R --- --- ---\n");
             for (int i = 0; i < 128; i++) {
-                int N2R = ResonanceHelperCosmosia.MIDIPitchIntervalToChannelID(new MidiPitchInterval(i), true);
-                int N2N = ResonanceHelperCosmosia.MIDIPitchIntervalToChannelID(new MidiPitchInterval(i), false);
-                bool IsStructual = ResonanceHelperCosmosia.MIDIPitchIntervalIsStructual(new MidiPitchInterval(i));
+                int N2R = ResonanceHelperCosmosia.IntervalToChannelID(new MidiPitchInterval(i), true);
+                int N2N = ResonanceHelperCosmosia.IntervalToChannelID(new MidiPitchInterval(i), false);
+                bool IsStructual = ResonanceHelperCosmosia.IntervalIsStructual(new MidiPitchInterval(i));
                 
                 if (N2R == 255) {N2R = -1;}
                 Log($"Midi: {i} | IsStructual: {IsStructual} | N2R: {N2R} | N2N: {N2N}");
