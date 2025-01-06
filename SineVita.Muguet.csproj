@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Exclude specific files -->
+    <!-- <Compile Remove="cosMagicalEffect.cs" />
+    <Compile Remove="cosResonanceHelper.cs" />
+    <Compile Remove="cosResonator.cs" />
+    <Compile Remove="cosResonatorParameter.cs" /> -->
+    <Compile Remove="src\asteraceae\cosmosia\**\*" />
+    <Compile Remove="src\test\basil-muguet-cosmosia.cs" />
+    <!-- <Compile Remove="FolderToIgnore\**\*" /> -->
+    <Reference Include="csLonicera">
+        <HintPath>assets\lib\csLonicera.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

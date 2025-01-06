@@ -1,0 +1,17 @@
+{
+    "0": "N2N.Octave",
+    "1": "N2N.Second",
+    "2": "N2N.Diminished",
+    "3": "N2N.Augmented",
+    "4": "N2N.Fourth",
+    "5": "N2N.Fifth",
+    "6": "N2N.Tritone",
+    "7": "N2N.Seventh",
+    "8": "N2R.Octave",
+    "9": "N2R.Fifth",
+    "10": "N2R.Fourth",
+    "11": "N2R.FF",
+    "12": "N2R.FifthOctave",
+    "13": "N2R.FourthOctave",
+    "255": "Null"
+  }

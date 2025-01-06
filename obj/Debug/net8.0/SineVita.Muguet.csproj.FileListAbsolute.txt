@@ -1,0 +1,17 @@
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\bin\Debug\net8.0\SineVita.Muguet.exe
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\bin\Debug\net8.0\SineVita.Muguet.deps.json
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\bin\Debug\net8.0\SineVita.Muguet.runtimeconfig.json
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\bin\Debug\net8.0\SineVita.Muguet.dll
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\bin\Debug\net8.0\SineVita.Muguet.pdb
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.AssemblyInfoInputs.cache
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.AssemblyInfo.cs
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.csproj.CoreCompileInputs.cache
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.dll
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\refint\SineVita.Muguet.dll
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.pdb
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.genruntimeconfig.cache
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\ref\SineVita.Muguet.dll
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.Muguet.csproj.AssemblyReference.cache
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\bin\Debug\net8.0\csLonicera.dll
+C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\obj\Debug\net8.0\SineVita.5F959426.Up2Date

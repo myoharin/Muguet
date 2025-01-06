@@ -1,0 +1,105 @@
+{
+	"ResonatorParameterID": 787726,
+	"Origin": {
+		"Frequency": 256,
+		"PitchType": "float",
+		"CentDifference": 0
+	},
+
+	"OriginIntensity": 32,
+	"MaxIdyllAmount": 16,
+	"CriticalEffect": 0,
+	"CriticalEffectDurationThreshold": 3000,
+	"CriticalEffectIntensity": 128,
+
+	"InflowLimit": 32,
+	"OutflowLimit": 16,
+	"OverflowLimit": 16,
+
+	"ChannelParameters": [
+		{"ChannelID": 0,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 1,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 2,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 3,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 4,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 5,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 6,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 7,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 8,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 9,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 10,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 11,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 12,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+		,
+		{"ChannelID": 13,
+		"OutflowMultiplier": 1,
+		"OverflowMultiplier": 1,
+		"OutflowEffect": 0,
+		"OverflowEffect": 0}
+	]
+	
+}
