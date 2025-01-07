@@ -5,9 +5,6 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
 {
     public class ResonatorParameterCosmosia : ResonatorParameter
     {
-        // Meta data
-        public int RunTimeLastFetched { get; set; } // milliseconds
-
         // basic information
         public int ResonatorParameterID { get; set; }
         public Pitch Origin { get; set; }
@@ -27,11 +24,11 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
 
         public ChannelParameterCosmosia GetChannelParameter(byte channelID) {
             if (channelID == 255 || channelID >= ChannelParameters.Count) {
-                return new NullChannelParameterCosmosia();
+                return new ChannelParameterCosmosia(null);
             }
             if (ChannelParameters[channelID] == null) {
                 // BasilMuguet.Warn($"ChannelID {channelID} is not a channel parameter.");
-                return new NullChannelParameterCosmosia();
+                return new ChannelParameterCosmosia(null);
             }
             return ChannelParameters[channelID];
         }
@@ -43,7 +40,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
             RunTimeLastFetched = runTime;
 
             // Construct the JSON file path
-            string jsonFilePath = Path.Combine(ResonanceHelperCosmosia.ResonatorParametersFolderPath, $"{resonatorParameterID}.json");
+            string jsonFilePath = Path.Combine(ResonanceHelper.ParametersFolderPath, "cosmosia" ,$"{resonatorParameterID}.json");
 
             // Check if the file exists
             if (File.Exists(jsonFilePath))
@@ -123,25 +120,24 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
     }
     public class ChannelParameterCosmosia
         {
-            public byte ChannelID { get; set; }
+            public CosmosiaChannelId ChannelId { get; set; }
             public float OutflowMultiplier { get; set; }
             public float OverflowMultiplier { get; set; }
             public int OutflowEffect { get; set; }
             public int OverflowEffect { get; set; }
-            public ChannelParameterCosmosia(byte channelID, float outflowMultiplier, float overflowMultiplier, int outflowEffect, int overflowEffect)
+            public bool IsNull;
+            public ChannelParameterCosmosia(CosmosiaChannelId channelId, float outflowMultiplier, float overflowMultiplier, int outflowEffect, int overflowEffect)
             {
-                ChannelID = channelID;
+                ChannelId = channelId;
                 OutflowMultiplier = outflowMultiplier;
                 OverflowMultiplier = overflowMultiplier;
                 OutflowEffect = outflowEffect;
                 OverflowEffect = overflowEffect;
+                IsNull = false;
             }
+            public ChannelParameterCosmosia(bool? _null) : this((CosmosiaChannelId)255, 0, 0, -1, -1) {IsNull = true;}
             [JsonConstructor]
             public ChannelParameterCosmosia() {}
         }
-    public class NullChannelParameterCosmosia : ChannelParameterCosmosia
-    {
-        public NullChannelParameterCosmosia() : base((byte)255, 0, 0, -1, -1) {}
-    }
 
 }
