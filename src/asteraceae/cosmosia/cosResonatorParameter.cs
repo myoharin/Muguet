@@ -22,15 +22,17 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
 
         public List<ChannelParameterCosmosia> ChannelParameters{ get; set; }   // 13 items for now
 
-        public ChannelParameterCosmosia GetChannelParameter(byte channelID) {
-            if (channelID == 255 || channelID >= ChannelParameters.Count) {
+        public ChannelParameterCosmosia GetChannelParameter(int channelID) {
+            if (channelID >= 255 || channelID >= ChannelParameters.Count) {
                 return new ChannelParameterCosmosia(null);
             }
             if (ChannelParameters[channelID] == null) {
-                // BasilMuguet.Warn($"ChannelID {channelID} is not a channel parameter.");
                 return new ChannelParameterCosmosia(null);
             }
             return ChannelParameters[channelID];
+        }
+        public ChannelParameterCosmosia GetChannelParameter(CosmosiaChannelId channelId) {
+            return GetChannelParameter((byte)channelId);
         }
 
         // class instantiation methods

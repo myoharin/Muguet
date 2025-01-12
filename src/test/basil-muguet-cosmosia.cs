@@ -16,19 +16,23 @@ namespace SineVita.Basil.Muguet
         public void Test1(){
             //test started!
             Log("BasilMuguet Test_1 started");
-            
-            // add initial pulse
             int randomMidiValue;
             byte intensity;
             List<int> setMidiValue = new List<int>() {
                 64, 78, 71, 74, 67
             };
+            List<byte> setIntensity = new List<byte>() {
+                40, 90, 40, 100, 40
+            };
             for (int i = 0; i < 5; i++) {
                 randomMidiValue = setMidiValue[i];
+                intensity = setIntensity[i];
                 //randomMidiValue = r.Next(60, 127);
-                intensity = (byte)r.Next(16, 64);
-                Log("\n - - - Adding pulse number " + i + " with midi index " + randomMidiValue + ". - - -");
-                Resonator.AddPulse(new Pulse(new MidiPitch(randomMidiValue),intensity));
+                //intensity = (byte)r.Next(16, 64);
+                Log(" - - - Adding pulse number " + i + " with midi index " + randomMidiValue + ". - - -");
+                var pitch = new MidiPitch(randomMidiValue);
+                var pulse = new Pulse(pitch, intensity);
+                Resonator.AddPulse(pulse);
             }
             AddBreaker_1();
             LogPulseList(Resonator);
@@ -43,27 +47,45 @@ namespace SineVita.Basil.Muguet
             // log em
             LogCosmosiaChannels(Resonator);
 
-            Log("\nLogging Idyll Amount:\n");
-            for (int _ = 0; _ < 800; _++) {
-                Resonator.Process(0.02);
-                LogResonatorIdyll(Resonator);
+            // Log("\nLogging Idyll Amount:\n");
+            // double delta = 0.01;
+            // for (int _ = 0; _ < 150; _++) {
+            //     Resonator.Process(delta);
+            //     LogResonatorIdyll(Resonator); Console.Write($"Time: {Math.Round(_ * delta,2)} | ");
+            // }
+
+            for (int frameRate = 10; frameRate < 200; frameRate++) {
+                Resonator.Resonance = 0;
+                for (int frames = 0; frames < frameRate; frames++) {
+                    Resonator.Process((double)0.5/(double)frameRate);
+                }
+                LogResonatorIdyll(Resonator); Console.Write($"FrameRate: {frameRate} | ");
             }
             
+            // ! Inflow and Outflow are somehow resonance dependant, and requires fixing
+            // * Ok maybe not^ the difference is so miniscule
+
             // LogResonatorParameter(ResonanceHelperCosmosia.GetResonatorParameter(787726));
         }
 
         // to string functions
-        public static void LogPulse(CosmosiaPulse? pulse){
+        public static void LogPitch(Pitch pitch) {
+            Log("Midi Index: " + HarmonyHelper.CalculateHtzToMidi(pitch.Frequency) + " | Note Name: " + HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(pitch.Frequency)));
+        }
+        public static void LogPulse(Pulse? pulse, int? index = null){
             if (pulse == null) {
                 Log("Midi Index: " + "NULL" + " | Intensity: " + "NULL" + " | Note Name: " + "NULL");
             }
-            else {
+            else if (index == null) {
                Log("Midi Index: " + HarmonyHelper.CalculateHtzToMidi(pulse.Pitch.Frequency) + " | Intensity: " + pulse.Intensity + " | Note Name: " + HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(pulse.Pitch.Frequency)));
+            }
+            else {
+                Log($"Pulse Index: {index} | Midi Index: " + HarmonyHelper.CalculateHtzToMidi(pulse.Pitch.Frequency) + " | Intensity: " + pulse.Intensity + " | Note Name: " + HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(pulse.Pitch.Frequency)));
             }
         }
         public static void LogPulseList(ResonatorCosmosia resonator){
             for (int i = 0; i < resonator.Lonicera.NodeCount; i++) {
-                LogPulse(resonator.Lonicera.Nodes[i]);
+                LogPulse(resonator.Lonicera.Nodes[i], i);
             }
         }
 

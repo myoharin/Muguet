@@ -1,4 +1,5 @@
 using System;
+using SineVita.Basil.Muguet;
 namespace SineVita.Muguet {
     public class Pulse
     {

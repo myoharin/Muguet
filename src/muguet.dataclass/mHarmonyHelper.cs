@@ -95,8 +95,16 @@ namespace SineVita.Muguet
             return index + int.Parse(octave) * 12 + 12;
         }
         public static string ConvertMidiToNoteName(int midiValue) // does not have lookup equiv
-        {
-            return $"{MidiNotesValue[midiValue % 12]}{Math.Floor((double)midiValue / 12) - 1}";
+        {   
+            int validate(int n) {
+                n %= 12;
+                if (n < 0) {
+                    n += 12;
+                }
+                return n;
+            }
+            
+            return $"{MidiNotesValue[validate(midiValue)]}{Math.Floor((double)midiValue / 12) - 1}";
         }
         public static float CalculateHtzToMidiInterval(double htz, int rounding = 0)
         {
@@ -143,17 +151,6 @@ namespace SineVita.Muguet
         public static string LookUpHtzToIntervalName(double htz, int rounding = 0) {
             return LookUpMidiToIntervalName((int)CalculateHtzToMidi(htz, rounding : rounding));
         }
-
-        // Data Validation
-        public static bool WINAIsValid(List<PitchInterval> WINA) {
-            if (WINA == null) {return false;}
-            int nodeCount = (int)Math.Floor(Math.Sqrt(2 * WINA.Count + 0.25) - 0.5); // not including the origin
-            int correctValue = (int)Math.Floor(nodeCount * (nodeCount + 1) * 0.5f);
-            return WINA.Count == correctValue;
-        }
-    
-
-        // INA HANNDLING, ALLL OF EM HAVE TO BE AS EFFICIENT AS POSSIBLE, so reuse the same function as much as possible
 
         public static List<Pitch> PACToPOA(List<Pitch> PAC, Pitch Origin){PAC.Insert(0, Origin);return PAC;} //DONE
         public static List<Pitch> POAToPAC(List<Pitch> POA){POA.RemoveAt(0); return POA;} //DONE

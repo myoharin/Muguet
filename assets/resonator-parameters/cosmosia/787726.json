@@ -1,7 +1,7 @@
 {
 	"ResonatorParameterID": 787726,
 	"Origin": {
-		"Frequency": 256,
+		"Frequency": 128,
 		"PitchType": "float",
 		"CentDifference": 0
 	},

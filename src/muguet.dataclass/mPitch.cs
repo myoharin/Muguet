@@ -1,4 +1,5 @@
 using System;
+using SineVita.Basil.Muguet;
 
 namespace SineVita.Muguet {
     public enum PitchType {
@@ -49,7 +50,7 @@ namespace SineVita.Muguet {
     public abstract class PitchBase : Pitch {
         public int CentOffsets { get; set; }
         public bool IsSynched { get; set; }
-        public PitchBase(float? frequency, PitchType type, int centOffsets = 0) : base(frequency) {
+        public PitchBase(float? frequency, PitchType type, int centOffsets = 0) : base(frequency, type) {
             IsSynched = false;
             CentOffsets = centOffsets;
         }
@@ -88,6 +89,7 @@ namespace SineVita.Muguet {
             TuningIndex = tuningIndex;
             TuningFrequency = tuningFrequency;
             PitchIndex = pitchIndex;
+            UpdateFrequency(frequency);
         }
         public CustomTETPitch(float frequency, int baseValue, int tuningIndex, float tuningFrequency, PitchType pitchType = PitchType.CustomeToneEuqal)
             : base(frequency, pitchType, 0) {
@@ -123,8 +125,8 @@ namespace SineVita.Muguet {
             if (round) {return (float)Math.Round(baseValue * Math.Log2(frequency / tuningFrequency) + tuningIndex);}
             else {return (float)(baseValue * Math.Log2(frequency / tuningFrequency) + tuningIndex);}
         }
-        public float ToPitchIndex(double frequency, bool round = true) {
-            return ToPitchIndex(Frequency, Base, TuningIndex, TuningFrequency, round);
+        public float ToPitchIndex(double? frequency = null, bool round = true) {
+            return ToPitchIndex(frequency??Frequency, Base, TuningIndex, TuningFrequency, round);
         }
     
     }
@@ -132,7 +134,7 @@ namespace SineVita.Muguet {
     public class MidiPitch : CustomTETPitch {
         public MidiPitch(int midiValue, float? frequency = null, int centOffsets = 0)
             : base(12, 69, 440, midiValue, frequency, PitchType.TwelveToneEqual, centOffsets) {}
-        public MidiPitch(float frequency, bool correct = true)
+        public MidiPitch(float frequency)
             : base(12, 69, 440, 1, frequency, PitchType.TwelveToneEqual, 0)
          {
             double cacheIndex = Base * Math.Log2(frequency / TuningFrequency) + TuningIndex;
@@ -141,7 +143,7 @@ namespace SineVita.Muguet {
             CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / Base * 1200.0);
             IsSynched = true;
         }
-        public new static float ToPitchIndex(double frequency, bool round = true) {
+        public static float ToPitchIndex(double frequency, bool round = true) {
             return ToPitchIndex(frequency, 12, 69, 440, round);
         }
     }
