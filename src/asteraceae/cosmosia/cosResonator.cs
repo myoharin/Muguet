@@ -16,6 +16,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         // * static Constants
         public static int InactivityTolerance { get; } = 2048; // ms
         public static byte InactivityThreshold { get; } = 16; // pulse intensity
+        public static bool CheckInactivity { get; } = false;
         
         // * Core Class Info
         public int ResonatorParameterID { get; set; }
@@ -53,7 +54,8 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         
 
         // * Constructor
-        public ResonatorCosmosia(int resonatorParameterID, float sizeMutiplier = 1.0f, bool addPulseLowerThanOrigin = false) {
+        public ResonatorCosmosia(int resonatorParameterID, float sizeMutiplier = 1.0f, bool addPulseLowerThanOrigin = false) 
+            : base(AsterGenus.Cosmosia) {
             ResonatorParameterID = resonatorParameterID;
             SizeMutiplier = sizeMutiplier;
             AddPulseLowerThanOrigin = addPulseLowerThanOrigin;
@@ -63,7 +65,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         // * Pulse Manipulation & Overrides
         public override bool AddPulse(Pulse newPulse) {
             if (!AddPulseLowerThanOrigin && ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID).Origin.Frequency > newPulse.Pitch.Frequency
-                || newPulse.Intensity < InactivityThreshold
+                || CheckInactivity && newPulse.Intensity < InactivityThreshold
                 || Lonicera.Nodes.Any(pulse => pulse != null && pulse.PulseID == newPulse.PulseID)
             )
             {return false;}
@@ -258,12 +260,16 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
 
         public float ProjectedInflowRate(ResonatorParameterCosmosia parameter, float sizeMultiplier) {
             float netFlow = 0;
-            foreach (CosmosiaPulse? pulse in _nodes) {
-                if (pulse != null) {
-                    netFlow += pulse.ScaledInflowRate(sizeMultiplier);
+            foreach (CosmosiaChannel? channel in _links) {
+                if (channel != null) {
+                    var inflowMultiplier = parameter.GetChannelParameter((byte)channel.ChannelId).InflowMultiplier;
+                    var linkNodeRatio = LinkNodeRatio();
+                    netFlow += channel.ScaledInflowRate(sizeMultiplier * inflowMultiplier / linkNodeRatio);
                 }
             }
-            return netFlow;
+            return netFlow; // Not capped
+
+
         }
         public float ProjectedOutflowRate(ResonatorParameterCosmosia parameter, float sizeMultiplier) {
             float netFlow = 0;
@@ -312,14 +318,6 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         public bool IsOrigin;
         public CosmosiaPulse(Pitch pitch, byte intensity, bool isOrigin = false) : base(pitch, intensity) {IsOrigin = isOrigin;}
         public CosmosiaPulse(Pulse pulse, bool isOrigin = false) : base(pulse.Pitch, pulse.Intensity) {IsOrigin = isOrigin;}
-
-        // * Derived Gets
-        public float RawInflowRate { get {
-            return (float)Math.Pow(Intensity/16, 2); 
-        } }
-        public float ScaledInflowRate(float multiplier = 1) {
-            return RawInflowRate * multiplier;
-        }
     }
     
     public class CosmosiaChannel {
@@ -343,18 +341,28 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             return effects;
         }
 
+        public float RawInflowRate { get {
+            return (float)Math.Pow(Intensity/16, 2); 
+        } }
         public float RawOutflowRate { get {
             return (float)Math.Pow(Intensity/16, 2);
         } }
         public float RawOverflowRate { get {
             return (float)Math.Pow(Intensity/16, 2);
         } }
+        
+        public float ScaledInflowRate(float multiplier = 1) {
+            return RawInflowRate * multiplier;
+        }
         public float ScaledOutflowRate(float multiplier = 1) {
             return RawOutflowRate * multiplier;
         }
         public float ScaledOverflowRate(float multiplier = 1) {
             return RawOverflowRate * multiplier;
         }
+
+    
+
 
         public byte OutflowIntensity { get {
             return ResonanceHelperCosmosia.FlowrateToIntensity(OutflowRate);

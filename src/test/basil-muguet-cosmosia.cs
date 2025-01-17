@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SineVita.Muguet.Asteraceae.Cosmosia;
+using SineVita.Muguet.Asteraceae;
 using SineVita.Muguet;
+using System.Runtime.InteropServices;
 
 namespace SineVita.Basil.Muguet
 {
     class BasilMuguetCosmosia : BasilMuguet
     {
-        ResonatorCosmosia Resonator = new ResonatorCosmosia(787726);
         Random r = new Random();
         public BasilMuguetCosmosia() : base() {}
 
         public void Test1(){
+            ResonanceHelper.ParametersFolderPath = Path.Combine("assets", "resonator-parameters");
+            ResonatorCosmosia resonator = new ResonatorCosmosia(244215);
             //test started!
             Log("BasilMuguet Test_1 started");
             int randomMidiValue;
@@ -22,50 +25,70 @@ namespace SineVita.Basil.Muguet
                 64, 78, 71, 74, 67
             };
             List<byte> setIntensity = new List<byte>() {
-                40, 90, 40, 100, 40
+                40, 20, 40, 80, 40
             };
             for (int i = 0; i < 5; i++) {
                 randomMidiValue = setMidiValue[i];
                 intensity = setIntensity[i];
                 //randomMidiValue = r.Next(60, 127);
                 //intensity = (byte)r.Next(16, 64);
-                Log(" - - - Adding pulse number " + i + " with midi index " + randomMidiValue + ". - - -");
+                //Log(" - - - Adding pulse number " + i + " with midi index " + randomMidiValue + ". - - -");
                 var pitch = new MidiPitch(randomMidiValue);
                 var pulse = new Pulse(pitch, intensity);
-                Resonator.AddPulse(pulse);
+                resonator.AddPulse(pulse);
             }
             AddBreaker_1();
-            LogPulseList(Resonator);
+            LogPulseList(resonator);
             AddBreaker_1();
 
             // run some time so it can update
-            Resonator.Process(0.05);
-            Resonator.Process(0.05);
-            Log("Ran Resonator.Process()");
+            resonator.Process(0.05);
+            resonator.Process(0.05);
             AddBreaker_1();
 
             // log em
-            LogCosmosiaChannels(Resonator);
+            //LogCosmosiaChannels(resonator);
+
+            int decision;
+            int index;
+            for (int i = 0; i < 1000; i++) {
+                decision = r.Next(1, 10);
+                if (decision >=3 ) {
+                    Log("Adding Pulse");
+                    resonator.AddPulse(new Pulse(new MidiPitch(r.Next(24, 96)), (byte)r.Next(32, 128)));
+                } else if (decision == 1 && resonator.Lonicera.NodeCount-1 >= 1) {
+                    Log("Deleting Pulse");
+                    index = r.Next(1, resonator.Lonicera.NodeCount-1);
+                    resonator.DeletePulse(resonator.Lonicera.Nodes[index].PulseID);
+                } else if (decision == 2 && resonator.Lonicera.NodeCount-1 >= 1) {
+                    Log("Mutating Pulse");
+                    index = r.Next(1, resonator.Lonicera.NodeCount-1);
+                    resonator.MutatePulse(resonator.Lonicera.Nodes[index].PulseID, new Pulse(new MidiPitch(r.Next(24, 96)), (byte)r.Next(32, 128)));
+                }   
+                resonator.Process(0.05);
+
+                LogPulseList(resonator);
+                LogResonatorIdyll(resonator);
+                AddBreaker_1();
+
+            }
 
             // Log("\nLogging Idyll Amount:\n");
-            // double delta = 0.01;
-            // for (int _ = 0; _ < 150; _++) {
-            //     Resonator.Process(delta);
-            //     LogResonatorIdyll(Resonator); Console.Write($"Time: {Math.Round(_ * delta,2)} | ");
+            // double delta = 0.02;
+            // for (int _ = 0; _ < 200; _++) {
+            //     resonator.Process(delta);
+            //     LogResonatorIdyll(resonator); Console.Write($"Time: {Math.Round(_ * delta,2)} | ");
             // }
 
-            for (int frameRate = 10; frameRate < 200; frameRate++) {
-                Resonator.Resonance = 0;
-                for (int frames = 0; frames < frameRate; frames++) {
-                    Resonator.Process((double)0.5/(double)frameRate);
-                }
-                LogResonatorIdyll(Resonator); Console.Write($"FrameRate: {frameRate} | ");
-            }
-            
-            // ! Inflow and Outflow are somehow resonance dependant, and requires fixing
-            // * Ok maybe not^ the difference is so miniscule
+            // for (int frameRate = 10; frameRate < 200; frameRate++) {
+            //     resonator.Resonance = 0;
+            //     for (int frames = 0; frames < frameRate; frames++) {
+            //         resonator.Process((double)0.9/(double)frameRate);
+            //     }
+            //     LogResonatorIdyll(resonator); Console.Write($"FrameRate: {frameRate} | ");
+            // }
 
-            // LogResonatorParameter(ResonanceHelperCosmosia.GetResonatorParameter(787726));
+            // LogResonatorParameter(resonator.Parameter);
         }
 
         // to string functions
@@ -91,7 +114,6 @@ namespace SineVita.Basil.Muguet
 
         // log wina functions
         public static void LogCosmosiaChannels(ResonatorCosmosia resonator){
-            Log($"Logging Cosmosia Channels, Origin Intensity: {ResonanceHelperCosmosia.GetResonatorParameter(787726).OriginIntensity} | Origin: {HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(ResonanceHelperCosmosia.GetResonatorParameter(787726).Origin.Frequency ))}");
             Tuple<int, int> POAindex;
             string n0;
             string n1;
@@ -101,9 +123,12 @@ namespace SineVita.Basil.Muguet
             
             var loniceraPulses = resonator.Lonicera.Nodes;
             var loniceraChannels = resonator.Lonicera.Links;
+            var parameter = resonator.Parameter;
             CosmosiaPulse? pulse1;
             CosmosiaPulse? pulse2;
             CosmosiaChannel? channel;
+
+            Log($"Logging Cosmosia Channels, Origin Intensity: {parameter.OriginIntensity} | Origin: {HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(parameter.Origin.Frequency ))}");
             
             for (int i = 0; i < resonator.Lonicera.LinkCount; i++) {
                 POAindex = HarmonyHelper.CalculateWINAIndexResult(i);
@@ -112,11 +137,11 @@ namespace SineVita.Basil.Muguet
                 channel = loniceraChannels[i];
 
                 if (pulse1 != null && pulse2 != null && channel != null) {
-                    if (POAindex.Item1 == 0) {n0 = HarmonyHelper.ConvertHtzToNoteName(ResonanceHelperCosmosia.GetResonatorParameter(787726).Origin.Frequency);}
+                    if (POAindex.Item1 == 0) {n0 = HarmonyHelper.ConvertHtzToNoteName(parameter.Origin.Frequency);}
                     else {n0 = HarmonyHelper.ConvertHtzToNoteName(pulse1.Pitch.Frequency);}
                     n1 = HarmonyHelper.ConvertHtzToNoteName(pulse2.Pitch.Frequency);
                     
-                    if (POAindex.Item1 == 0) {N0 = (int)HarmonyHelper.CalculateHtzToMidi(ResonanceHelperCosmosia.GetResonatorParameter(787726).Origin.Frequency);}
+                    if (POAindex.Item1 == 0) {N0 = (int)HarmonyHelper.CalculateHtzToMidi(parameter.Origin.Frequency);}
                     else {N0 = (int)HarmonyHelper.CalculateHtzToMidi(pulse1.Pitch.Frequency);}
                     N1 = (int)HarmonyHelper.CalculateHtzToMidi(pulse2.Pitch.Frequency);
 
@@ -143,7 +168,7 @@ namespace SineVita.Basil.Muguet
             }
         }
         public static void LogChannelParameter(ChannelParameterCosmosia cacheParam) {
-            Log($"ID: {(int)cacheParam.ChannelId} | OutflowMultiplier: {cacheParam.OutflowMultiplier} | OverflowMultiplier: {cacheParam.OverflowMultiplier} | OutflowEffect: {cacheParam.OutflowEffect} | OverflowEffect: {cacheParam.OverflowEffect}");
+            Log($"ID: {(int)cacheParam.ChannelId} | InflowMultiplier: {cacheParam.InflowMultiplier} | OutflowMultiplier: {cacheParam.OutflowMultiplier} | OverflowMultiplier: {cacheParam.OverflowMultiplier} | InflowEffect: {cacheParam.InflowEffect} | OutflowEffect: {cacheParam.OutflowEffect} | OverflowEffect: {cacheParam.OverflowEffect}");
         }
         // Log Midi to Shits function
         public static void LogMidiIntervalsToChannel(){

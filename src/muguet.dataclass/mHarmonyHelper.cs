@@ -65,10 +65,7 @@ namespace SineVita.Muguet
         {
             return (float)Math.Round(440 * Math.Pow(2, (midi - 69) / 12.0), rounding);
         }
-        public static string ConvertMidiToIntervalName(int midiValue)  // Incomplete conversion function
-        {
-            return MidiPitchIntervalName[midiValue % 12 + (int)Math.Floor((double)MidiPitchIntervalName.Length / 12) * 12 - 12];
-        }
+
         public static int ConvertNoteNameToMidi(string noteName) // does not have lookup equiv
         {
             int index = -100000;
@@ -114,8 +111,12 @@ namespace SineVita.Muguet
             return ConvertMidiToNoteName((int)CalculateHtzToMidi(htz, rounding : rounding));
         }
 
+        public static string ConvertMidiToIntervalName(int midiValue) // ! Incomplete
+        {
+            return MidiPitchIntervalName[midiValue % 12 + (int)Math.Floor((double)MidiPitchIntervalName.Length / 12) * 12 - 12];
+        }
 
-        public static float LookUpHtzToMidi(double htz, int rounding = 0) // Incomplete LookupTable
+        public static float LookUpHtzToMidi(double htz, int rounding = 0) // ! Incomplete LookupTable
         {
             if ((htz > 1) && (htz < 32768))
             {
@@ -126,7 +127,7 @@ namespace SineVita.Muguet
                 return CalculateHtzToMidi(htz, rounding);
             } ;
         }
-        public static float LookUpMidiToHtz(int midi, int rounding = 3) // Incomplete LookupTable
+        public static float LookUpMidiToHtz(int midi, int rounding = 3) // ! Incomplete LookupTable
         {
             if ((midi > 0) && (midi <= 128))
             {

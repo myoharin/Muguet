@@ -14,7 +14,6 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
         public int CriticalEffectDurationThreshold { get; set; } // in ms
         public byte CriticalEffectIntensity { get; set; }
 
- 
         // limit on Idyllflow. If limit reached, then it will be distributed according to their intensity ratio
         public float InflowLimit { get; set; } // caping net inflow rate (pulse intensity)
         public float OutflowLimit { get; set; } // once limit reached, excess idyll flow gets stored (interval intensity)
@@ -37,6 +36,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
 
         // class instantiation methods
         public ResonatorParameterCosmosia(int resonatorParameterID, int runTime = 0) // DONE but not tested yet, accepts ID as int
+            : base(AsterGenus.Cosmosia)
         {
             ResonatorParameterID = resonatorParameterID;
             RunTimeLastFetched = runTime;
@@ -57,7 +57,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
                 {
                     // Initialize properties from the deserialized object
                     ResonatorParameterID = resonatorParameter.ResonatorParameterID;
-                    Origin = resonatorParameter.Origin ?? new Pitch(432); // Ensure Origin is initialize
+                    Origin = resonatorParameter.Origin ?? new MidiPitch(69); // Ensure Origin is initialize
                     OriginIntensity = resonatorParameter.OriginIntensity;
                     MaxIdyllAmount = resonatorParameter.MaxIdyllAmount;
                     CriticalEffect = resonatorParameter.CriticalEffect;
@@ -73,6 +73,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
             }
         }
         public ResonatorParameterCosmosia(string paramaterPath, int runTime = 0) // DONE but not tested yet, accepts full path names
+            : base(AsterGenus.Cosmosia) 
         {
             if (int.TryParse(paramaterPath.Split("\\").Last().Split(".")[0], out int result))
             {
@@ -97,7 +98,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
                 {
                     // Initialize properties from the deserialized object
                     ResonatorParameterID = resonatorParameter.ResonatorParameterID;
-                    Origin = resonatorParameter.Origin ?? new Pitch(432); // Ensure Origin is initialize
+                    Origin = resonatorParameter.Origin ?? new MidiPitch(69); // Ensure Origin is initialize
                     OriginIntensity = resonatorParameter.OriginIntensity;
                     MaxIdyllAmount = resonatorParameter.MaxIdyllAmount;
                     CriticalEffect = resonatorParameter.CriticalEffect;
@@ -115,16 +116,15 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
     
         // json deserialization : parameterless constructor required
         [JsonConstructor]
-        public ResonatorParameterCosmosia() {}
-        
-
-
+        public ResonatorParameterCosmosia() : base(AsterGenus.Cosmosia) {}
     }
     public class ChannelParameterCosmosia
         {
             public CosmosiaChannelId ChannelId { get; set; }
+            public float InflowMultiplier { get; set; }
             public float OutflowMultiplier { get; set; }
             public float OverflowMultiplier { get; set; }
+            public int InflowEffect { get; set; }
             public int OutflowEffect { get; set; }
             public int OverflowEffect { get; set; }
             public bool IsNull;

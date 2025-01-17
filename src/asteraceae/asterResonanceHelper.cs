@@ -2,7 +2,8 @@ using SineVita.Muguet.Asteraceae.Cosmosia;
 namespace SineVita.Muguet.Asteraceae {
     public class ResonanceHelper{
 
-        public static string ParametersFolderPath = Path.Combine("assets", "resonator-parameters");
+        public static string? ParametersFolderPath = null; //?? Path.Combine("assets", "resonator-parameters");
+        public static bool FolderPathSet { get {return ParametersFolderPath == null;} }
         protected const int DefaultTimeOutDeletionDuration = 32768; // ms
 
         // ! ALL THIS NEEDS TO BE FIXED TO GENERIC PARAMETERS
@@ -33,14 +34,14 @@ namespace SineVita.Muguet.Asteraceae {
             }
         }
                 
-        public static void ResonatorParamatersDeleteCache(int deletionResonatorParamaterID) {
-            ResonatorParamaters.Remove(deletionResonatorParamaterID);
+        public static bool ResonatorParamatersDeleteCache(int deletionResonatorParamaterID) {
+            return ResonatorParamaters.Remove(deletionResonatorParamaterID);
         }
-        public static void ResonatorParamatersDeleteCache(string deletionResonatorParamaterPath) {
+        public static bool ResonatorParamatersDeleteCache(string deletionResonatorParamaterPath) {
             if (int.TryParse(deletionResonatorParamaterPath.Split("\\").Last().Split(".")[0], out int result))
             {
                 int ID = result;
-                ResonatorParamaters.Remove(ID);
+                return ResonatorParamaters.Remove(ID);
             }
             else{
                 throw new FileNotFoundException("ParamaterIDNotSpecified");
@@ -73,31 +74,6 @@ namespace SineVita.Muguet.Asteraceae {
                 return ResonatorParamaters[ResonatorParamaterID];
             }
         }
-         
-        // * Cosmosia Specific
-        public static ChannelParameterCosmosia GetCosmosiaChannelParameter(int resonatorParameterID, byte ChannelID) {
-            try {
-                if (ChannelID == 255) {
-                    return new ChannelParameterCosmosia(null);
-                } else {
-                    return ((ResonatorParameterCosmosia)ResonatorParamaters[resonatorParameterID]).GetChannelParameter(ChannelID);
-                }
-            }
-            catch (Exception) { // does not exist
-                try {
-                    ResonatorParamatersAddCache(resonatorParameterID);
-                    if (ChannelID == 255) {
-                        return new ChannelParameterCosmosia(null);
-                    } else {
-                        return ((ResonatorParameterCosmosia)ResonatorParamaters[resonatorParameterID]).GetChannelParameter(ChannelID);
-                    }
-                }
-                catch (Exception) {
-                    throw new Exception("Failed to get Cosmosia Channel Parameter");
-                }
-                
-            } 
-       }
-    
+             
     }
 }

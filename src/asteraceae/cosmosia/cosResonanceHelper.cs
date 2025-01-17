@@ -13,7 +13,6 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
     public class ResonanceHelperCosmosia : ResonanceHelper // Muguet is the magic system it is currently operating under. Additional magic system can be added later.
     {
         // * Helper Constants
-        
         private static List<int> _intervalIsStructual = new List<int>(){
             0, 5, 7, 10, 12, 14, 15, 17, 19, 20, 21, 22
         };
@@ -46,27 +45,14 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             }
             return (byte)result;
         }
-        
-
         public static byte FlowrateToIntensity(float flowRate) { // max = 256
             return (byte)(Math.Pow(flowRate, 1/2) * 16);
-        }
-        
-        
-        public static float PulseIntensityToFlowRate(byte intensity) { // ! Reduundant
-            return (float)(Math.Pow(intensity, 2) / 256);
-        }
-        public static float IntervalIntensityToFlowRate(byte intensity) { // ! Reduundant
-            return (float)(Math.Pow(intensity, 2) / 256);
-        }
-        
+        }   
         public static float ResonancePressureLerp(float percentage) {
             float a = 1/12;
             return Math.Clamp((float)((Math.Pow(a, percentage) - 1)/(a - 1)),0,1);
         }
-
-        
-
+    
         // * From Interval Methods
         public static MEDDuo IntervalToMEDDuo(PitchInterval interval, bool isN2R, byte intensity, int resonatorParameterID){ // DONE - return list of possible channels(channelID, grade) or List(channelID, degree)
             
@@ -202,7 +188,29 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             return _intervalIsStructual.Contains(midiIndex);
         }
     
-
+        public static ChannelParameterCosmosia GetCosmosiaChannelParameter(int resonatorParameterID, byte ChannelID) {
+            try {
+                if (ChannelID == 255) {
+                    return new ChannelParameterCosmosia(null);
+                } else {
+                    return ((ResonatorParameterCosmosia)ResonatorParamaters[resonatorParameterID]).GetChannelParameter(ChannelID);
+                }
+            }
+            catch (Exception) { // does not exist
+                try {
+                    ResonatorParamatersAddCache(resonatorParameterID);
+                    if (ChannelID == 255) {
+                        return new ChannelParameterCosmosia(null);
+                    } else {
+                        return ((ResonatorParameterCosmosia)ResonatorParamaters[resonatorParameterID]).GetChannelParameter(ChannelID);
+                    }
+                }
+                catch (Exception) {
+                    throw new Exception("Failed to get Cosmosia Channel Parameter");
+                }
+                
+            } 
+       }
     
     }
 }

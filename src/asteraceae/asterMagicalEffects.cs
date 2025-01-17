@@ -17,6 +17,10 @@ namespace SineVita.Muguet.Asteraceae {
             Arguments = arguments ?? new Dictionary<AsterArgumentType, float>();
         }
     }
+
+    public enum MagicEffectId {
+        None = 0,
+    }
     
     public enum AsterArgumentType {
         // * Cosmosia Variants

@@ -2,7 +2,8 @@ using System.Collections.Generic;
 
 namespace SineVita.Muguet.Asteraceae {
     public abstract class Resonator{
-        public Resonator() {}
+        public AsterGenus Genus { get; set; }
+        public Resonator(AsterGenus genus) {Genus = genus;}
         public virtual void Process(double deltaTime) {}
         public virtual bool AddPulse(Pulse newPulse) {return false;}
         public virtual bool DeletePulse(int pulseId) {return false;}
