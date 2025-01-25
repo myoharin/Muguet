@@ -46,7 +46,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             return (byte)result;
         }
         public static byte FlowrateToIntensity(float flowRate) { // max = 256
-            return (byte)(Math.Pow(flowRate, 1/2) * 16);
+            return (byte)(Math.Pow(Math.Abs(flowRate), 1/2) * 16);
         }   
         public static float ResonancePressureLerp(float percentage) {
             float a = 1/12;

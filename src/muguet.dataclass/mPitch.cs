@@ -1,5 +1,6 @@
 using System;
 using SineVita.Basil.Muguet;
+using SineVita.Muguet.Asteraceae;
 
 namespace SineVita.Muguet {
     public enum PitchType {
@@ -11,6 +12,11 @@ namespace SineVita.Muguet {
     public class Pitch {
         public float Frequency { get; set; }
         public PitchType Type { get; set; }
+
+        // * Derived Gets
+        public string NoteName { get {
+            return HarmonyHelper.HtzToNoteName(Frequency);
+        } }
 
         // * statics
         public static Pitch Empty { get {return new Pitch((float)256.0f);} }
@@ -89,7 +95,8 @@ namespace SineVita.Muguet {
             TuningIndex = tuningIndex;
             TuningFrequency = tuningFrequency;
             PitchIndex = pitchIndex;
-            UpdateFrequency(frequency);
+            if (frequency.HasValue) {UpdateFrequency(frequency);}
+            else {UpdateFrequency();}
         }
         public CustomTETPitch(float frequency, int baseValue, int tuningIndex, float tuningFrequency, PitchType pitchType = PitchType.CustomeToneEuqal)
             : base(frequency, pitchType, 0) {
@@ -128,7 +135,6 @@ namespace SineVita.Muguet {
         public float ToPitchIndex(double? frequency = null, bool round = true) {
             return ToPitchIndex(frequency??Frequency, Base, TuningIndex, TuningFrequency, round);
         }
-    
     }
 
     public class MidiPitch : CustomTETPitch {

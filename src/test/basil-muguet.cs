@@ -1,6 +1,6 @@
 namespace SineVita.Basil.Muguet
 {
-    class BasilMuguet : Basil
+    public class BasilMuguet : Basil
     {
         
     }

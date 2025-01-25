@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,70 +11,40 @@ namespace SineVita.Basil
     {
         // Optional: Set this to true to enable debugging output
         public static bool DebugEnabled { get; set; } = true;
-        public static int MaxDebugLogCount = 1024;
-        public static int DebugLogCount = 0;
-        public static LinkedList<Tuple<byte, string>> DebugLog= new LinkedList<Tuple<byte, string>>();
+        public static string? DebugFolder = "debug";
+        public static string? DebugFile;
+        public static bool DebugFolderSet { get { return DebugFolder != null; } }
 
         // instantiate
         public Basil(){}
 
-        // Log - 0
-        // Warn - 1
-        // Error - 2
-        // Debug - 3
-        // breakers and other ornaments - 4
 
-        public static void Log(string message)
-        {
-            if (DebugEnabled){Console.WriteLine($"LOG: {message}");}
-            DebugLog.AddLast(new Tuple<byte, string>(0, message));
-            if (DebugLogCount > MaxDebugLogCount) {
-                DebugLog.RemoveFirst();
-            } else {
-                DebugLogCount++;
+        public static void initialize() {
+            if (DebugFolder == null) {return;}
+            if (!Directory.Exists(DebugFolder)) {
+                Directory.CreateDirectory(DebugFolder);
+            }
+            DebugFile = Path.Combine(DebugFolder, $"log_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+            Log("Debugger session started.");
+        }
+
+
+        public static void Log(string message) {
+            if (DebugEnabled){
+                Console.WriteLine("Log: " + message);
+                if (DebugFolder != null) {
+                    if (DebugFile == null) {initialize();}
+                    string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
+                    File.AppendAllText(DebugFile!, logMessage + Environment.NewLine);
+                }
             }
         }
-        public static void Warn(string message)
-        {
-            if (DebugEnabled){Console.WriteLine($"WARNING: {message}");}
-            DebugLog.AddLast(new Tuple<byte, string>(1, message));
-            if (DebugLogCount > MaxDebugLogCount) {
-                DebugLog.RemoveFirst();
-            } else {
-                DebugLogCount++;
-            }
-        }
-        public static void Error(string message)
-        {
-            if (DebugEnabled){Console.WriteLine($"ERROR: {message}");}
-            DebugLog.AddLast(new Tuple<byte, string>(2, message));
-            if (DebugLogCount > MaxDebugLogCount) {
-                DebugLog.RemoveFirst();
-            } else {
-                DebugLogCount++;
-            }
-        }
-        public static void Debug(string message)
-        {
-            if (DebugEnabled){Console.WriteLine($"DEBUG: {message}");}
-            DebugLog.AddLast(new Tuple<byte, string>(3, message));
-            if (DebugLogCount > MaxDebugLogCount) {
-                DebugLog.RemoveFirst();
-            } else {
-                DebugLogCount++;
-            }
-        }
+
 
         // breaker function
         public static void AddBreaker_1() {
             string message = "| - - - - - - - - - |";
             if (DebugEnabled){Console.WriteLine(message);}
-            DebugLog.AddLast(new Tuple<byte, string>(4, message));
-            if (DebugLogCount > MaxDebugLogCount) {
-                DebugLog.RemoveFirst();
-            } else {
-                DebugLogCount++;
-            }
         }
 
 

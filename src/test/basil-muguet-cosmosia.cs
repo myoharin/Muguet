@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace SineVita.Basil.Muguet
 {
-    class BasilMuguetCosmosia : BasilMuguet
+    public class BasilMuguetCosmosia : BasilMuguet
     {
         Random r = new Random();
         public BasilMuguetCosmosia() : base() {}
@@ -30,12 +30,22 @@ namespace SineVita.Basil.Muguet
             for (int i = 0; i < 5; i++) {
                 randomMidiValue = setMidiValue[i];
                 intensity = setIntensity[i];
-                //randomMidiValue = r.Next(60, 127);
-                //intensity = (byte)r.Next(16, 64);
-                //Log(" - - - Adding pulse number " + i + " with midi index " + randomMidiValue + ". - - -");
+                randomMidiValue = r.Next(60, 127);
+                intensity = (byte)r.Next(16, 64);
+                Log(" - - - Adding pulse number " + i + " with midi index " + randomMidiValue + ". - - -");
                 var pitch = new MidiPitch(randomMidiValue);
                 var pulse = new Pulse(pitch, intensity);
                 resonator.AddPulse(pulse);
+
+                LogPulseList(resonator);
+
+                Log("\nLogging Idyll Amount:\n");
+                double delta = 0.02;
+                for (int _ = 0; _ < 50; _++) {
+                resonator.Process(delta);
+                LogResonatorIdyll(resonator); Console.Write($"Time: {Math.Round(_ * delta,2)} | ");
+            }
+
             }
             AddBreaker_1();
             LogPulseList(resonator);
@@ -46,38 +56,28 @@ namespace SineVita.Basil.Muguet
             resonator.Process(0.05);
             AddBreaker_1();
 
-            // log em
-            //LogCosmosiaChannels(resonator);
+            // int decision;
+            // int index;
+            // for (int i = 0; i < 1000; i++) {
+            //     decision = r.Next(1, 10);
+            //     if (decision >=3 ) {
+            //         Log("Adding Pulse");
+            //         resonator.AddPulse(new Pulse(new MidiPitch(r.Next(24, 96)), (byte)r.Next(0, 64)));
+            //     } else if (decision == 1 && resonator.Lonicera.NodeCount-1 >= 1) {
+            //         Log("Deleting Pulse");
+            //         index = r.Next(1, resonator.Lonicera.NodeCount-1);
+            //         resonator.DeletePulse(resonator.Lonicera.Nodes[index].PulseID);
+            //     } else if (decision == 2 && resonator.Lonicera.NodeCount-1 >= 1) {
+            //         Log("Mutating Psulse");
+            //         index = r.Next(1, resonator.Lonicera.NodeCount-1);
+            //         resonator.MutatePulse(resonator.Lonicera.Nodes[index].PulseID, new Pulse(new MidiPitch(r.Next(24, 96)), (byte)r.Next(32, 128)));
+            //     }   
+            //     resonator.Process(0.05);
 
-            int decision;
-            int index;
-            for (int i = 0; i < 1000; i++) {
-                decision = r.Next(1, 10);
-                if (decision >=3 ) {
-                    Log("Adding Pulse");
-                    resonator.AddPulse(new Pulse(new MidiPitch(r.Next(24, 96)), (byte)r.Next(32, 128)));
-                } else if (decision == 1 && resonator.Lonicera.NodeCount-1 >= 1) {
-                    Log("Deleting Pulse");
-                    index = r.Next(1, resonator.Lonicera.NodeCount-1);
-                    resonator.DeletePulse(resonator.Lonicera.Nodes[index].PulseID);
-                } else if (decision == 2 && resonator.Lonicera.NodeCount-1 >= 1) {
-                    Log("Mutating Pulse");
-                    index = r.Next(1, resonator.Lonicera.NodeCount-1);
-                    resonator.MutatePulse(resonator.Lonicera.Nodes[index].PulseID, new Pulse(new MidiPitch(r.Next(24, 96)), (byte)r.Next(32, 128)));
-                }   
-                resonator.Process(0.05);
+            //     //LogPulseList(resonator);
+            //     LogResonatorIdyll(resonator);
+            //     //AddBreaker_1();
 
-                LogPulseList(resonator);
-                LogResonatorIdyll(resonator);
-                AddBreaker_1();
-
-            }
-
-            // Log("\nLogging Idyll Amount:\n");
-            // double delta = 0.02;
-            // for (int _ = 0; _ < 200; _++) {
-            //     resonator.Process(delta);
-            //     LogResonatorIdyll(resonator); Console.Write($"Time: {Math.Round(_ * delta,2)} | ");
             // }
 
             // for (int frameRate = 10; frameRate < 200; frameRate++) {
@@ -93,17 +93,17 @@ namespace SineVita.Basil.Muguet
 
         // to string functions
         public static void LogPitch(Pitch pitch) {
-            Log("Midi Index: " + HarmonyHelper.CalculateHtzToMidi(pitch.Frequency) + " | Note Name: " + HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(pitch.Frequency)));
+            Log("Midi Index: " + HarmonyHelper.HtzToMidi(pitch.Frequency) + " | Note Name: " + pitch.NoteName);
         }
         public static void LogPulse(Pulse? pulse, int? index = null){
             if (pulse == null) {
                 Log("Midi Index: " + "NULL" + " | Intensity: " + "NULL" + " | Note Name: " + "NULL");
             }
             else if (index == null) {
-               Log("Midi Index: " + HarmonyHelper.CalculateHtzToMidi(pulse.Pitch.Frequency) + " | Intensity: " + pulse.Intensity + " | Note Name: " + HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(pulse.Pitch.Frequency)));
+               Log("Midi Index: " + HarmonyHelper.HtzToMidi(pulse.Pitch.Frequency) + " | Intensity: " + pulse.Intensity + " | Note Name: " + pulse.Pitch.NoteName);
             }
             else {
-                Log($"Pulse Index: {index} | Midi Index: " + HarmonyHelper.CalculateHtzToMidi(pulse.Pitch.Frequency) + " | Intensity: " + pulse.Intensity + " | Note Name: " + HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(pulse.Pitch.Frequency)));
+                Log($"Pulse Index: {index} | Midi Index: " + HarmonyHelper.HtzToMidi(pulse.Pitch.Frequency) + " | Intensity: " + pulse.Intensity + " | Note Name: " + pulse.Pitch.NoteName);
             }
         }
         public static void LogPulseList(ResonatorCosmosia resonator){
@@ -116,9 +116,7 @@ namespace SineVita.Basil.Muguet
         public static void LogCosmosiaChannels(ResonatorCosmosia resonator){
             Tuple<int, int> POAindex;
             string n0;
-            string n1;
-            int N0;
-            int N1;
+            string n1; 
             float midiIntervalInternal;
             
             var loniceraPulses = resonator.Lonicera.Nodes;
@@ -128,7 +126,7 @@ namespace SineVita.Basil.Muguet
             CosmosiaPulse? pulse2;
             CosmosiaChannel? channel;
 
-            Log($"Logging Cosmosia Channels, Origin Intensity: {parameter.OriginIntensity} | Origin: {HarmonyHelper.ConvertMidiToNoteName((int)HarmonyHelper.CalculateHtzToMidi(parameter.Origin.Frequency ))}");
+            Log($"Logging Cosmosia Channels, Origin Intensity: {parameter.OriginIntensity} | Origin: {parameter.Origin.NoteName}");
             
             for (int i = 0; i < resonator.Lonicera.LinkCount; i++) {
                 POAindex = HarmonyHelper.CalculateWINAIndexResult(i);
@@ -137,15 +135,11 @@ namespace SineVita.Basil.Muguet
                 channel = loniceraChannels[i];
 
                 if (pulse1 != null && pulse2 != null && channel != null) {
-                    if (POAindex.Item1 == 0) {n0 = HarmonyHelper.ConvertHtzToNoteName(parameter.Origin.Frequency);}
-                    else {n0 = HarmonyHelper.ConvertHtzToNoteName(pulse1.Pitch.Frequency);}
-                    n1 = HarmonyHelper.ConvertHtzToNoteName(pulse2.Pitch.Frequency);
-                    
-                    if (POAindex.Item1 == 0) {N0 = (int)HarmonyHelper.CalculateHtzToMidi(parameter.Origin.Frequency);}
-                    else {N0 = (int)HarmonyHelper.CalculateHtzToMidi(pulse1.Pitch.Frequency);}
-                    N1 = (int)HarmonyHelper.CalculateHtzToMidi(pulse2.Pitch.Frequency);
+                    if (POAindex.Item1 == 0) {n0 = parameter.Origin.NoteName;}
+                    else {n0 = pulse1.Pitch.NoteName;}
+                    n1 = pulse2.Pitch.NoteName;
 
-                    midiIntervalInternal = HarmonyHelper.CalculateHtzToMidiInterval(channel.Interval.FrequencyRatio);
+                    midiIntervalInternal = HarmonyHelper.HtzToMidiInterval(channel.Interval.FrequencyRatio);
                     // launch!
                     Log($"Index: {i} | n{POAindex.Item2} -> n{POAindex.Item1} | {n1} -> {n0} | MidiIntervInt: {midiIntervalInternal} | FreqRatio: {Math.Round(channel.Interval.FrequencyRatio,2)} | intensity: {channel.Intensity} | ChannelID: {channel.ChannelId}");
                 }

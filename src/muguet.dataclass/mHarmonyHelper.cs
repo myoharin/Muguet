@@ -6,16 +6,19 @@ namespace SineVita.Muguet
     public static class HarmonyHelper
     {
         // basic comonly used cache data for debugging stage.
-        public static string[] MidiPitchIntervalName = new string[] {
+        public static readonly string[] MidiPitchIntervalName = new string[] {
             // Populate with actual interval names
-            "R", "m2", "M2", "m3", "M3", "P4", "T1", "P5", "m6", "M6", "m7", "M7",
+            "U", "m2", "M2", "m3", "M3", "P4", "T1", "P5", "m6", "M6", "m7", "M7",
             "O1", "m9", "M9", "m10", "M10", "P11", "T2", "P12", "m13", "M13", "m14", "M14",
             "O2", "m16", "M16", "m17", "M17", "P18", "T3", "P19", "m20", "M20", "m21", "M21",
             "O3", "m23", "M23", "m24", "M24", "P25", "T4", "P26", "m27", "M27", "m28", "M28",
             "O4"
         };
-        public static string[] MidiNotesValue = new string[] {
-            "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
+        public static readonly string[] IntervalNamePrefix = new string[] {
+            "O", "m", "M", "m", "M", "P", "T", "P", "m", "M", "m", "M",
+        };
+        public static readonly int[] IntervalNameNumber = new int[] {
+            -1, 2, 2, 3, 3, 4, -1, 5, 6, 6, 7, 7
         };
 
         // micellaneous functions
@@ -57,33 +60,28 @@ namespace SineVita.Muguet
         }
         
         // Midi, frequency and note name conversion methods
-        public static float CalculateHtzToMidi(double htz, int rounding = 0)
+        public static float HtzToMidi(double htz, int rounding = 0)
         {
             return (float)Math.Round(69 + 12 * Math.Log2(htz / 440), rounding);
         }
-        public static float CalculateMidiToHtz(int midi, int rounding = 3)
+        public static float MidiToHtz(int midi, int rounding = 3)
         {
             return (float)Math.Round(440 * Math.Pow(2, (midi - 69) / 12.0), rounding);
         }
 
-        public static int ConvertNoteNameToMidi(string noteName) // does not have lookup equiv
-        {
+        public static int NoteNameToMidi(string noteName) {
             int index = -100000;
             string[] junkList = { "/", "#", "b", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
             string octave = noteName;
 
-            foreach (var junk in junkList)
-            {
-                if (octave.Contains(junk))
-                {
+            foreach (var junk in junkList) {
+                if (octave.Contains(junk)) {
                     octave = octave.Replace(junk, string.Empty);
                 }
             }
 
-            for (int i = 0; i < 12; i++)
-            {
-                if (noteName.Contains(MidiNotesValue[i]))
-                {
+            for (int i = 0; i < 12; i++) {
+                if (noteName.Contains(Pitch.NoteNames[i])) {
                     index = i;
                     break;
                 }
@@ -91,7 +89,7 @@ namespace SineVita.Muguet
 
             return index + int.Parse(octave) * 12 + 12;
         }
-        public static string ConvertMidiToNoteName(int midiValue) // does not have lookup equiv
+        public static string MidiToNoteName(int midiValue) // does not have lookup equiv
         {   
             int validate(int n) {
                 n %= 12;
@@ -100,57 +98,35 @@ namespace SineVita.Muguet
                 }
                 return n;
             }
-            
-            return $"{MidiNotesValue[validate(midiValue)]}{Math.Floor((double)midiValue / 12) - 1}";
+            return $"{Pitch.NoteNames[validate(midiValue)]}{Math.Floor((double)midiValue / 12) - 1}";
         }
-        public static float CalculateHtzToMidiInterval(double htz, int rounding = 0)
+        
+        public static float HtzToMidiInterval(double htz, int rounding = 0)
         {
             return (float)Math.Round(12 * Math.Log2(htz), rounding);
         }
-        public static string ConvertHtzToNoteName(double htz, int rounding = 0) {
-            return ConvertMidiToNoteName((int)CalculateHtzToMidi(htz, rounding : rounding));
+        public static string HtzToNoteName(double htz, int rounding = 0) {
+            return MidiToNoteName((int)HtzToMidi(htz, rounding : rounding));
         }
 
-        public static string ConvertMidiToIntervalName(int midiValue) // ! Incomplete
-        {
-            return MidiPitchIntervalName[midiValue % 12 + (int)Math.Floor((double)MidiPitchIntervalName.Length / 12) * 12 - 12];
-        }
+        public static string MidiToIntervalName(int midiValue) {
+            if (midiValue >= MidiPitchIntervalName.Length) {
+                int octave = (int)Math.Floor((float)midiValue / 12);
+                int modValue = midiValue % 12;
 
-        public static float LookUpHtzToMidi(double htz, int rounding = 0) // ! Incomplete LookupTable
-        {
-            if ((htz > 1) && (htz < 32768))
-            {
-                return 0.0f; // Look up from a table - incomplete
+                int num = modValue switch {
+                    0 => octave-1,
+                    6 => octave,
+                    _ => IntervalNameNumber[modValue] + octave * 7
+                };
+                return $"{IntervalNamePrefix[modValue]}{num}";
             }
-            else
-            {
-                return CalculateHtzToMidi(htz, rounding);
-            } ;
-        }
-        public static float LookUpMidiToHtz(int midi, int rounding = 3) // ! Incomplete LookupTable
-        {
-            if ((midi > 0) && (midi <= 128))
-            {
-                return 0.0f; // Look up from a table - incomplete 
-            }
-            else
-            {
-                return CalculateMidiToHtz(midi, rounding);
-            }           
-        }
-        public static string LookUpMidiToIntervalName(int midiValue)
-        {
-            if (midiValue >= MidiPitchIntervalName.Length)
-            {
-                return ConvertMidiToIntervalName(midiValue);
-            }
-            else
-            {
+            else {
                 return MidiPitchIntervalName[midiValue];
             }
         }
-        public static string LookUpHtzToIntervalName(double htz, int rounding = 0) {
-            return LookUpMidiToIntervalName((int)CalculateHtzToMidi(htz, rounding : rounding));
+        public static string HtzToIntervalName(double htz, int rounding = 0) {
+            return MidiToIntervalName((int)HtzToMidiInterval(htz, rounding : rounding));
         }
 
         public static List<Pitch> PACToPOA(List<Pitch> PAC, Pitch Origin){PAC.Insert(0, Origin);return PAC;} //DONE

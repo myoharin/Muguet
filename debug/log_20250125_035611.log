@@ -1,0 +1,822 @@
+2025-01-25 03:56:11 - Debugger session started.
+2025-01-25 03:56:11 - BasilMuguet Test_1 started
+2025-01-25 03:56:11 -  - - - Adding pulse number 0 with midi index 98. - - -
+2025-01-25 03:56:11 -  - - - Adding pulse number 1 with midi index 94. - - -
+2025-01-25 03:56:11 -  - - - Adding pulse number 2 with midi index 126. - - -
+2025-01-25 03:56:11 -  - - - Adding pulse number 3 with midi index 106. - - -
+2025-01-25 03:56:11 -  - - - Adding pulse number 4 with midi index 109. - - -
+2025-01-25 03:56:11 - Pulse Index: 0 | Midi Index: 48 | Intensity: 32 | Note Name: C3
+2025-01-25 03:56:11 - Pulse Index: 1 | Midi Index: 94 | Intensity: 27 | Note Name: A#/Bb6
+2025-01-25 03:56:11 - Pulse Index: 2 | Midi Index: 98 | Intensity: 52 | Note Name: D7
+2025-01-25 03:56:11 - Pulse Index: 3 | Midi Index: 106 | Intensity: 62 | Note Name: A#/Bb7
+2025-01-25 03:56:11 - Pulse Index: 4 | Midi Index: 109 | Intensity: 57 | Note Name: C#/Db8
+2025-01-25 03:56:11 - Pulse Index: 5 | Midi Index: 126 | Intensity: 56 | Note Name: F#/Gb9
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - 
+Logging Idyll Amount:
+
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 2.7 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 3 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 3.4 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 3.7 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 4 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 4.3 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 4.6 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 5 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 5.3 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 5.6 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 5.9 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 6.2 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 6.6 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 6.9 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 7.2 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 7.5 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 7.8 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 8.2 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 8.5 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 8.8 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 9.1 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 9.4 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 9.8 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 10.1 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 10.4 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 10.7 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 11 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 11.4 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 11.7 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 12 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 12.3 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 12.6 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 13 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 13.3 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 13.6 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 13.9 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 14.2 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 14.6 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 14.9 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 15.2 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 15.5 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 15.8 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 0 | State: Active
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 8 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:11 - NaN Check: False 2
+2025-01-25 03:56:11 - LinkNode: 2
+2025-01-25 03:56:11 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:11 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow
+2025-01-25 03:56:12 - NaN Check: False 1
+2025-01-25 03:56:12 - NaN Check: False 2
+2025-01-25 03:56:12 - LinkNode: 2
+2025-01-25 03:56:12 - Resonance: 16 | NetInflow: 32 | NetOutflow: 16 | NetOverflow: 16 | State: Overflow

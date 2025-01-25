@@ -25,8 +25,8 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
 
         // * Class Variables (updated during process)
         public CosmosiaResonatorState State = CosmosiaResonatorState.Static;        
-        public float Resonance { get; set; } = 0;
-        public int CriticalOverflowDuration = 0; // ms
+        public float Resonance { get; set; }
+        public int CriticalOverflowDuration { get; set; } // ms
         public CosmosiaLonicera Lonicera;
 
         // * Derived Gets
@@ -51,15 +51,22 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             return Lonicera.NetOverflowRate();
         } }
 
-        
+        public IReadOnlyList<CosmosiaPulse?> Pulses { get {
+            return Lonicera.Nodes;
+        } }
+        public IReadOnlyList<CosmosiaChannel?> Channels { get {
+            return Lonicera.Links;
+        } }
 
         // * Constructor
-        public ResonatorCosmosia(int resonatorParameterID, float sizeMutiplier = 1.0f, bool addPulseLowerThanOrigin = false) 
+        public ResonatorCosmosia(int resonatorParameterID, float sizeMutiplier = 1.0f, bool addPulseLowerThanOrigin = false, float resonance = 0, int criticalOverflowDuration = 0) 
             : base(AsterGenus.Cosmosia) {
             ResonatorParameterID = resonatorParameterID;
             SizeMutiplier = sizeMutiplier;
             AddPulseLowerThanOrigin = addPulseLowerThanOrigin;
             Lonicera = new CosmosiaLonicera(OriginCosmosiaPulse);
+            Resonance = resonance;
+            CriticalOverflowDuration = criticalOverflowDuration;
         }
 
         // * Pulse Manipulation & Overrides
@@ -115,9 +122,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         public override List<MagicalEffectData> GetMagicalEffects(byte intensityThreshold = 1) {
             var returnEffects = new List<MagicalEffectData>();
             foreach (CosmosiaChannel? channel in Lonicera.Links) {
-                if (channel != null) {
-                   returnEffects.AddRange(channel.MagicEffect(ResonatorParameterID)); 
-                }
+                returnEffects.AddRange(channel.MagicEffect(ResonatorParameterID));
             }
             returnEffects.RemoveAll(effect => effect.Intensity < intensityThreshold);
             if (State == CosmosiaResonatorState.CriticalState || State == CosmosiaResonatorState.CriticalOverflow) {
@@ -139,8 +144,8 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             var projOutflowRate = Lonicera.ProjectedOutflowRate(parameter, SizeMutiplier);
             var projOverflowRate = Lonicera.ProjectedOverflowRate(parameter, SizeMutiplier);
             
-            var netInflow = Math.Min(projNetInflow, parameter.InflowLimit); // Capped
-            var netOutflow = Math.Min(projOutflowRate, parameter.OutflowLimit); // Capped
+            var netInflow = Math.Clamp(projNetInflow, 0, parameter.InflowLimit); // Capped
+            var netOutflow = Math.Clamp(projOutflowRate, 0, parameter.OutflowLimit); // Capped
             var netOverflow = 0.0f;
 
             var resonancePercentage = Resonance / parameter.MaxIdyllAmount; // Apply pressure lerp
@@ -179,9 +184,10 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
                 State = CosmosiaResonatorState.Active;
                 CriticalOverflowDuration = 0;
             }
+            // * Global NaN check
+            if (float.IsNaN(Resonance)) {Resonance = 0;}
                        
             // * Update Channel Actual FlowRate
-            //BasilMuguet.Log($"projOutflowRate: {projOutflowRate}, projOverflowRate: {projOverflowRate}, netOutflow: {netOutflow}, netOverflow: {netOverflow}");
             Lonicera.AssignChannelFlowrate(projOutflowRate, projOverflowRate, netOutflow, netOverflow, SizeMutiplier, parameter);
 
             // * Check Pulse Inactivity
@@ -190,13 +196,9 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         }
     }
 
-
     public class CosmosiaLonicera : Lonicera<CosmosiaPulse,CosmosiaChannel> {
         private CosmosiaPulse Origin;
-        private static Func<CosmosiaPulse?, CosmosiaPulse?, CosmosiaChannel?> _growthFunction = (pulse1, pulse2) => {
-            if (pulse1 == null || pulse2 == null) {
-                return null;
-            }
+        private static Func<CosmosiaPulse, CosmosiaPulse, CosmosiaChannel> _growthFunction = (pulse1, pulse2) => {
             return new CosmosiaChannel(pulse1, pulse2);
         };
         
@@ -214,14 +216,14 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         public int PulseIntensitySum { get { // [excluded origin] 
             int sum = 0;
             foreach (var node in _nodes) {
-                if (node != null) {sum += node.Intensity;}
+                sum += node.Intensity;
             }
             return sum - Origin.Intensity;
         } }
         public int ChannelIntensitySum { get { 
             int sum = 0;
             foreach (var link in _links) {
-                if (link != null) {sum += link.Intensity;}
+                sum += link.Intensity;
             }
             return sum;
         } }
@@ -231,10 +233,12 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         } }
 
         public static float LinkNodeRatio(int pulseCount) {
-            return NodesToLinkIndex(0, pulseCount) / pulseCount;
+            if (pulseCount == 0) {return 0;}
+            return (float)NodesToLinkIndex(0, pulseCount) / (float)pulseCount;
         }
         public float LinkNodeRatio() {
-            return LinkCount / NodeCount;
+            if (NodeCount == 0) {return 0;}
+            return (float)LinkCount / (float)NodeCount;
         }
         
         // * Process Methods - (parameter, sizeMultiplier)
@@ -242,68 +246,58 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         public float NetOutflowRate() {
             float netFlow = 0;
             foreach (CosmosiaChannel? link in _links) {
-                if (link != null) {
-                    netFlow += link.OutflowRate;
-                }
+                netFlow += link.OutflowRate;
             }
             return netFlow;
         }
         public float NetOverflowRate() {
             float netFlow = 0;
             foreach (CosmosiaChannel? link in _links) {
-                if (link != null) {
-                    netFlow += link.OverflowRate;
-                }
+                netFlow += link.OverflowRate;
             }
             return netFlow;
         }
 
         public float ProjectedInflowRate(ResonatorParameterCosmosia parameter, float sizeMultiplier) {
+            float linkNodeRatio = LinkNodeRatio();
+            if (linkNodeRatio == 0) {return 0;}
             float netFlow = 0;
-            foreach (CosmosiaChannel? channel in _links) {
-                if (channel != null) {
-                    var inflowMultiplier = parameter.GetChannelParameter((byte)channel.ChannelId).InflowMultiplier;
-                    var linkNodeRatio = LinkNodeRatio();
-                    netFlow += channel.ScaledInflowRate(sizeMultiplier * inflowMultiplier / linkNodeRatio);
-                }
+            foreach (CosmosiaChannel? channel in _links) { 
+                var inflowMultiplier = parameter.GetChannelParameter((byte)channel.ChannelId).InflowMultiplier;
+                netFlow += channel.ScaledInflowRate(sizeMultiplier * inflowMultiplier / linkNodeRatio);
             }
             return netFlow; // Not capped
-
-
         }
         public float ProjectedOutflowRate(ResonatorParameterCosmosia parameter, float sizeMultiplier) {
+            float linkNodeRatio = LinkNodeRatio();
+            if (linkNodeRatio == 0) {return 0;}
             float netFlow = 0;
             foreach (CosmosiaChannel? channel in _links) {
-                if (channel != null) {
-                    var outflowMultiplier = parameter.GetChannelParameter((byte)channel.ChannelId).OutflowMultiplier;
-                    var linkNodeRatio = LinkNodeRatio();
-                    netFlow += channel.ScaledOutflowRate(sizeMultiplier * outflowMultiplier / linkNodeRatio);
-                }
+                var outflowMultiplier = parameter.GetChannelParameter((byte)channel.ChannelId).OutflowMultiplier;
+                netFlow += channel.ScaledOutflowRate(sizeMultiplier * outflowMultiplier / linkNodeRatio);
             }
             return netFlow; // Not capped
         }
         public float ProjectedOverflowRate(ResonatorParameterCosmosia parameter, float sizeMultiplier) {
+            float linkNodeRatio = LinkNodeRatio();
+            if (linkNodeRatio == 0) {return 0;}
             float netFlow = 0;
             foreach (CosmosiaChannel? channel in _links) {
-                if (channel != null) {
-                    var overflowMultiplier = parameter.GetChannelParameter(channel.ChannelId).OverflowMultiplier;
-                    var linkNodeRatio = LinkNodeRatio();
-                    netFlow += channel.ScaledOverflowRate(sizeMultiplier * overflowMultiplier / linkNodeRatio);
-                }
+                var overflowMultiplier = parameter.GetChannelParameter(channel.ChannelId).OverflowMultiplier;
+                netFlow += channel.ScaledOverflowRate(sizeMultiplier * overflowMultiplier / linkNodeRatio);
             }
             return netFlow; // Not capped
         }
         
         public void AssignChannelFlowrate(float projOutflow, float projOverflow, float netOutflowRate, float netOverflowRate, float sizeMultiplier, ResonatorParameterCosmosia parameter) {
             var linkNodeRatio = LinkNodeRatio();
-            var outflowScaleMultiplier = sizeMultiplier * netOutflowRate / linkNodeRatio / projOutflow;
-            var overflowScaleMultiplier = sizeMultiplier * netOverflowRate / linkNodeRatio / projOverflow;
+            if (linkNodeRatio == 0) {return;} // no channel links to assign to
+            var outflowScaleMultiplier = sizeMultiplier * netOutflowRate / linkNodeRatio / Math.Clamp(projOutflow, 1, float.MaxValue);
+            var overflowScaleMultiplier = sizeMultiplier * netOverflowRate / linkNodeRatio / Math.Clamp(projOverflow, 1, float.MaxValue);
             for (int i = 0; i < LinkCount; i++) {
-                if (_links[i] != null) {
-                    var channel = parameter.GetChannelParameter((byte)_links[i].ChannelId);
-                    _links[i].OutflowRate = _links[i].ScaledOutflowRate(outflowScaleMultiplier * channel.OutflowMultiplier);
-                    _links[i].OverflowRate = _links[i].ScaledOverflowRate(overflowScaleMultiplier * channel.OverflowMultiplier);
-                }
+                var channel = parameter.GetChannelParameter((byte)_links[i].ChannelId);
+                _links[i].OutflowRate = _links[i].ScaledOutflowRate(outflowScaleMultiplier * channel.OutflowMultiplier);
+                _links[i].OverflowRate = _links[i].ScaledOverflowRate(overflowScaleMultiplier * channel.OverflowMultiplier);
             }
         
         }
@@ -317,7 +311,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         public int InactivityDuration = 0;
         public bool IsOrigin;
         public CosmosiaPulse(Pitch pitch, byte intensity, bool isOrigin = false) : base(pitch, intensity) {IsOrigin = isOrigin;}
-        public CosmosiaPulse(Pulse pulse, bool isOrigin = false) : base(pulse.Pitch, pulse.Intensity) {IsOrigin = isOrigin;}
+        public CosmosiaPulse(Pulse pulse, bool isOrigin = false) : base(pulse.Pitch, pulse.Intensity) {IsOrigin = isOrigin; PulseID = pulse.PulseID;}
     }
     
     public class CosmosiaChannel {
@@ -361,9 +355,6 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             return RawOverflowRate * multiplier;
         }
 
-    
-
-
         public byte OutflowIntensity { get {
             return ResonanceHelperCosmosia.FlowrateToIntensity(OutflowRate);
         } }
@@ -373,8 +364,8 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
 
         // * Class Variables
         public byte Intensity; // Derived Input Value
-        public float OutflowRate = 0; // Finalised Value
-        public float OverflowRate = 0; // Finalised Value
+        public float OutflowRate; // Finalised Value
+        public float OverflowRate; // Finalised Value
         
 
         // * Constructor
@@ -382,11 +373,15 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
             IsN2R = isN2R;
             Interval = new PitchInterval(pulse1.Pitch, pulse2.Pitch);
             Intensity = ResonanceHelperCosmosia.CalculateIntervalIntensity(pulse1.Intensity, pulse2.Intensity);
+            OutflowRate = 0;
+            OverflowRate = 0;
         }
         public CosmosiaChannel(CosmosiaPulse pulse1, CosmosiaPulse pulse2) { // growth constructor
             IsN2R = pulse1.IsOrigin;
             Interval = new PitchInterval(pulse1.Pitch, pulse2.Pitch);
             Intensity = ResonanceHelperCosmosia.CalculateIntervalIntensity(pulse1.Intensity, pulse2.Intensity);
+            OutflowRate = 0;
+            OverflowRate = 0;
         }
    
     }

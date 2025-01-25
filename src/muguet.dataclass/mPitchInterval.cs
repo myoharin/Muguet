@@ -8,6 +8,11 @@ namespace SineVita.Muguet {
         public PitchType Type { get; set; }
         public bool IsNegative { get {return FrequencyRatio < 1;} }
 
+        // * Derived Gets
+        public string IntervalName { get {
+            return HarmonyHelper.HtzToIntervalName(FrequencyRatio);
+        } }
+
         // * Statics
         public static PitchInterval Empty { get {return new PitchInterval((double)1.0);} }
         public static string[] IntervalNames = new string[] {
