@@ -116,7 +116,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
                 }
             }
             if (index == -1) {return false;}
-            Lonicera.MutateNode(index, new CosmosiaPulse(newPulse), false);
+            Lonicera.MutateNode(index, new CosmosiaPulse(newPulse), true);
             return true;
         }       
         public override List<MagicalEffectData> GetMagicalEffects(byte intensityThreshold = 1) {
