@@ -10,12 +10,12 @@ namespace SineVita.Muguet.Asteraceae {
 
         // * Manual Parameter Cache Management
         protected static Dictionary<int, ResonatorParameter> ResonatorParamaters { get; set; } = new Dictionary<int, ResonatorParameter>();
-        public static void ResonatorParamatersAddCache(int newResonatorParamaterID, bool autoDeletionTimer = false) {
+        public static void ResonatorParamatersAddCache(int newResonatorParamaterID, bool autoDeletionTimer = false) { // ! GENERALIZE
             ResonatorParameterCosmosia newResonatorParameter = new ResonatorParameterCosmosia(newResonatorParamaterID);
             ResonatorParamaters.Add(newResonatorParamaterID, newResonatorParameter);
             if (autoDeletionTimer) {StartAutoDeletionTimer(newResonatorParamaterID);}
         }
-        public static void ResonatorParamatersAddCache(string newResonatorParamaterPath, bool autoDeletionTimer = false) {
+        public static void ResonatorParamatersAddCache(string newResonatorParamaterPath, bool autoDeletionTimer = false) { // ! GENERALIZE
             ResonatorParameterCosmosia newResonatorParameter;
             try{
                 newResonatorParameter = new ResonatorParameterCosmosia(newResonatorParamaterPath);

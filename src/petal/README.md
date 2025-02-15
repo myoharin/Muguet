@@ -1,0 +1,1 @@
+Petals are a Muguet Module that aren't necessary for muguet to function, and mostly act as a way for harmony helper to bounce off of. However they are more generally applicable than the other modules, should and can be expanded upon. With that, they are highly specialized and get an extra layer of namespace submoduling.

@@ -1,9 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using SineVita.Basil.Muguet;
-Console.WriteLine("Hello, World!");
-var testClass = new BasilMuguetCosmosia();
+using SineVita.Basil.Muguet.Nelumbo;
+var testClass = new BasilMuguetNelumbo();
 
-testClass.Test1();
+testClass.StartTest();
 
 
 
