@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using SineVita.Basil.Muguet;
+using System.Text.Json;
 
 
 
@@ -30,7 +31,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         }
 
         // * Mana Calculation functions
-        public static byte CalculateIntervalIntensity(byte p1, byte p2) { // geometric mean - return (byte)Math.Floor(Math.Sqrt(p1 * p2));
+        public static byte CalculateIntervalIntensity(byte p1, byte p2) { // geometric mean
             int product = p1 * p2;
             int result = 0;
             int bit = 1 << 30;
@@ -55,15 +56,9 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
     
         // * From Interval Methods
         public static MEDDuo IntervalToMEDDuo(PitchInterval interval, bool isN2R, byte intensity, int resonatorParameterID){ // DONE - return list of possible channels(channelID, grade) or List(channelID, degree)
-            
+            int calculateDegree(int num, int Base) {return (int)Math.Floor(num / (float)Base);}
             int midiIndex = (int)MidiPitchInterval.ToPitchIndex(interval);
-            
-            // data validation
             if (midiIndex < 0) {return new MEDDuo();}
-            
-            int calculateDegree(int num, int Base) {
-                return (int)Math.Floor(num / (float)Base);
-            }
 
             // working capital
             int outFlowEffectID;
@@ -189,28 +184,19 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         }
     
         public static ChannelParameterCosmosia GetCosmosiaChannelParameter(int resonatorParameterID, byte ChannelID) {
-            try {
-                if (ChannelID == 255) {
-                    return new ChannelParameterCosmosia(null);
-                } else {
-                    return ((ResonatorParameterCosmosia)ResonatorParamaters[resonatorParameterID]).GetChannelParameter(ChannelID);
-                }
-            }
+            if (ChannelID == 255) {return new ChannelParameterCosmosia();}
+            try {return ((ResonatorParameterCosmosia)ResonatorParamaters[resonatorParameterID]).GetChannelParameter(ChannelID);}
             catch (Exception) { // does not exist
                 try {
-                    ResonatorParamatersAddCache(resonatorParameterID);
-                    if (ChannelID == 255) {
-                        return new ChannelParameterCosmosia(null);
-                    } else {
-                        return ((ResonatorParameterCosmosia)ResonatorParamaters[resonatorParameterID]).GetChannelParameter(ChannelID);
-                    }
+                    ResonatorParamatersAddCache(resonatorParameterID); 
+                    return ((ResonatorParameterCosmosia)ResonatorParamaters[resonatorParameterID]).GetChannelParameter(ChannelID);
                 }
-                catch (Exception) {
-                    throw new Exception("Failed to get Cosmosia Channel Parameter");
-                }
-                
+                catch (Exception) {throw new Exception("Failed to get Cosmosia Channel Parameter");}
             } 
-       }
-    
+        }
+       
     }
+
+
+    
 }

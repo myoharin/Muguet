@@ -25,10 +25,8 @@ namespace SineVita.Muguet
         public static (int reducedNumerator, int reducedDenominator) ReduceFraction(int numerator, int denominator)
         {
             // Nested method to find the greatest common divisor (GCD) recursively
-            int GcdRecursive(int a, int b)
-            {
-                if (b == 0)
-                {
+            int GcdRecursive(int a, int b) {
+                if (b == 0) {
                     return a;
                 }
                 return GcdRecursive(b, a % b);

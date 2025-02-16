@@ -1,4 +1,5 @@
 using System;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 namespace SineVita.Muguet.Asteraceae.Cosmosia
@@ -6,7 +7,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
     public class ResonatorParameterCosmosia : ResonatorParameter
     {
         // basic information
-        public int ResonatorParameterID { get; set; }
+        public int ResonatorParameterId { get; set; }
         public Pitch Origin { get; set; }
         public byte OriginIntensity { get; set; }
         public float MaxIdyllAmount { get; set; } // max amount before the the mana starts going out the overflow limit
@@ -23,10 +24,10 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
 
         public ChannelParameterCosmosia GetChannelParameter(int channelID) {
             if (channelID >= 255 || channelID >= ChannelParameters.Count) {
-                return new ChannelParameterCosmosia(null);
+                return new ChannelParameterCosmosia();
             }
             if (ChannelParameters[channelID] == null) {
-                return new ChannelParameterCosmosia(null);
+                return new ChannelParameterCosmosia();
             }
             return ChannelParameters[channelID];
         }
@@ -34,112 +35,108 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
             return GetChannelParameter((byte)channelId);
         }
 
-        // class instantiation methods
-        public ResonatorParameterCosmosia(int resonatorParameterID, int runTime = 0) // DONE but not tested yet, accepts ID as int
-            : base(AsterGenus.Cosmosia)
-        {
-            ResonatorParameterID = resonatorParameterID;
-            RunTimeLastFetched = runTime;
+        // * Derived Constructors
+        public ResonatorParameterCosmosia(int resonatorParameterID) // DONE but not tested yet, accepts ID as int
+            : this(Path.Combine(ResonanceHelper.ParametersFolderPath, "cosmosia" ,$"{resonatorParameterID}.json")) {}
+        public ResonatorParameterCosmosia(string paramaterPath) : base(AsterGenus.Cosmosia) {
+            if (int.TryParse(paramaterPath.Split("\\").Last().Split(".")[0], out int result)) {
+                ResonatorParameterId = result;
+            } else {throw new FileNotFoundException("ParamaterIDNotSpecified");}
 
-            // Construct the JSON file path
-            string jsonFilePath = Path.Combine(ResonanceHelper.ParametersFolderPath, "cosmosia" ,$"{resonatorParameterID}.json");
-
-            // Check if the file exists
-            if (File.Exists(jsonFilePath))
-            {
-                // Read the JSON file content
-                var options = new JsonSerializerOptions {PropertyNameCaseInsensitive = true}; // Optional: makes property names case insensitive
-                string jsonString = File.ReadAllText(jsonFilePath);
-                ResonatorParameterCosmosia? resonatorParameter = JsonSerializer.Deserialize<ResonatorParameterCosmosia>(jsonString, options);
-                
-                // Check if the deserialization was successful
-                if (resonatorParameter != null)
-                {
-                    // Initialize properties from the deserialized object
-                    ResonatorParameterID = resonatorParameter.ResonatorParameterID;
-                    Origin = resonatorParameter.Origin ?? new MidiPitch(69); // Ensure Origin is initialize
-                    OriginIntensity = resonatorParameter.OriginIntensity;
-                    MaxIdyllAmount = resonatorParameter.MaxIdyllAmount;
-                    CriticalEffect = resonatorParameter.CriticalEffect;
-                    InflowLimit = resonatorParameter.InflowLimit;
-                    OutflowLimit = resonatorParameter.OutflowLimit;
-                    OverflowLimit = resonatorParameter.OverflowLimit;
-                    ChannelParameters = resonatorParameter.ChannelParameters ?? new List<ChannelParameterCosmosia>(); // Initialize if null
-                }
-            }
-            else
-            {
-                throw new FileNotFoundException($"The specified JSON file was not found: {jsonFilePath}");
-            }
-        }
-        public ResonatorParameterCosmosia(string paramaterPath, int runTime = 0) // DONE but not tested yet, accepts full path names
-            : base(AsterGenus.Cosmosia) 
-        {
-            if (int.TryParse(paramaterPath.Split("\\").Last().Split(".")[0], out int result))
-            {
-                ResonatorParameterID = result;
-            }
-            else{
-                throw new FileNotFoundException("ParamaterIDNotSpecified");
-            }
-
-            RunTimeLastFetched = runTime;
- 
-            // Check if the file exists
-            if (File.Exists(paramaterPath))
-            {
-                // Read the JSON file content
-                string jsonString = File.ReadAllText(paramaterPath);
-                var options = new JsonSerializerOptions {PropertyNameCaseInsensitive = true}; // Optional: makes property names case insensitive
-                var resonatorParameter = JsonSerializer.Deserialize<ResonatorParameterCosmosia>(jsonString, options);
-                
-                // Check if the deserialization was successful
-                if (resonatorParameter != null)
-                {
-                    // Initialize properties from the deserialized object
-                    ResonatorParameterID = resonatorParameter.ResonatorParameterID;
-                    Origin = resonatorParameter.Origin ?? new MidiPitch(69); // Ensure Origin is initialize
-                    OriginIntensity = resonatorParameter.OriginIntensity;
-                    MaxIdyllAmount = resonatorParameter.MaxIdyllAmount;
-                    CriticalEffect = resonatorParameter.CriticalEffect;
-                    InflowLimit = resonatorParameter.InflowLimit;
-                    OutflowLimit = resonatorParameter.OutflowLimit;
-                    OverflowLimit = resonatorParameter.OverflowLimit;
-                    ChannelParameters = resonatorParameter.ChannelParameters ?? new List<ChannelParameterCosmosia>(); // Initialize if null
-                }
-            }
-            else
-            {
-                throw new FileNotFoundException($"The specified JSON file was not found: {paramaterPath }");
-            }
+            if (!File.Exists(paramaterPath)) {throw new FileNotFoundException($"The specified JSON file was not found: {paramaterPath }");}
+            
+            string jsonString = File.ReadAllText(paramaterPath);
+            var resonatorParameter = FromJson(jsonString);
+            ResonatorParameterId = resonatorParameter.ResonatorParameterId;
+            Origin = resonatorParameter.Origin ?? new MidiPitch(69);
+            OriginIntensity = resonatorParameter.OriginIntensity;
+            MaxIdyllAmount = resonatorParameter.MaxIdyllAmount;
+            CriticalEffect = resonatorParameter.CriticalEffect;
+            InflowLimit = resonatorParameter.InflowLimit;
+            OutflowLimit = resonatorParameter.OutflowLimit;
+            OverflowLimit = resonatorParameter.OverflowLimit;
+            ChannelParameters = resonatorParameter.ChannelParameters ?? new List<ChannelParameterCosmosia>();
         }
     
-        // json deserialization : parameterless constructor required
-        [JsonConstructor]
-        public ResonatorParameterCosmosia() : base(AsterGenus.Cosmosia) {}
-    }
-    public class ChannelParameterCosmosia
-        {
-            public CosmosiaChannelId ChannelId { get; set; }
-            public float InflowMultiplier { get; set; }
-            public float OutflowMultiplier { get; set; }
-            public float OverflowMultiplier { get; set; }
-            public int InflowEffect { get; set; }
-            public int OutflowEffect { get; set; }
-            public int OverflowEffect { get; set; }
-            public bool IsNull;
-            public ChannelParameterCosmosia(CosmosiaChannelId channelId, float outflowMultiplier, float overflowMultiplier, int outflowEffect, int overflowEffect)
-            {
-                ChannelId = channelId;
-                OutflowMultiplier = outflowMultiplier;
-                OverflowMultiplier = overflowMultiplier;
-                OutflowEffect = outflowEffect;
-                OverflowEffect = overflowEffect;
-                IsNull = false;
+        // * FromJson
+        private ResonatorParameterCosmosia() : base(AsterGenus.Cosmosia) {Origin = new MidiPitch(69); ChannelParameters = new List<ChannelParameterCosmosia>();}
+        public static ResonatorParameterCosmosia FromJson(string jsonString) {
+            var jsonDocument = JsonDocument.Parse(jsonString);
+            var rootElement = jsonDocument.RootElement;
+            var returnParameter = new ResonatorParameterCosmosia();
+
+            returnParameter.ResonatorParameterId = rootElement.GetProperty("ResonatorParameterId").GetInt32();
+            
+            returnParameter.OriginIntensity = rootElement.GetProperty("OriginIntensity").GetByte();
+            returnParameter.MaxIdyllAmount = rootElement.GetProperty("MaxIdyllAmount").GetSingle();
+            returnParameter.CriticalEffect = rootElement.GetProperty("CriticalEffect").GetInt32();
+            returnParameter.CriticalEffectDurationThreshold = rootElement.GetProperty("CriticalEffectDurationThreshold").GetInt32();
+            returnParameter.CriticalEffectIntensity = rootElement.GetProperty("CriticalEffectIntensity").GetByte();
+
+            returnParameter.InflowLimit = rootElement.GetProperty("InflowLimit").GetSingle();
+            returnParameter.OutflowLimit = rootElement.GetProperty("OutflowLimit").GetSingle();
+            returnParameter.OverflowLimit = rootElement.GetProperty("OverflowLimit").GetSingle();
+
+            // * Origin Pitch
+            string? originJsonString = rootElement.GetProperty("Origin").ToString();
+            if (originJsonString != null) {
+                returnParameter.Origin = Pitch.FromJson(originJsonString);
             }
-            public ChannelParameterCosmosia(bool? _null) : this((CosmosiaChannelId)255, 0, 0, -1, -1) {IsNull = true;}
-            [JsonConstructor]
-            public ChannelParameterCosmosia() {}
+            else {
+                returnParameter.Origin = new Pitch(256);
+            }
+
+            // * Channel Parameters
+            var channelParametersElement = rootElement.GetProperty("ChannelParameters");
+            for (int i = 0; i < channelParametersElement.GetArrayLength(); i++) {
+                var parameterJsonString = channelParametersElement[i].ToString();
+                if (parameterJsonString == null) {throw new JsonException("Channel Parameter is null");}
+                returnParameter.ChannelParameters.Add(ChannelParameterCosmosia.FromJson(parameterJsonString));
+            }
+            return returnParameter;
         }
+    }
+    
+    public class ChannelParameterCosmosia {
+        public CosmosiaChannelId ChannelId { get; set; }
+        public float InflowMultiplier { get; set; }
+        public float OutflowMultiplier { get; set; }
+        public float OverflowMultiplier { get; set; }
+        public int InflowEffect { get; set; }
+        public int OutflowEffect { get; set; }
+        public int OverflowEffect { get; set; }
+        public bool IsNull { get; set; }
+
+        // * Constructor
+        public ChannelParameterCosmosia(CosmosiaChannelId channelId, float inflowMultiplier, float outflowMultiplier, float overflowMultiplier, int inflowEffect, int outflowEffect, int overflowEffect) {
+            ChannelId = channelId;
+            InflowMultiplier = inflowMultiplier;
+            OutflowMultiplier = outflowMultiplier;
+            OverflowMultiplier = overflowMultiplier;
+            InflowEffect = inflowEffect;
+            OutflowEffect = outflowEffect;
+            OverflowEffect = overflowEffect;
+            IsNull = false;
+        }
+        
+        // * FromJson
+        public ChannelParameterCosmosia() : this((CosmosiaChannelId)255, 0, 0, 0, -1, -1, -1) {IsNull = true;}
+        public static ChannelParameterCosmosia FromJson(string jsonString) {
+            var jsonDocument = JsonDocument.Parse(jsonString);
+            var rootElement = jsonDocument.RootElement;
+            var returnChannel = new ChannelParameterCosmosia();
+
+            returnChannel.ChannelId = (CosmosiaChannelId)rootElement.GetProperty("ChannelId").GetInt32();
+            returnChannel.InflowMultiplier = rootElement.GetProperty("InflowMultiplier").GetSingle();
+            returnChannel.OutflowMultiplier = rootElement.GetProperty("OutflowMultiplier").GetSingle();
+            returnChannel.OverflowMultiplier = rootElement.GetProperty("OverflowMultiplier").GetSingle();
+            returnChannel.InflowEffect = rootElement.GetProperty("InflowEffect").GetInt32();
+            returnChannel.OutflowEffect = rootElement.GetProperty("OutflowEffect").GetInt32();
+            returnChannel.OverflowEffect = rootElement.GetProperty("OverflowEffect").GetInt32();
+            returnChannel.IsNull = false;
+            
+            return returnChannel;
+        }
+    }
 
 }

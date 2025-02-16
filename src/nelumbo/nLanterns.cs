@@ -1,4 +1,6 @@
 using System;
+using System.Numerics;
+using System.Collections.Generic;
 using SineVita.Lonicera;
 using SineVita.Muguet.Petal.ScalerPetal;
 namespace SineVita.Muguet.Nelumbo {
@@ -17,18 +19,22 @@ namespace SineVita.Muguet.Nelumbo {
         }
         public Lantern(List<Lotus> lotuses, bool bloom = true) {
             _lotuses = lotuses;
+            if (bloom) {Bloom();}
         }
         public Lantern(List<Pitch> pitches, bool bloom = true) {
             _lotuses = new List<Lotus>();
             foreach (var pitch in pitches) {
                 _lotuses.Add(new Lotus(pitch));
             }
+            if (bloom) {Bloom();}
         }
 
         // * Lonicera
         public Lonicera<Lotus, LotusDuet> ToLonicera(bool grow = true) {
-            return new Lonicera<Lotus, LotusDuet>(_growthFunction, true, _lotuses);
+            return new Lonicera<Lotus, LotusDuet>(_growthFunction, grow, _lotuses);
         }
+        
+        // * Lotus Property Blooms
         public void Bloom() { // ! NOT DONE
             // main function to update the individual properties of the lotuses
 
@@ -39,37 +45,6 @@ namespace SineVita.Muguet.Nelumbo {
         private static Func<Lotus, Lotus, LotusDuet> _growthFunction = (pitch1, pitch2) => {
             return new LotusDuet(pitch1, pitch2);
         };
-    
-
-        // // * Lonicera Organisers
-        // public bool Add(Pitch pitch) {
-        //     var lotus = new Lotus(pitch);
-        //     int index = 0;
-        //     while (pitch.Frequency > _lonicera.Nodes[index].Pitch.Frequency && index < _lonicera.Nodes.Count) {
-        //         index++;
-        //     }
-        //     if (index == _lonicera.Nodes.Count) {
-        //         _lonicera.Add(lotus);
-        //     } else {
-        //         _lonicera.Insert(index, lotus, true);
-        //     }
-        //     return true;
-        // }
-        // public bool Add(double frequency) {
-        //     return Add(new Pitch((float)frequency));
-        // }
-        // public bool Remove(Pitch pitch, int centTolerance = 20) {
-        //     return Remove(pitch.Frequency, centTolerance);
-        // }
-        // public bool Remove(double frequency, int centTolerance = 20) { // remove lowest which matches it
-        //     for (int i = 0; i < _lonicera.Nodes.Count; i++) {
-        //         if (Math.Abs(_lonicera.Nodes[i].Pitch.Frequency - frequency) < centTolerance) {
-        //             _lonicera.RemoveAt(i);
-        //             return true;
-        //         }
-        //     }   
-        //     return false;
-        // }
 
         // * Lantern Properties
         public List<MidiPitchName> GetDiatonicScales(ScaleType type = ScaleType.Ionian) {
@@ -115,22 +90,37 @@ namespace SineVita.Muguet.Nelumbo {
         
 
     }
-    public class LanternDuet { // * Used to quantitate the transition between two chords
-        public bool LeadingToneTension { get; set; }
+    
+    public class LanternDuet { // Used to quantitate the transition between two chords
+        // * Flames
+        public List<List<LotusFlame>> Flames { get; set; }
 
-        public LanternDuet(Lantern lantern1, Lantern lantern2) {
-            for (int i = 0; i < lantern1.Lotuses.Count; i++) {
-                for (int j = 0; j < lantern2.Lotuses.Count; j++) {
-                   var lotus1 = lantern1.Lotuses[i]; 
-                   var lotus2 = lantern2.Lotuses[i];
+        // * Duet Properties
 
-
-
-
+        // * Constructor
+        public LanternDuet(Lantern masterLantern, Lantern slaveLantern) {
+            Flames = new List<List<LotusFlame>>();
+            for (int i = 0; i < slaveLantern.Lotuses.Count; i++) {
+                Flames.Add(new List<LotusFlame>());
+                for (int j = 0; j < masterLantern.Lotuses.Count; j++) {
+                    var masterLotus = masterLantern.Lotuses[j]; 
+                    var slaveLotus = slaveLantern.Lotuses[i];
+                    Flames[i].Add(new LotusFlame(masterLotus, slaveLotus));
                 }
             }
+        }
+
+    }
+    public class LotusFlame {
+        public PitchInterval Interval { get; set; }
+    
+        // * Constructors
+
+        public LotusFlame(Lotus masterLotus, Lotus slaveLotus) { // ! NOT DONE
+            Interval = new PitchInterval(masterLotus.Pitch, slaveLotus.Pitch, false);
 
         }
     }
+
     
 }

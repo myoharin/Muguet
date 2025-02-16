@@ -1,6 +1,7 @@
 using System;
 using SineVita.Basil.Muguet;
 using SineVita.Muguet.Asteraceae;
+using System.Text.Json;
 
 namespace SineVita.Muguet {
     public enum MidiPitchName {
@@ -22,10 +23,11 @@ namespace SineVita.Muguet {
         } }
 
         // * statics
-        public static Pitch Empty { get {return new Pitch((float)256.0f);} }
-        public static string[] NoteNames = new string[] {
+        public static Pitch Empty { get {return new Pitch(256f);} }
+        private static readonly string[] noteNames = new string[] {
             "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
         };
+        public static string[] NoteNames {get {return noteNames;}}
 
         // * Constructor
         public Pitch(float frequency) {
@@ -40,7 +42,12 @@ namespace SineVita.Muguet {
             
             Type = pitchType;
         }
-
+        
+        // * FromJson
+        public static Pitch FromJson(string jsonString) { // ! NOT DONE
+            return null;
+        }
+ 
         // * virtual methods
         public virtual double UpdateFrequency(float? newFrequency = null) {
             if (newFrequency.HasValue) {Frequency = newFrequency.Value;}
@@ -52,8 +59,6 @@ namespace SineVita.Muguet {
         public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false) {
             return new PitchInterval(this, pitch2, absoluteInterval);
         }
-        // NOT DONE
-        // - add virtual metohds for each pitch intervals
     }
 
     public abstract class PitchBase : Pitch {

@@ -12,7 +12,7 @@ namespace SineVita.Basil
         public static bool DebugFolderSet { get { return DebugFolder != null; } }
 
         // instantiate
-        public Basil(){}
+        protected Basil(){}
 
 
         public static void initialize() {

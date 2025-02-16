@@ -19,7 +19,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         public static bool CheckInactivity { get; } = false;
         
         // * Core Class Info
-        public int ResonatorParameterID { get; set; }
+        public int ResonatorParameterId { get; set; }
         public float SizeMutiplier { get; set; }
         public bool AddPulseLowerThanOrigin { get; set; }
 
@@ -31,7 +31,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
 
         // * Derived Gets
         public ResonatorParameterCosmosia Parameter { get {
-            return ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID);
+            return ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterId);
         } }
         public Pulse OriginPulse { get {
             var parameter = Parameter;
@@ -59,9 +59,9 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         } }
 
         // * Constructor
-        public ResonatorCosmosia(int resonatorParameterID, float sizeMutiplier = 1.0f, bool addPulseLowerThanOrigin = false, float resonance = 0, int criticalOverflowDuration = 0) 
+        public ResonatorCosmosia(int resonatorParameterId, float sizeMutiplier = 1.0f, bool addPulseLowerThanOrigin = false, float resonance = 0, int criticalOverflowDuration = 0) 
             : base(AsterGenus.Cosmosia) {
-            ResonatorParameterID = resonatorParameterID;
+            ResonatorParameterId = resonatorParameterId;
             SizeMutiplier = sizeMutiplier;
             AddPulseLowerThanOrigin = addPulseLowerThanOrigin;
             Lonicera = new CosmosiaLonicera(OriginCosmosiaPulse);
@@ -71,7 +71,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
 
         // * Pulse Manipulation & Overrides
         public override bool AddPulse(Pulse newPulse) {
-            if (!AddPulseLowerThanOrigin && ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterID).Origin.Frequency > newPulse.Pitch.Frequency
+            if (!AddPulseLowerThanOrigin && ResonanceHelperCosmosia.GetResonatorParameter(ResonatorParameterId).Origin.Frequency > newPulse.Pitch.Frequency
                 || CheckInactivity && newPulse.Intensity < InactivityThreshold
                 || Lonicera.Nodes.Any(pulse => pulse != null && pulse.PulseID == newPulse.PulseID)
             )
@@ -122,7 +122,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         public override List<MagicalEffectData> GetMagicalEffects(byte intensityThreshold = 1) {
             var returnEffects = new List<MagicalEffectData>();
             foreach (CosmosiaChannel? channel in Lonicera.Links) {
-                returnEffects.AddRange(channel.MagicEffect(ResonatorParameterID));
+                returnEffects.AddRange(channel.MagicEffect(ResonatorParameterId));
             }
             returnEffects.RemoveAll(effect => effect.Intensity < intensityThreshold);
             if (State == CosmosiaResonatorState.CriticalState || State == CosmosiaResonatorState.CriticalOverflow) {

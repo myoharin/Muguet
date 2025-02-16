@@ -151,7 +151,7 @@ namespace SineVita.Basil.Muguet.Cosmosia
         }
         // Channel Parameter
         public static void LogResonatorParameter(ResonatorParameterCosmosia parameter) {
-            Log($"- - - Resonator Parameter: {parameter.ResonatorParameterID} - - - ");
+            Log($"- - - Resonator Parameter: {parameter.ResonatorParameterId} - - - ");
             Log($"OriginFrequency: {parameter.Origin.Frequency} | OriginIntensity: {parameter.OriginIntensity} | MaxIdyllAmount: {parameter.MaxIdyllAmount} | CriticalEffect: {parameter.CriticalEffect} | CriticalEffectDurationThreshold: {parameter.CriticalEffectDurationThreshold} | CriticalEffectIntensity: {parameter.CriticalEffectIntensity}");
             Log($"InflowLimit: {parameter.InflowLimit} | OutflowLimit: {parameter.OutflowLimit} | OverflowLimit: {parameter.OverflowLimit}");
             for (int i = 0; i < 14 ; i++) {

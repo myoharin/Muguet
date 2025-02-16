@@ -21,7 +21,7 @@ namespace SineVita.Muguet {
 
         // * Statics
         public static PitchInterval Empty { get {return new PitchInterval((double)1.0);} }
-        public static string[] IntervalNames = new string[] {
+        private static readonly string[] intervalNames = new string[] {
             // Populate with actual interval names
             "R", "m2", "M2", "m3", "M3", "P4", "T1", "P5", "m6", "M6", "m7", "M7",
             "O1", "m9", "M9", "m10", "M10", "P11", "T2", "P12", "m13", "M13", "m14", "M14",
@@ -29,6 +29,9 @@ namespace SineVita.Muguet {
             "O3", "m23", "M23", "m24", "M24", "P25", "T4", "P26", "m27", "M27", "m28", "M28",
             "O4"
         };
+
+        public static string[] IntervalNames {get { return intervalNames; }}
+
         public static PitchInterval CreateTargetInterval(Pitch pitch1, Pitch pitch2, PitchType? targetType = null, bool absoluteInterval = false) {
             return null;
         }

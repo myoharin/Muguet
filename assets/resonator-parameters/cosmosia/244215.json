@@ -1,5 +1,6 @@
 {
-	"ResonatorParameterID": 244215,
+	"Genus": "Cosmosia",
+	"ResonatorParameterId": 244215,
 	"Origin": {
 		"Frequency": 128,
 		"PitchType": "float",
@@ -17,7 +18,7 @@
 	"OverflowLimit": 16,
 
 	"ChannelParameters": [
-		{"ChannelID": 0,
+		{"ChannelId": 0,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -25,7 +26,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 1,
+		{"ChannelId": 1,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -33,7 +34,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 2,
+		{"ChannelId": 2,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -41,7 +42,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 3,
+		{"ChannelId": 3,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -49,7 +50,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 4,
+		{"ChannelId": 4,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -57,7 +58,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 5,
+		{"ChannelId": 5,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -65,7 +66,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 6,
+		{"ChannelId": 6,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -73,7 +74,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 7,
+		{"ChannelId": 7,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -81,7 +82,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 8,
+		{"ChannelId": 8,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -89,7 +90,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 9,
+		{"ChannelId": 9,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -97,7 +98,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 10,
+		{"ChannelId": 10,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -105,7 +106,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 11,
+		{"ChannelId": 11,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -113,7 +114,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 12,
+		{"ChannelId": 12,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
@@ -121,7 +122,7 @@
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
-		{"ChannelID": 13,
+		{"ChannelId": 13,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,

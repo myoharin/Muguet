@@ -5,18 +5,19 @@ namespace SineVita.Muguet.Nelumbo {
         // * Variables
         public Pitch Pitch { get; set; }
 
-        // * lotus Properties
-        public bool IsRoot { get; set; } // Root of lantern
+        // * lotus Yin Properties
+        public bool IsRoot { get; set; } = false; // Root of lantern
 
-        public bool IsStructualTonic { get; set; } // Root of a fifth relation / top of a fourth relation
-        public bool IsStructualMediant { get; set; } // the minor or major third of a structual chord
-        public bool IsStructualDominant { get; set; } // the minor or major third of a structual chord
+        public bool IsStructualTonic { get; set; } = false; // Root of a fifth relation / top of a fourth relation
+        public bool IsStructualMediant { get; set; } = false; // the minor or major third of a structual chord
+        public bool IsStructualDominant { get; set; } = false; // the minor or major third of a structual chord
         
-        public bool IsStressTone { get; set;} // tension note, involved in 3rd or 6th relation
-        public bool IsInStressChain { get; set; } // involved in a chain of chaining stress tones
+        public bool IsStressTone { get; set;} = false; // tension note, involved in 3rd or 6th relation
+        public bool IsInStressChain { get; set; } = false; // involved in a chain of chaining stress tones
         
-        public bool IsDeflatedTone { get; set;} // 2nd relations
-        public bool IsAlchemicTone { get; set;} // tritone or 7ths
+        public bool IsDeflatedTone { get; set;} = false; // 2nd relations
+        public bool IsAlchemicTone { get; set;} = false; // tritone or 7ths
+
 
         // * Constructors
         public Lotus(Pitch pitch) {
