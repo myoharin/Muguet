@@ -117,7 +117,7 @@ namespace SineVita.Muguet.Nelumbo {
         // * Constructors
 
         public LotusFlame(Lotus masterLotus, Lotus slaveLotus) { // ! NOT DONE
-            Interval = new PitchInterval(masterLotus.Pitch, slaveLotus.Pitch, false);
+            Interval = PitchInterval.CreateInterval(masterLotus.Pitch, slaveLotus.Pitch, false);
 
         }
     }

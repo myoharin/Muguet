@@ -13,101 +13,122 @@ namespace SineVita.Muguet {
         TwelveToneEqual,
         Float
     }
-    public class Pitch {
-        public float Frequency { get; set; }
+
+    public abstract class Pitch {
+        // * Properties
         public PitchType Type { get; set; }
+        public int CentOffsets { get; set; }
 
         // * Derived Gets
-        public string NoteName { get {
-            return HarmonyHelper.HtzToNoteName(Frequency);
-        } }
+        public string NoteName { get { return HarmonyHelper.HtzToNoteName(Frequency); } }
+        public double Frequency { get { return GetFrequency(); } }
 
         // * statics
-        public static Pitch Empty { get {return new Pitch(256f);} }
+        public static Pitch Empty { get { return new FloatPitch(256f); } }
         private static readonly string[] noteNames = new string[] {
             "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
         };
-        public static string[] NoteNames {get {return noteNames;}}
+        public static string[] NoteNames { get { return noteNames; } }
+
+        // * FromJson
+        public static Pitch FromJson(string jsonString) {
+            var jsonDocument = JsonDocument.Parse(jsonString);
+            var rootElement = jsonDocument.RootElement;
+            PitchType type = Enum.Parse<PitchType>(rootElement.GetProperty("Type").GetString() ?? "Float");
+            switch (type) {
+                case PitchType.Float:
+                    return new FloatPitch(rootElement.GetProperty("Frequency").GetDouble());
+                case PitchType.JustIntonation:
+                    var justFrequency = rootElement.GetProperty("JustFrequency");
+                    return new JustIntonalPitch(
+                        (justFrequency.GetProperty("Numerator").GetInt32(), justFrequency.GetProperty("Denominator").GetInt32()),
+                        rootElement.GetProperty("CentOffsets").GetInt32()
+                    );
+                case PitchType.CustomeToneEuqal:
+                    return new CustomTetPitch(
+                        rootElement.GetProperty("Base").GetInt32(),
+                        rootElement.GetProperty("TuningIndex").GetInt32(),
+                        rootElement.GetProperty("TuningFrequency").GetSingle(),
+                        rootElement.GetProperty("PitchIndex").GetInt32(),
+                        type,
+                        rootElement.GetProperty("CentOffsets").GetInt32()
+                    );
+                case PitchType.TwelveToneEqual:
+                    return new MidiPitch(
+                        rootElement.GetProperty("PitchIndex").GetInt32(),
+                        rootElement.GetProperty("CentOffsets").GetInt32()
+                    );
+                default:
+                    throw new ArgumentException("Invalid pitch type");
+            }
+        }
 
         // * Constructor
-        public Pitch(float frequency) {
-            Frequency = frequency;
-            Type = PitchType.Float;
-        }
-        protected Pitch(float? frequency = null, PitchType pitchType = PitchType.Float) {
-            if (frequency == null && pitchType == PitchType.Float) {
-                Frequency = 256;
-            }
-            else {Frequency = frequency ?? (float)UpdateFrequency();}
-            
+        protected Pitch(PitchType pitchType = PitchType.Float, int centOffsets = 0) {
             Type = pitchType;
-        }
-        
-        // * FromJson
-        public static Pitch FromJson(string jsonString) { // ! NOT DONE
-            return null;
-        }
- 
-        // * virtual methods
-        public virtual double UpdateFrequency(float? newFrequency = null) {
-            if (newFrequency.HasValue) {Frequency = newFrequency.Value;}
-            return Frequency;
-        }
-        public Pitch ReturnIncrementedPitch(PitchInterval pitchInterval) {
-            return new Pitch((float)(this.Frequency * pitchInterval.FrequencyRatio), PitchType.Float);
-        }
-        public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false) {
-            return new PitchInterval(this, pitch2, absoluteInterval);
-        }
-    }
-
-    public abstract class PitchBase : Pitch {
-        public int CentOffsets { get; set; }
-        public bool IsSynched { get; set; }
-        public PitchBase(float? frequency, PitchType type, int centOffsets = 0) : base(frequency, type) {
-            IsSynched = false;
             CentOffsets = centOffsets;
         }
+
+        // * virtual methods
+        public virtual double GetFrequency() { return 0; }
+
+        // * General Methods
+        public FloatPitch IncrementPitch(PitchInterval pitchInterval) {
+            return new FloatPitch((float)(Frequency * pitchInterval.FrequencyRatio));
+        }
+        public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false, PitchType targetType = PitchType.Float) {
+            return PitchInterval.CreateInterval(this, pitch2, absoluteInterval, targetType);
+        }
     }
 
-    public class JustIntonalPitch : PitchBase {
+    public class FloatPitch : Pitch {
+        // * Properties
+        private double _frequency;
+
+        // * Constructor
+        public FloatPitch(double frequency) : base(PitchType.Float, 0) {
+            _frequency = frequency;
+        }
+
+        // * Overrides
+        public new int CentOffsets {
+            get { return 0; }
+            set { _frequency *= Math.Pow(2, 1+value/1200);}
+        }
+        public override double GetFrequency() {return _frequency;}
+    }
+
+    public class JustIntonalPitch : Pitch {
+        // * Properties
         public (int Numerator, int Denominator) JustFrequency { get; set; }
 
-        public JustIntonalPitch((int, int) justFrequency, float? frequency = null, int centOffsets = 0)
-            : base(frequency, PitchType.JustIntonation, centOffsets) {
+        // * Constructor
+        public JustIntonalPitch((int, int) justFrequency, int centOffsets = 0)
+            : base(PitchType.JustIntonation, centOffsets) {
             JustFrequency = justFrequency;
         }
-
-        public override double UpdateFrequency(float? newFrequency = null) {
-            if (newFrequency.HasValue) {
-                Frequency = newFrequency.Value;
-                IsSynched = false;
-            }
-            else {
-                Frequency = (float)Math.Pow(2, CentOffsets / 1200.0) * JustFrequency.Numerator / JustFrequency.Denominator;
-                IsSynched = true;
-            }
-            return Frequency;
+        
+        // * Overrides
+        public override double GetFrequency() {
+            return (float)Math.Pow(2, CentOffsets / 1200.0) * JustFrequency.Numerator / JustFrequency.Denominator;
         }
     }
 
-    public class CustomTETPitch : PitchBase {
+    public class CustomTetPitch : Pitch {
         public int Base { get; set; }
         public int TuningIndex { get; set; }
         public float TuningFrequency { get; set; }
         public int PitchIndex { get; set; }
 
-        public CustomTETPitch(int baseValue, int tuningIndex, float tuningFrequency, int pitchIndex, float? frequency = null, PitchType pitchType = PitchType.CustomeToneEuqal, int centOffsets = 0)
-            : base(frequency, pitchType, centOffsets) {
+        public CustomTetPitch(int baseValue, int tuningIndex, float tuningFrequency, int pitchIndex, PitchType pitchType = PitchType.CustomeToneEuqal, int centOffsets = 0)
+            : base(pitchType, centOffsets) {
             Base = baseValue;
             TuningIndex = tuningIndex;
             TuningFrequency = tuningFrequency;
             PitchIndex = pitchIndex;
-            if (frequency.HasValue) {UpdateFrequency(frequency);}
-            else {UpdateFrequency();}
         }
-        public CustomTETPitch(float frequency, int baseValue, int tuningIndex, float tuningFrequency, PitchType pitchType = PitchType.CustomeToneEuqal)
-            : base(frequency, pitchType, 0) {
+        public CustomTetPitch(float frequency, int baseValue, int tuningIndex, float tuningFrequency, PitchType pitchType = PitchType.CustomeToneEuqal)
+            : base(pitchType, 0) {
             Base = baseValue;
             TuningIndex = tuningIndex;
             TuningFrequency = tuningFrequency;
@@ -116,23 +137,18 @@ namespace SineVita.Muguet {
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIndex = (int)Math.Floor(cacheIndex);}            
             else {PitchIndex = (int)Math.Ceiling(cacheIndex);}
             CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / baseValue * 1200.0);
-            IsSynched = true;
         }
 
-        public override double UpdateFrequency(float? newFrequency = null) {
-            if (newFrequency.HasValue) {Frequency = newFrequency.Value; IsSynched = false;}   
-            else {Frequency = (float)Math.Pow(2, CentOffsets / 1200.0) * TuningFrequency * (float)Math.Pow(2, (PitchIndex - TuningIndex) / (double)Base); IsSynched = true;}
-            return Frequency;
+        public override double GetFrequency() {
+            return (float)Math.Pow(2, CentOffsets / 1200.0) * TuningFrequency * (float)Math.Pow(2, (PitchIndex - TuningIndex) / (double)Base);
         }
             
-        // TET increment system
+        // * TET increment system
         public void Up(int upBy = 1) {
             PitchIndex += upBy;
-            Frequency *= (float)Math.Pow(2, upBy/Base);
         }
         public void Down(int downBy = 1) {
             PitchIndex -= downBy;
-            Frequency /= (float)Math.Pow(2, downBy/Base);
         }
     
         // * To Pitch Index
@@ -145,17 +161,16 @@ namespace SineVita.Muguet {
         }
     }
 
-    public class MidiPitch : CustomTETPitch {
-        public MidiPitch(int midiValue, float? frequency = null, int centOffsets = 0)
-            : base(12, 69, 440, midiValue, frequency, PitchType.TwelveToneEqual, centOffsets) {}
+    public class MidiPitch : CustomTetPitch {
+        public MidiPitch(int midiValue, int centOffsets = 0)
+            : base(12, 69, 440, midiValue, PitchType.TwelveToneEqual, centOffsets) {}
         public MidiPitch(float frequency)
-            : base(12, 69, 440, 1, frequency, PitchType.TwelveToneEqual, 0)
+            : base(frequency, 12, 69, 440, PitchType.TwelveToneEqual)
          {
             double cacheIndex = Base * Math.Log2(frequency / TuningFrequency) + TuningIndex;
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIndex = (int)Math.Floor(cacheIndex);}            
             else {PitchIndex = (int)Math.Ceiling(cacheIndex);}
             CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / Base * 1200.0);
-            IsSynched = true;
         }
         public static float ToPitchIndex(double frequency, bool round = true) {
             return ToPitchIndex(frequency, 12, 69, 440, round);

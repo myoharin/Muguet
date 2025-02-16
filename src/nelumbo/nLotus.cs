@@ -50,10 +50,10 @@ namespace SineVita.Muguet.Nelumbo {
             Interval = interval;
         }
         public LotusDuet(Pitch pitch1, Pitch pitch2) {
-            Interval = new PitchInterval(pitch1, pitch2);
+            Interval = PitchInterval.CreateInterval(pitch1, pitch2);
         }
         public LotusDuet(Lotus lotus1, Lotus lotus2) {
-            Interval = new PitchInterval(lotus1.Pitch, lotus2.Pitch);
+            Interval = PitchInterval.CreateInterval(lotus1.Pitch, lotus2.Pitch);
         }
     }
 }

@@ -3,8 +3,8 @@
 	"ResonatorParameterId": 244215,
 	"Origin": {
 		"Frequency": 128,
-		"PitchType": "float",
-		"CentDifference": 0
+		"Type": "Float",
+		"CentOffsets": 0
 	},
 
 	"OriginIntensity": 32,
@@ -20,7 +20,7 @@
 	"ChannelParameters": [
 		{"ChannelId": 0,
 		"InflowMultiplier": 1,
-		"OutflowMultiplier": 1,
+		"OutflowMultiplier": 2,
 		"OverflowMultiplier": 1,
 		"InflowEffect": 0,
 		"OutflowEffect": 0,
@@ -35,7 +35,7 @@
 		"OverflowEffect": 0}
 		,
 		{"ChannelId": 2,
-		"InflowMultiplier": 1,
+		"InflowMultiplier": 5,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
 		"InflowEffect": 0,
@@ -45,14 +45,14 @@
 		{"ChannelId": 3,
 		"InflowMultiplier": 1,
 		"OutflowMultiplier": 1,
-		"OverflowMultiplier": 1,
+		"OverflowMultiplier": 4,
 		"InflowEffect": 0,
 		"OutflowEffect": 0,
 		"OverflowEffect": 0}
 		,
 		{"ChannelId": 4,
 		"InflowMultiplier": 1,
-		"OutflowMultiplier": 1,
+		"OutflowMultiplier": 3,
 		"OverflowMultiplier": 1,
 		"InflowEffect": 0,
 		"OutflowEffect": 0,
@@ -67,7 +67,7 @@
 		"OverflowEffect": 0}
 		,
 		{"ChannelId": 6,
-		"InflowMultiplier": 1,
+		"InflowMultiplier": 3,
 		"OutflowMultiplier": 1,
 		"OverflowMultiplier": 1,
 		"InflowEffect": 0,

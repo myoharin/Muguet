@@ -36,7 +36,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
         }
 
         // * Derived Constructors
-        public ResonatorParameterCosmosia(int resonatorParameterID) // DONE but not tested yet, accepts ID as int
+        public ResonatorParameterCosmosia(int resonatorParameterID)
             : this(Path.Combine(ResonanceHelper.ParametersFolderPath, "cosmosia" ,$"{resonatorParameterID}.json")) {}
         public ResonatorParameterCosmosia(string paramaterPath) : base(AsterGenus.Cosmosia) {
             if (int.TryParse(paramaterPath.Split("\\").Last().Split(".")[0], out int result)) {
@@ -83,7 +83,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
                 returnParameter.Origin = Pitch.FromJson(originJsonString);
             }
             else {
-                returnParameter.Origin = new Pitch(256);
+                returnParameter.Origin = Pitch.Empty;
             }
 
             // * Channel Parameters

@@ -8,7 +8,7 @@ namespace SineVita.Muguet.Petal.ScalerPetal {
         Mixolydian,
         Aeolian,
         Locrian,
-        // * Other Diat
+        // * Other Ones
         WholeTone,
         HarmonicMinor,
         MelodicMinor,
@@ -23,7 +23,7 @@ namespace SineVita.Muguet.Petal.ScalerPetal {
         }
     
         // * Statics
-        public static List<ScaleType> DiatonicScales = new List<ScaleType> {
+        public static readonly IReadOnlyList<ScaleType> DiatonicScales = new List<ScaleType> {
             ScaleType.Ionian,
             ScaleType.Dorian,
             ScaleType.Phrygian,
@@ -31,6 +31,6 @@ namespace SineVita.Muguet.Petal.ScalerPetal {
             ScaleType.Mixolydian,
             ScaleType.Aeolian,
             ScaleType.Locrian
-        };
+        }.AsReadOnly();
     }
 }

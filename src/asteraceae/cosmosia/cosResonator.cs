@@ -371,14 +371,14 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         // * Constructor
         public CosmosiaChannel(Pulse pulse1, Pulse pulse2, bool isN2R) { // standard constructor
             IsN2R = isN2R;
-            Interval = new PitchInterval(pulse1.Pitch, pulse2.Pitch);
+            Interval = PitchInterval.CreateInterval(pulse1.Pitch, pulse2.Pitch);
             Intensity = ResonanceHelperCosmosia.CalculateIntervalIntensity(pulse1.Intensity, pulse2.Intensity);
             OutflowRate = 0;
             OverflowRate = 0;
         }
         public CosmosiaChannel(CosmosiaPulse pulse1, CosmosiaPulse pulse2) { // growth constructor
             IsN2R = pulse1.IsOrigin;
-            Interval = new PitchInterval(pulse1.Pitch, pulse2.Pitch);
+            Interval = PitchInterval.CreateInterval(pulse1.Pitch, pulse2.Pitch);
             Intensity = ResonanceHelperCosmosia.CalculateIntervalIntensity(pulse1.Intensity, pulse2.Intensity);
             OutflowRate = 0;
             OverflowRate = 0;

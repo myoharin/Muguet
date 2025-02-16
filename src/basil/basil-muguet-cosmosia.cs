@@ -56,39 +56,7 @@ namespace SineVita.Basil.Muguet.Cosmosia
             resonator.Process(0.05);
             AddBreaker_1();
 
-            // int decision;
-            // int index;
-            // for (int i = 0; i < 1000; i++) {
-            //     decision = r.Next(1, 10);
-            //     if (decision >=3 ) {
-            //         Log("Adding Pulse");
-            //         resonator.AddPulse(new Pulse(new MidiPitch(r.Next(24, 96)), (byte)r.Next(0, 64)));
-            //     } else if (decision == 1 && resonator.Lonicera.NodeCount-1 >= 1) {
-            //         Log("Deleting Pulse");
-            //         index = r.Next(1, resonator.Lonicera.NodeCount-1);
-            //         resonator.DeletePulse(resonator.Lonicera.Nodes[index].PulseID);
-            //     } else if (decision == 2 && resonator.Lonicera.NodeCount-1 >= 1) {
-            //         Log("Mutating Psulse");
-            //         index = r.Next(1, resonator.Lonicera.NodeCount-1);
-            //         resonator.MutatePulse(resonator.Lonicera.Nodes[index].PulseID, new Pulse(new MidiPitch(r.Next(24, 96)), (byte)r.Next(32, 128)));
-            //     }   
-            //     resonator.Process(0.05);
-
-            //     //LogPulseList(resonator);
-            //     LogResonatorIdyll(resonator);
-            //     //AddBreaker_1();
-
-            // }
-
-            // for (int frameRate = 10; frameRate < 200; frameRate++) {
-            //     resonator.Resonance = 0;
-            //     for (int frames = 0; frames < frameRate; frames++) {
-            //         resonator.Process((double)0.9/(double)frameRate);
-            //     }
-            //     LogResonatorIdyll(resonator); Console.Write($"FrameRate: {frameRate} | ");
-            // }
-
-            // LogResonatorParameter(resonator.Parameter);
+            LogResonatorParameter(resonator.Parameter);
         }
 
         // to string functionns
