@@ -72,9 +72,9 @@ namespace SineVita.Muguet {
             PitchType type = Enum.Parse<PitchType>(rootElement.GetProperty("Type").GetString() ?? "Float");
             switch (type) {
                 case PitchType.Float:
-                    return new FloatPitchInterval(rootElement.GetProperty("Frequency").GetDouble());
+                    return new FloatPitchInterval(rootElement.GetProperty("FrequencyRatio").GetDouble());
                 case PitchType.JustIntonation:
-                    var justFrequency = rootElement.GetProperty("JustFrequency");
+                    var justFrequency = rootElement.GetProperty("JustRatio");
                     return new JustIntonalPitchInterval(
                         (justFrequency.GetProperty("Numerator").GetInt32(), justFrequency.GetProperty("Denominator").GetInt32()),
                         rootElement.GetProperty("CentOffsets").GetInt32()
@@ -82,13 +82,13 @@ namespace SineVita.Muguet {
                 case PitchType.CustomeToneEuqal:
                     return new CustomTetPitchInterval(
                         rootElement.GetProperty("Base").GetInt32(),
-                        rootElement.GetProperty("PitchIndex").GetInt32(),
+                        rootElement.GetProperty("PitchIntervalIndex").GetInt32(),
                         type,
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
                 case PitchType.TwelveToneEqual:
                     return new MidiPitchInterval(
-                        rootElement.GetProperty("PitchIndex").GetInt32(),
+                        rootElement.GetProperty("PitchIntervalIndex").GetInt32(),
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
                 default:
@@ -101,6 +101,7 @@ namespace SineVita.Muguet {
 
         // * virtual methods
         public virtual double GetFrequencyRatio() {return 1;}
+        public virtual string ToJson() {return "";}
     }
 
     public class FloatPitchInterval : PitchInterval {
@@ -119,7 +120,15 @@ namespace SineVita.Muguet {
             set { _frequencyRatio *= Math.Pow(2, 1+value/1200);}
         }
         public override double GetFrequencyRatio() {return _frequencyRatio;}
-
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"FrequencyRatio\": {FrequencyRatio},",
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
+        }
     }
 
     public class JustIntonalPitchInterval : PitchInterval {
@@ -135,6 +144,15 @@ namespace SineVita.Muguet {
         // * Overrides
         public override double GetFrequencyRatio()  {
             return Math.Pow(2, CentOffsets / 1200.0) * JustRatio.Numerator / JustRatio.Denominator;
+        }
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"JustRatio\": {JustRatio},",
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
         }
     }
 
@@ -156,8 +174,19 @@ namespace SineVita.Muguet {
             CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / baseValue * 1200.0);
         }
 
+        // * Overrides
         public override double GetFrequencyRatio() {
             return Math.Pow(2, CentOffsets / 1200.0) * Math.Pow(2, PitchIntervalIndex / (double)Base);    
+        }
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"Base\": {Base},",
+                $"\"PitchIntervalIndex\": {PitchIntervalIndex},",
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
         }
 
         // * TET increment system
@@ -192,6 +221,16 @@ namespace SineVita.Muguet {
                 return ((MidiPitchInterval)interval).PitchIntervalIndex;
             }
             else {return ToPitchIndex(interval.FrequencyRatio, round);}
+        }
+    
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"PitchIntervalIndex\": {PitchIntervalIndex},",
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
         }
     }
 

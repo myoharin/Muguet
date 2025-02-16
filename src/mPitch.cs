@@ -71,6 +71,7 @@ namespace SineVita.Muguet {
 
         // * virtual methods
         public virtual double GetFrequency() { return 0; }
+        public virtual string ToJson() {return "";}
 
         // * General Methods
         public FloatPitch IncrementPitch(PitchInterval pitchInterval) {
@@ -96,6 +97,15 @@ namespace SineVita.Muguet {
             set { _frequency *= Math.Pow(2, 1+value/1200);}
         }
         public override double GetFrequency() {return _frequency;}
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"Frequency\": {_frequency},",
+                $"\"Type\": {Type.ToString()},",
+                $"\"CentOffsets\":{CentOffsets}",
+                "}"
+            );
+        }
     }
 
     public class JustIntonalPitch : Pitch {
@@ -112,6 +122,16 @@ namespace SineVita.Muguet {
         public override double GetFrequency() {
             return (float)Math.Pow(2, CentOffsets / 1200.0) * JustFrequency.Numerator / JustFrequency.Denominator;
         }
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"JustFrequency\": {{ \"Numerator\": {JustFrequency.Numerator}, \"Denominator\": {JustFrequency.Denominator} }},",
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
+        }
+    
     }
 
     public class CustomTetPitch : Pitch {
@@ -138,11 +158,23 @@ namespace SineVita.Muguet {
             else {PitchIndex = (int)Math.Ceiling(cacheIndex);}
             CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / baseValue * 1200.0);
         }
-
+        // * Overrides
         public override double GetFrequency() {
             return (float)Math.Pow(2, CentOffsets / 1200.0) * TuningFrequency * (float)Math.Pow(2, (PitchIndex - TuningIndex) / (double)Base);
         }
-            
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"Base\": {Base},",
+                $"\"TuningIndex\": {TuningIndex},",
+                $"\"TuningFrequency\": {TuningFrequency},",
+                $"\"PitchIndex\": {PitchIndex},",
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
+        }
+
         // * TET increment system
         public void Up(int upBy = 1) {
             PitchIndex += upBy;
@@ -174,6 +206,17 @@ namespace SineVita.Muguet {
         }
         public static float ToPitchIndex(double frequency, bool round = true) {
             return ToPitchIndex(frequency, 12, 69, 440, round);
+        }
+    
+        // * Overrides
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"PitchIndex\": {PitchIndex},",
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
         }
     }
 
