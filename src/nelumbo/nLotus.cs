@@ -27,9 +27,9 @@ namespace SineVita.Muguet.Nelumbo {
     
     
     
-    public class LotusDuet {
+    public class LotusDyad {
         // * Variables
-        public PitchInterval Interval { get; set; }
+        public PitchInterval Interval { get; set; }            // root - bottom | bloom - top
 
         // * Derived Gets
         public bool IsFifth { get {
@@ -44,15 +44,15 @@ namespace SineVita.Muguet.Nelumbo {
         public bool IsUnison { get {
             return Interval.ToMidiIndex == 0;
         } }
-        
+
         // * Contructors
-        public LotusDuet(PitchInterval interval) {
+        public LotusDyad(PitchInterval interval) {
             Interval = interval;
         }
-        public LotusDuet(Pitch pitch1, Pitch pitch2) {
+        public LotusDyad(Pitch pitch1, Pitch pitch2) {
             Interval = PitchInterval.CreateInterval(pitch1, pitch2);
         }
-        public LotusDuet(Lotus lotus1, Lotus lotus2) {
+        public LotusDyad(Lotus lotus1, Lotus lotus2) {
             Interval = PitchInterval.CreateInterval(lotus1.Pitch, lotus2.Pitch);
         }
     }

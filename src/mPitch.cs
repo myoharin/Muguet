@@ -193,22 +193,46 @@ namespace SineVita.Muguet {
         }
     }
 
-    public class MidiPitch : CustomTetPitch {
+    public class MidiPitch : Pitch {
+        // * Constants
+        public const int Base = 12;
+        public const double TuningFrequency = 440;
+        public const int TuningIndex = 69;
+
+        // * Variable
+        public int PitchIndex { get; set; }
+
         public MidiPitch(int midiValue, int centOffsets = 0)
-            : base(12, 69, 440, midiValue, PitchType.TwelveToneEqual, centOffsets) {}
+            : base(PitchType.TwelveToneEqual, centOffsets) {PitchIndex = midiValue;}
         public MidiPitch(float frequency)
-            : base(frequency, 12, 69, 440, PitchType.TwelveToneEqual)
-         {
+            : base(PitchType.TwelveToneEqual) {
             double cacheIndex = Base * Math.Log2(frequency / TuningFrequency) + TuningIndex;
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIndex = (int)Math.Floor(cacheIndex);}            
             else {PitchIndex = (int)Math.Ceiling(cacheIndex);}
             CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / Base * 1200.0);
         }
-        public static float ToPitchIndex(double frequency, bool round = true) {
-            return ToPitchIndex(frequency, 12, 69, 440, round);
+
+        // * To Pitch Index
+        public float ToIndex(double? frequency = null, bool round = true) {
+            return ToIndex(frequency??Frequency, round);
         }
-    
+        public static float ToIndex(double frequency, bool round = true) {
+            if (round) {return (float)Math.Round(Base * Math.Log2(frequency / TuningFrequency) + TuningIndex);}
+            else {return (float)(Base * Math.Log2(frequency / TuningFrequency) + TuningIndex);}
+        }
+
+        // * TET increment system
+        public void Up(int upBy = 1) {
+            PitchIndex += upBy;
+        }
+        public void Down(int downBy = 1) {
+            PitchIndex -= downBy;
+        }
+   
         // * Overrides
+        public override double GetFrequency() {
+            return (float)Math.Pow(2, CentOffsets / 1200.0) * TuningFrequency * (float)Math.Pow(2, (PitchIndex - TuningIndex) / (double)Base);
+        }
         public override string ToJson() {
             return string.Concat(
                 "{",

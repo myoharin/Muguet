@@ -10,8 +10,8 @@ namespace SineVita.Muguet.Nelumbo {
 
         // * Derived Gets
         public IReadOnlyList<Lotus> Lotuses { get {return _lotuses;} }
-        public IReadOnlyList<LotusDuet> PitchIntervals { get {return ToLonicera().Links;} }
-        public IReadOnlyList<LotusDuet> LotusDuets { get {return ToLonicera().Links;} }
+        public IReadOnlyList<LotusDyad> PitchIntervals { get {return ToLonicera().Links;} }
+        public IReadOnlyList<LotusDyad> LotusDuets { get {return ToLonicera().Links;} }
     
         // * Constructor
         public Lantern() {
@@ -30,8 +30,8 @@ namespace SineVita.Muguet.Nelumbo {
         }
 
         // * Lonicera
-        public Lonicera<Lotus, LotusDuet> ToLonicera(bool grow = true) {
-            return new Lonicera<Lotus, LotusDuet>(_growthFunction, grow, _lotuses);
+        public Lonicera<Lotus, LotusDyad> ToLonicera(bool grow = true) {
+            return new Lonicera<Lotus, LotusDyad>(_growthFunction, grow, _lotuses);
         }
         
         // * Lotus Property Blooms
@@ -42,8 +42,8 @@ namespace SineVita.Muguet.Nelumbo {
         
         
         // * Statics
-        private static Func<Lotus, Lotus, LotusDuet> _growthFunction = (pitch1, pitch2) => {
-            return new LotusDuet(pitch1, pitch2);
+        private static Func<Lotus, Lotus, LotusDyad> _growthFunction = (pitch1, pitch2) => {
+            return new LotusDyad(pitch1, pitch2);
         };
 
         // * Lantern Properties
@@ -64,7 +64,7 @@ namespace SineVita.Muguet.Nelumbo {
             var midiQuantized =  new List<int>();
             var midiFifthCircle =  new List<int>();
             foreach (var lotus in Lotuses) {
-                midiQuantized.Add((int)MidiPitch.ToPitchIndex(lotus.Pitch.Frequency));
+                midiQuantized.Add((int)MidiPitch.ToIndex(lotus.Pitch.Frequency));
             }
             midiQuantized.Sort();
             for (int i = 0; i < midiQuantized.Count; i++) {
@@ -91,32 +91,32 @@ namespace SineVita.Muguet.Nelumbo {
 
     }
     
-    public class LanternDuet { // Used to quantitate the transition between two chords
+    public class LanternThread { // Used to quantitate the transition between two chords
         // * Flames
-        public List<List<LotusFlame>> Flames { get; set; }
+        public List<List<LotusThread>> Flames { get; set; }
 
         // * Duet Properties
 
         // * Constructor
-        public LanternDuet(Lantern masterLantern, Lantern slaveLantern) {
-            Flames = new List<List<LotusFlame>>();
+        public LanternThread(Lantern masterLantern, Lantern slaveLantern) {
+            Flames = new List<List<LotusThread>>();
             for (int i = 0; i < slaveLantern.Lotuses.Count; i++) {
-                Flames.Add(new List<LotusFlame>());
+                Flames.Add(new List<LotusThread>());
                 for (int j = 0; j < masterLantern.Lotuses.Count; j++) {
                     var masterLotus = masterLantern.Lotuses[j]; 
                     var slaveLotus = slaveLantern.Lotuses[i];
-                    Flames[i].Add(new LotusFlame(masterLotus, slaveLotus));
+                    Flames[i].Add(new LotusThread(masterLotus, slaveLotus));
                 }
             }
         }
 
     }
-    public class LotusFlame {
+    public class LotusThread {
         public PitchInterval Interval { get; set; }
     
         // * Constructors
 
-        public LotusFlame(Lotus masterLotus, Lotus slaveLotus) { // ! NOT DONE
+        public LotusThread(Lotus masterLotus, Lotus slaveLotus) { // ! NOT DONE
             Interval = PitchInterval.CreateInterval(masterLotus.Pitch, slaveLotus.Pitch, false);
 
         }

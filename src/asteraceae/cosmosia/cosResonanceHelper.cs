@@ -57,7 +57,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         // * From Interval Methods
         public static MEDDuo IntervalToMEDDuo(PitchInterval interval, bool isN2R, byte intensity, int resonatorParameterID){ // DONE - return list of possible channels(channelID, grade) or List(channelID, degree)
             int calculateDegree(int num, int Base) {return (int)Math.Floor(num / (float)Base);}
-            int midiIndex = (int)MidiPitchInterval.ToPitchIndex(interval);
+            int midiIndex = (int)MidiPitchInterval.ToIndex(interval);
             if (midiIndex < 0) {return new MEDDuo();}
 
             // working capital
@@ -129,7 +129,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
  
         }
         public static CosmosiaChannelId IntervalToChannelID(PitchInterval interval, bool isN2R) {
-            int midiIndex = (int)MidiPitchInterval.ToPitchIndex(interval);
+            int midiIndex = (int)MidiPitchInterval.ToIndex(interval);
             // data validation
             if (midiIndex < 0) {return CosmosiaChannelId.Null;}
             int calculateDegree(int num, int Base) {
@@ -178,7 +178,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia {
         }
         public static bool IntervalIsStructual(PitchInterval interval) {
             // convert
-            int midiIndex = (int)MidiPitchInterval.ToPitchIndex(interval);
+            int midiIndex = (int)MidiPitchInterval.ToIndex(interval);
             if (midiIndex >= 24) {return true;}
             return _intervalIsStructual.Contains(midiIndex);
         }

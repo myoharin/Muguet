@@ -37,7 +37,7 @@ namespace SineVita.Muguet.Asteraceae.Cosmosia
 
         // * Derived Constructors
         public ResonatorParameterCosmosia(int resonatorParameterID)
-            : this(Path.Combine(ResonanceHelper.ParametersFolderPath, "cosmosia" ,$"{resonatorParameterID}.json")) {}
+            : this(Path.Combine(ResonanceHelper.ParametersFolderPath ?? "", "cosmosia" ,$"{resonatorParameterID}.json")) {}
         public ResonatorParameterCosmosia(string paramaterPath) : base(AsterGenus.Cosmosia) {
             if (int.TryParse(paramaterPath.Split("\\").Last().Split(".")[0], out int result)) {
                 ResonatorParameterId = result;

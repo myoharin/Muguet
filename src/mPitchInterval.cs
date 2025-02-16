@@ -208,21 +208,34 @@ namespace SineVita.Muguet {
 
     }
 
-    public class MidiPitchInterval : CustomTetPitchInterval {
+    public class MidiPitchInterval : PitchInterval {
+        public const int Base = 12;
+        public int PitchIntervalIndex { get; set; }
         public MidiPitchInterval(int midiValue, int centOffsets = 0)
-            : base(12, midiValue, PitchType.TwelveToneEqual, centOffsets) {}
-        public MidiPitchInterval(double frequencyRatio) : base (12, frequencyRatio) {}
-        public new static float ToPitchIndex(double frequencyRatio, bool round = true) {
+            : base(PitchType.TwelveToneEqual, centOffsets) {PitchIntervalIndex = midiValue;}
+        public MidiPitchInterval(double frequencyRatio, bool round = true) : base (PitchType.TwelveToneEqual, 0) {
+            double cacheIndex = Base * Math.Log2(frequencyRatio);
+            if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIntervalIndex = (int)Math.Floor(cacheIndex);}            
+            else {PitchIntervalIndex = (int)Math.Ceiling(cacheIndex);}
+            CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / Base * 1200.0);
+        }
+
+        // * ToIndex
+        public static float ToIndex(double frequencyRatio, bool round = true) {
             if (round) {return (float)Math.Round(12 * Math.Log2(frequencyRatio));}
             else {return (float)(12 * Math.Log2(frequencyRatio));}
         }
-        public static float ToPitchIndex(PitchInterval interval, bool round = true) {
+        public static float ToIndex(PitchInterval interval, bool round = true) {
             if (interval.Type == PitchType.TwelveToneEqual) {
                 return ((MidiPitchInterval)interval).PitchIntervalIndex;
             }
-            else {return ToPitchIndex(interval.FrequencyRatio, round);}
+            else {return ToIndex(interval.FrequencyRatio, round);}
         }
-    
+
+        // * Overrides
+        public override double GetFrequencyRatio() {
+            return Math.Pow(2, CentOffsets/1200d + PitchIntervalIndex/12d);
+        }
         public override string ToJson() {
             return string.Concat(
                 "{",
