@@ -4,9 +4,6 @@ using SineVita.Muguet.Asteraceae;
 using System.Text.Json;
 
 namespace SineVita.Muguet {
-    public enum MidiPitchName {
-        C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B
-    }
     public enum PitchType {
         JustIntonation,
         CustomeToneEuqal,
@@ -14,7 +11,7 @@ namespace SineVita.Muguet {
         Float
     }
 
-    public abstract class Pitch {
+    public abstract class Pitch : IComparable, ICloneable {
         // * Properties
         public PitchType Type { get; set; }
         public int CentOffsets { get; set; }
@@ -24,6 +21,7 @@ namespace SineVita.Muguet {
         public double Frequency { get { return GetFrequency(); } }
 
         // * statics
+        public static FloatPitch New(double frequency) {return new FloatPitch(frequency);}
         public static Pitch Empty { get { return new FloatPitch(256f); } }
         private static readonly string[] noteNames = new string[] {
             "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
@@ -80,7 +78,49 @@ namespace SineVita.Muguet {
         public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false, PitchType targetType = PitchType.Float) {
             return PitchInterval.CreateInterval(this, pitch2, absoluteInterval, targetType);
         }
-    }
+    
+        // * Interfaces
+        public int CompareTo(object? obj) {
+            if (obj == null) return 1; // Null is considered less than any object
+            if (obj is Pitch otherPitch) {
+                return Frequency.CompareTo(otherPitch.Frequency); // Compare by Frequency
+            }
+            throw new ArgumentException("Object is not a Pitch");
+        }
+        public object Clone() {
+            return New(Frequency);
+        }
+     
+        public override bool Equals(object? obj) {
+            if (obj == null || GetType() != obj.GetType()) return false;
+            Pitch other = (Pitch)obj;
+            return Math.Abs(Frequency - other.Frequency) < 0.0001;
+        }
+        public override int GetHashCode() {
+            return Frequency.GetHashCode();
+        }
+        public static bool operator ==(Pitch left, Pitch right) {
+            if (left is null) return right is null;
+            return left.Equals(right);
+        }
+        public static bool operator !=(Pitch left, Pitch right) {
+            return !(left == right);
+        }
+        public static bool operator <(Pitch left, Pitch right) {
+            return left is not null && left.CompareTo(right) < 0;
+        }
+        public static bool operator <=(Pitch left, Pitch right) {
+            return left is null || left.CompareTo(right) <= 0;
+        }
+        public static bool operator >(Pitch left, Pitch right) {
+            return left is not null && left.CompareTo(right) > 0;
+        }
+        public static bool operator >=(Pitch left, Pitch right) {
+            return left is null ? right is null : left.CompareTo(right) >= 0;
+        }
+        
+     
+     }
 
     public class FloatPitch : Pitch {
         // * Properties

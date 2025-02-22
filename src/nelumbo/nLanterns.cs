@@ -3,42 +3,121 @@ using System.Numerics;
 using System.Collections.Generic;
 using SineVita.Lonicera;
 using SineVita.Muguet.Petal.ScalerPetal;
+using System.Security.Cryptography.X509Certificates;
 namespace SineVita.Muguet.Nelumbo {
     public class Lantern {
         // * Variables
-        private List<Lotus> _lotuses { get; set; }
+        private Lonicera<Lotus,LotusDyad> _lonicera { get; set; }
 
         // * Derived Gets
-        public IReadOnlyList<Lotus> Lotuses { get {return _lotuses;} }
-        public IReadOnlyList<LotusDyad> PitchIntervals { get {return ToLonicera().Links;} }
-        public IReadOnlyList<LotusDyad> LotusDuets { get {return ToLonicera().Links;} }
+        public IReadOnlyList<Lotus> Lotuses { get {return _lonicera.Nodes;} }
+        public IReadOnlyList<LotusDyad> LotusDyads { get {return _lonicera.Links;} }
     
         // * Constructor
         public Lantern() {
-            _lotuses = new List<Lotus>();
+            _lonicera = new Lonicera<Lotus, LotusDyad>(_growthFunction, true);
         }
         public Lantern(List<Lotus> lotuses, bool bloom = true) {
-            _lotuses = lotuses;
+            _lonicera = new Lonicera<Lotus, LotusDyad>(_growthFunction, true);
+            foreach (var lotus in lotuses) {
+                Add(lotus.Pitch, false);
+            }
             if (bloom) {Bloom();}
+            
         }
         public Lantern(List<Pitch> pitches, bool bloom = true) {
-            _lotuses = new List<Lotus>();
+            _lonicera = new Lonicera<Lotus, LotusDyad>(_growthFunction, true);
             foreach (var pitch in pitches) {
-                _lotuses.Add(new Lotus(pitch));
+                Add(pitch, false);
             }
             if (bloom) {Bloom();}
         }
 
-        // * Lonicera
-        public Lonicera<Lotus, LotusDyad> ToLonicera(bool grow = true) {
-            return new Lonicera<Lotus, LotusDyad>(_growthFunction, grow, _lotuses);
+        // * Lonicera Add Remove Delete
+        public void Remove(Lotus lotus) {
+            _lonicera.Remove(lotus);
         }
-        
-        // * Lotus Property Blooms
-        public void Bloom() { // ! NOT DONE
-            // main function to update the individual properties of the lotuses
+        public void RemoveAt(int i) {
+            _lonicera.RemoveAt(i);
+        }
+        public void Add(Pitch pitch, bool bloom = true) {
+            // find index to insert.
+            int index = _lonicera.NodeCount;
+            for (int i = 0; i < _lonicera.NodeCount; i++) {
+                if (_lonicera.Nodes[i].Pitch > pitch) {
+                    index = i;
+                }
+            }
+            
+            // Add in lonicera
+            Lotus uproot(Lotus l) {
+                l.IsRoot = false;
+                return l;
+            }
+            if (index == 0) {
+                _lonicera.MutateNode(0, uproot);          
+            }
+            _lonicera.Insert(index, new Lotus(pitch, index == 0));
+
+            if (bloom) {Bloom();}
+        }
+
+        // * Bloom
+        public void Bloom() {
+            _lonicera.Grow(); // all dyads generated
+
+            // * Working Captial
+            List<Lotus> otherLotuses;
+            List<LotusDyad> otherDyads;
+            Lotus FertilizeWithBuds(Lotus l) {
+                l.FertilizeWithBuds(otherLotuses, otherDyads);
+                return l;
+            }
+            Lotus FertilizeWithFlowers(Lotus l) {
+                l.FertilizeWithFlowers(otherLotuses, otherDyads);
+                return l;
+            }
+
+            void CrossBudFertilization(int i) {
+                otherLotuses = new List<Lotus>(_lonicera.Nodes);
+                otherLotuses.RemoveAt(i);
+
+                otherDyads = new List<LotusDyad>();
+                for (int j = 0; j < _lonicera.NodeCount; j++) {
+                    if (i != j) {
+                        otherDyads.Add(_lonicera.GetValue(i, j));
+                    }
+                }
+                _lonicera.MutateNode(i, FertilizeWithBuds);
+            }
+            void CrossFlowerFertilization(int i) {
+                otherLotuses = new List<Lotus>(_lonicera.Nodes);
+                otherLotuses.RemoveAt(i);
+
+                otherDyads = new List<LotusDyad>();
+                for (int j = 0; j < _lonicera.NodeCount; j++) {
+                    if (i != j) {
+                        otherDyads.Add(_lonicera.GetValue(i, j));
+                    }
+                }
+                _lonicera.MutateNode(i, FertilizeWithFlowers);
+            }
+
+            // * Fertilize with Buds to flower
+            for (int i = 0; i < _lonicera.NodeCount; i++) {CrossBudFertilization(i);}
+            _lonicera.Grow();
+            // * Fertilize with Flowers to Fruits
+            for (int i = 0; i < _lonicera.NodeCount; i++) {CrossFlowerFertilization(i);}
+            _lonicera.Grow();
+            
+
 
         }
+
+
+
+
+        
         
         
         // * Statics
@@ -47,6 +126,34 @@ namespace SineVita.Muguet.Nelumbo {
         };
 
         // * Lantern Properties
+        public List<Pitch> GetStructualTonics() {
+            var returnList = new List<Pitch>();
+            foreach (var lotus in _lonicera.Nodes) {
+                if (lotus.IsStructualTonic) {
+                    returnList.Add(lotus.Pitch);
+                }
+            }
+            return returnList;
+        }
+        public List<Pitch> GetStructualMediants() {
+            var returnList = new List<Pitch>();
+            foreach (var lotus in _lonicera.Nodes) {
+                if (lotus.IsStructualMediant) {
+                    returnList.Add(lotus.Pitch);
+                }
+            }
+            return returnList;
+        }
+        public List<Pitch> GetStructualDominants() {
+            var returnList = new List<Pitch>();
+            foreach (var lotus in _lonicera.Nodes) {
+                if (lotus.IsStructualDominant) {
+                    returnList.Add(lotus.Pitch);
+                }
+            }
+            return returnList;
+        }
+
         public List<MidiPitchName> GetDiatonicScales(ScaleType type = ScaleType.Ionian) {
             if (!Scale.DiatonicScales.Contains(type)) {throw new NotImplementedException();}
 
@@ -87,6 +194,7 @@ namespace SineVita.Muguet.Nelumbo {
 
             return returnList;
         }
+        
         
 
     }
