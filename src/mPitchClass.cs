@@ -1,10 +1,10 @@
 using System;
-namespace SineVita.Muguet {
-    public class UnitPitch {
+namespace SineVita.Muguet { // ! NOTE DONE
+    public class PitchClass {
         private Pitch _pitch;
         public Pitch Pitch { get {return _pitch;} }
         
-        public UnitPitch(Pitch p) {
+        public PitchClass(Pitch p) {
             _pitch = p;
         }
     }

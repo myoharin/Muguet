@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SineVita.Muguet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38c40a7be7321d17b50df1be2ae44a6d639a7168")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dc9f9079b373ff8d002273ebb952dc4dc791befa")]
 [assembly: System.Reflection.AssemblyProductAttribute("SineVita.Muguet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SineVita.Muguet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
