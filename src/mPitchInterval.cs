@@ -1,26 +1,34 @@
+using System.Security.Cryptography;
 using System.Text.Json;
 
 namespace SineVita.Muguet {
 
-    public abstract class PitchInterval {
+    public abstract class PitchInterval : IComparable, ICloneable{
         // * Properties
         public PitchType Type { get; set; }
         public int CentOffsets { get; set; }
 
         // * Derived Gets
         public bool IsNegative { get {return FrequencyRatio < 1;} }
+        public bool IsPositive { get {return FrequencyRatio > 1;} }
+        public bool IsUnison { get {return (FrequencyRatio - 1.0) < 0.001;} }
+        
         public double FrequencyRatio { get {return GetFrequencyRatio();} }
+        public int ToMidiIndex { get {
+            return (int)MidiPitchInterval.ToIndex(this);
+        } }
+        public float ToMidiValue { get {
+            return MidiPitchInterval.ToIndex(this, false);
+        } }
+            // ? Harmony Helper Derives
         public string IntervalName { get {
             return HarmonyHelper.HtzToIntervalName(FrequencyRatio);
         } }
-        public float ToMidiValue { get {
-            return HarmonyHelper.HtzToMidiInterval(FrequencyRatio, 3);
-        } }
-        public int ToMidiIndex { get {
-            return (int)HarmonyHelper.HtzToMidiInterval(FrequencyRatio);
-        } }
-
+        
         // * Statics
+        public static FloatPitch New(double frequencyRatio) {
+            return new FloatPitch(frequencyRatio);
+        }
         public static PitchInterval Empty { get {return new FloatPitchInterval(1.0);} }
         private static readonly string[] intervalNames = new string[] {
             // Populate with actual interval names
@@ -32,21 +40,38 @@ namespace SineVita.Muguet {
         };
         public static string[] IntervalNames {get { return intervalNames; }}
 
-        // ! NOT DONE
+        public static PitchInterval Octave { get {
+            return new JustIntonalPitchInterval((2,1));
+        } }
+        public static PitchInterval Perfect5th { get {
+            return new JustIntonalPitchInterval((3,2));
+        } }
+        public static PitchInterval Perfect4th { get {
+            return new JustIntonalPitchInterval((4,3));
+        } }
+        public static PitchInterval PerfectFifth { get {
+            return new JustIntonalPitchInterval((3,2));
+        } }
+        public static PitchInterval PerfectFourth { get {
+            return new JustIntonalPitchInterval((4,3));
+        } }
+        public static PitchInterval Unison { get {return Empty;}}
+
+        // ! NOT DONE - Override below
         public static FloatPitchInterval CreateInterval(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false, PitchType targetType = PitchType.Float) {
             Pitch higherPitch, lowerPitch;
-            if (absoluteInterval) {
-            if (basePitch.Frequency > upperPitch.Frequency) {
-                higherPitch = basePitch;
-                lowerPitch = upperPitch;
-            }
-            else {
-                higherPitch = upperPitch;
-                lowerPitch = basePitch;
-            }
+            if (absoluteInterval) { // * Absolute value of the interval
+                if (basePitch.Frequency > upperPitch.Frequency) {
+                    higherPitch = basePitch;
+                    lowerPitch = upperPitch;
+                }
+                else {
+                    higherPitch = upperPitch;
+                    lowerPitch = basePitch;
+                }
             } else {
-            lowerPitch = basePitch;
-            higherPitch = upperPitch;
+                lowerPitch = basePitch;
+                higherPitch = upperPitch;
             }
             
             // working capital
@@ -63,6 +88,14 @@ namespace SineVita.Muguet {
             default:
                 throw new ArgumentException("Unsupported PitchType");
             }
+        }
+
+        // * Inversion | other Abstractions
+        public abstract void Invert();
+        public PitchInterval Inverted() {
+            var returnInterval = this;
+            returnInterval.Invert();
+            return returnInterval;
         }
 
         // * FromJson
@@ -102,10 +135,50 @@ namespace SineVita.Muguet {
         // * virtual methods
         public virtual double GetFrequencyRatio() {return 1;}
         public virtual string ToJson() {return "";}
+
+        // * Interfaces
+        public int CompareTo(object? obj) {
+            if (obj == null) return 1; // Null is considered less than any object
+            if (obj is PitchInterval otherPitch) {
+                return FrequencyRatio.CompareTo(otherPitch.FrequencyRatio); // Compare by Frequency
+            }
+            throw new ArgumentException("Object is not a Pitch");
+        }
+        public object Clone() {
+            var newThis = this;
+            return newThis;
+        }
+            
+        public override bool Equals(object? obj) {
+            if (obj == null || GetType() != obj.GetType()) return false;
+            PitchInterval other = (PitchInterval)obj;
+            return Math.Abs(FrequencyRatio - other.FrequencyRatio) < 0.0001;
+        }
+        public override int GetHashCode() {
+            return FrequencyRatio.GetHashCode();
+        }
+        public static bool operator ==(PitchInterval? left, PitchInterval? right) {
+            if (left is null) return right is null;
+            return left.Equals(right);
+        }
+        public static bool operator !=(PitchInterval left, PitchInterval right) {
+            return !(left == right);
+        }
+        public static bool operator <(PitchInterval left, PitchInterval right) {
+            return left is not null && left.CompareTo(right) < 0;
+        }
+        public static bool operator <=(PitchInterval left, PitchInterval right) {
+            return left is null || left.CompareTo(right) <= 0;
+        }
+        public static bool operator >(PitchInterval left, PitchInterval right) {
+            return left is not null && left.CompareTo(right) > 0;
+        }
+        public static bool operator >=(PitchInterval left, PitchInterval right) {
+            return left is null ? right is null : left.CompareTo(right) >= 0;
+        }
     }
 
     public class FloatPitchInterval : PitchInterval {
-
         // * Properties
         private double _frequencyRatio;
 
@@ -115,6 +188,9 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
+        public override void Invert() {
+            _frequencyRatio = 1/_frequencyRatio;
+        }
         public new int CentOffsets {
             get { return 0; }
             set { _frequencyRatio *= Math.Pow(2, 1+value/1200);}
@@ -142,6 +218,9 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
+        public override void Invert() {
+            JustRatio = (JustRatio.Denominator, JustRatio.Numerator);
+        }
         public override double GetFrequencyRatio()  {
             return Math.Pow(2, CentOffsets / 1200.0) * JustRatio.Numerator / JustRatio.Denominator;
         }
@@ -175,6 +254,9 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
+        public override void Invert() {
+            PitchIntervalIndex *= -1;
+        }
         public override double GetFrequencyRatio() {
             return Math.Pow(2, CentOffsets / 1200.0) * Math.Pow(2, PitchIntervalIndex / (double)Base);    
         }
@@ -233,6 +315,9 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
+        public override void Invert() {
+            PitchIntervalIndex *= -1;
+        }
         public override double GetFrequencyRatio() {
             return Math.Pow(2, CentOffsets/1200d + PitchIntervalIndex/12d);
         }

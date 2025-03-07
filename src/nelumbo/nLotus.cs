@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.VisualBasic;
+using SineVita.Lonicera;
 
 namespace SineVita.Muguet.Nelumbo {
     public enum LotusStage {
@@ -40,7 +41,9 @@ namespace SineVita.Muguet.Nelumbo {
 
         // * Methods 
 
-        private void validateFertilizers(List<Lotus> lotuses, List<LotusDyad> dyads, LotusStage stage) {
+        private void validateLanternFertilizer(Lantern lantern, LotusStage stage) {
+            List<Lotus> lotuses = new List<Lotus>(lantern.Lotuses);
+            List<LotusDyad> dyads = new List<LotusDyad>(lantern.LotusDyads);
             // * Data Validation
             if (lotuses.Count != dyads.Count ) {
                 throw new ArgumentException("Lists Length do not match.");
@@ -50,6 +53,22 @@ namespace SineVita.Muguet.Nelumbo {
                     throw new ArgumentException($"Fertilizer aren't {stage} at index {i}.");
                 }
             }
+        }
+
+        private static List<Lotus> extractRelatedLotusFromLantern(Lantern lantern, int index) {
+            var lotuses = new List<Lotus>(lantern.Lotuses);
+            lotuses.RemoveAt(index);
+            return lotuses;
+        }
+        private static List<LotusDyad> extractRelatedDyadsFromLantern(Lantern lantern, int index) {
+            var dyads = new List<LotusDyad>();
+            for (int j = 0; j < lantern.Lotuses.Count; j++) {
+                if (index != j) {
+                    dyads.Add(lantern.GetDyad(index, j));
+                    // _lonicera.GetValue(i, j)
+                }
+            }
+            return dyads;
         }
 
         public void Replant(bool isRoot) {
@@ -64,8 +83,12 @@ namespace SineVita.Muguet.Nelumbo {
             IsStructualMediant = false;
 
         }
-        public void FertilizeWithBuds(List<Lotus> lotuses, List<LotusDyad> dyads) {
-            validateFertilizers(lotuses, dyads, LotusStage.Budding);
+        public void FertilizeWithBuddingLantern(Lantern lantern, int lotusIndex) {
+            validateLanternFertilizer(lantern, LotusStage.Budding);
+            List<Lotus> lotuses = extractRelatedLotusFromLantern(lantern, lotusIndex);
+            List<LotusDyad> dyads = extractRelatedDyadsFromLantern(lantern, lotusIndex);
+
+
             if (Stage == LotusStage.Budding) {Stage = LotusStage.Flowering;}
 
             var stressTones = new List<int>() {3, 4, 8, 9};
@@ -85,12 +108,15 @@ namespace SineVita.Muguet.Nelumbo {
 
             IsInStressChain = stressCount >= 2;
         }
-        public void FertilizeWithFlowers(List<Lotus> lotuses, List<LotusDyad> dyads) {
-            validateFertilizers(lotuses, dyads, LotusStage.Flowering);
-
+        public void FertilizeWithFloweringLantern(Lantern lantern, int lotusIndex) {
             // * Stage Check
-            if ((int)Stage < (int)LotusStage.Flowering) {FertilizeWithBuds(lotuses, dyads);}
+            if ((int)Stage < (int)LotusStage.Flowering) {FertilizeWithBuddingLantern(lantern, lotusIndex);}
             if (Stage == LotusStage.Flowering) {Stage = LotusStage.Fruiting;}
+
+            // * Validation
+            validateLanternFertilizer(lantern, LotusStage.Budding);
+            List<Lotus> lotuses = extractRelatedLotusFromLantern(lantern, lotusIndex);
+            List<LotusDyad> dyads = extractRelatedDyadsFromLantern(lantern, lotusIndex);
 
             // * Actual Evaluation
             var stressTones = new List<int>() {3, 4, 8, 9};
@@ -114,28 +140,24 @@ namespace SineVita.Muguet.Nelumbo {
             }
 
         }
-        public void FertilizeWithFruits(List<Lotus> lotuses, List<LotusDyad> dyads) { // ! NOT NEEDED
-            validateFertilizers(lotuses, dyads, LotusStage.Fruiting);
-
+        public void FertilizeWithFruitingLantern(Lantern lantern, int lotusIndex) { // ! NOT NEEDED?
             // * Stage Check
-            if ((int)Stage < (int)LotusStage.Fruiting) {FertilizeWithBuds(lotuses, dyads);}
+            if ((int)Stage < (int)LotusStage.Fruiting) {FertilizeWithBuddingLantern(lantern, lotusIndex);}
             if (Stage == LotusStage.Fruiting) {Stage = LotusStage.Fruiting;}
             
             // * Actual Evaluation
+            validateLanternFertilizer(lantern, LotusStage.Fruiting);
+            List<Lotus> lotuses = extractRelatedLotusFromLantern(lantern, lotusIndex);
+            List<LotusDyad> dyads = extractRelatedDyadsFromLantern(lantern, lotusIndex);
             
         }
-        
-        
-        // ! CHANGE all of this into "FertilizeWith[XX Lantern]"
-        
         
         public void FertilizeWithExternalLantern(Lantern lantern) { // ! NOT DONE
-            
+            // * Actual Evaluation
+            validateLanternFertilizer(lantern, LotusStage.Fruiting);
+            List<Lotus> lotuses = new List<Lotus>(lantern.Lotuses);
+            List<LotusDyad> dyads = new List<LotusDyad>(lantern.LotusDyads);
         }
-        
-
-        
-
     }
     
     
@@ -161,6 +183,7 @@ namespace SineVita.Muguet.Nelumbo {
 
         // * Contructors
         public LotusDyad(Lotus lotus1, Lotus lotus2) {
+            // * Determine Dyad Stage
             Interval = PitchInterval.CreateInterval(lotus1.Pitch, lotus2.Pitch);
             if ((int)lotus1.Stage >= 2 && (int)lotus2.Stage >= 2) {Stage = LotusStage.Fruiting;}
             else if ((int)lotus1.Stage >= 1 && (int)lotus2.Stage >= 1) {Stage = LotusStage.Flowering;}

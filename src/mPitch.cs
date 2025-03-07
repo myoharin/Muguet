@@ -75,6 +75,9 @@ namespace SineVita.Muguet {
         public FloatPitch IncrementPitch(PitchInterval pitchInterval) {
             return new FloatPitch((float)(Frequency * pitchInterval.FrequencyRatio));
         }
+        public FloatPitch Decrement(PitchInterval pitchInterval) {
+            return new FloatPitch((float)(Frequency / pitchInterval.FrequencyRatio));
+        }
         public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false, PitchType targetType = PitchType.Float) {
             return PitchInterval.CreateInterval(this, pitch2, absoluteInterval, targetType);
         }
@@ -87,7 +90,7 @@ namespace SineVita.Muguet {
             }
             throw new ArgumentException("Object is not a Pitch");
         }
-        public object Clone() {
+        public object Clone() { // ! NOT DONE, add clone for all subclasses
             return New(Frequency);
         }
      

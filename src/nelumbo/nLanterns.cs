@@ -12,6 +12,9 @@ namespace SineVita.Muguet.Nelumbo {
         // * Derived Gets
         public IReadOnlyList<Lotus> Lotuses { get {return _lonicera.Nodes;} }
         public IReadOnlyList<LotusDyad> LotusDyads { get {return _lonicera.Links;} }
+        public LotusDyad GetDyad(int index1, int index2) {
+            return _lonicera.GetValue(index1, index2);
+        }
     
         // * Constructor
         public Lantern() {
@@ -20,7 +23,7 @@ namespace SineVita.Muguet.Nelumbo {
         public Lantern(List<Lotus> lotuses, bool bloom = true) {
             _lonicera = new Lonicera<Lotus, LotusDyad>(_growthFunction, true);
             foreach (var lotus in lotuses) {
-                Add(lotus.Pitch, false);
+                Add(lotus.Pitch, replantAll: false, bloom: false);
             }
             if (bloom) {Bloom();}
             
@@ -28,7 +31,7 @@ namespace SineVita.Muguet.Nelumbo {
         public Lantern(List<Pitch> pitches, bool bloom = true) {
             _lonicera = new Lonicera<Lotus, LotusDyad>(_growthFunction, true);
             foreach (var pitch in pitches) {
-                Add(pitch, false);
+                Add(pitch, replantAll: false, bloom: false);
             }
             if (bloom) {Bloom();}
         }
@@ -40,25 +43,37 @@ namespace SineVita.Muguet.Nelumbo {
         public void RemoveAt(int i) {
             _lonicera.RemoveAt(i);
         }
-        public void Add(Pitch pitch, bool bloom = true) {
-            // find index to insert.
+        public void Add(Pitch pitch, bool replantAll = true, bool bloom = true) {
+            // * Mutation Func
+            Lotus replant(Lotus l) {
+                l.Replant(l.IsRoot);
+                return l;
+            }
+            Lotus uproot(Lotus l) {
+                l.IsRoot = false;
+                return l;
+            }
+
+            // * find index to insert.
             int index = _lonicera.NodeCount;
             for (int i = 0; i < _lonicera.NodeCount; i++) {
                 if (_lonicera.Nodes[i].Pitch > pitch) {
                     index = i;
                 }
             }
-            
-            // Add in lonicera
-            Lotus uproot(Lotus l) {
-                l.IsRoot = false;
-                return l;
-            }
+
+            // * lonicera.Insert
             if (index == 0) {
                 _lonicera.MutateNode(0, uproot);          
             }
             _lonicera.Insert(index, new Lotus(pitch, index == 0));
-
+            
+            // * Parameter Settings
+            if (replantAll) {
+               for (int i = 0 ; i < _lonicera.NodeCount ; i++) { // replant all
+                _lonicera.MutateNode(i, replant);
+                } 
+            }
             if (bloom) {Bloom();}
         }
 
@@ -67,39 +82,28 @@ namespace SineVita.Muguet.Nelumbo {
             _lonicera.Grow(); // all dyads generated
 
             // * Working Captial
+            int targetIndex;
             List<Lotus> otherLotuses;
             List<LotusDyad> otherDyads;
             Lotus FertilizeWithBuds(Lotus l) {
-                l.FertilizeWithBuds(otherLotuses, otherDyads);
+                l.FertilizeWithBuddingLantern(this, targetIndex);
                 return l;
             }
             Lotus FertilizeWithFlowers(Lotus l) {
-                l.FertilizeWithFlowers(otherLotuses, otherDyads);
+                l.FertilizeWithFloweringLantern(this, targetIndex);
+                return l;
+            }
+            Lotus FertilizeWithFruits(Lotus l) {
+                l.FertilizeWithFruitingLantern(this, targetIndex);
                 return l;
             }
 
             void CrossBudFertilization(int i) {
-                otherLotuses = new List<Lotus>(_lonicera.Nodes);
-                otherLotuses.RemoveAt(i);
-
-                otherDyads = new List<LotusDyad>();
-                for (int j = 0; j < _lonicera.NodeCount; j++) {
-                    if (i != j) {
-                        otherDyads.Add(_lonicera.GetValue(i, j));
-                    }
-                }
+                targetIndex = i;
                 _lonicera.MutateNode(i, FertilizeWithBuds);
             }
             void CrossFlowerFertilization(int i) {
-                otherLotuses = new List<Lotus>(_lonicera.Nodes);
-                otherLotuses.RemoveAt(i);
-
-                otherDyads = new List<LotusDyad>();
-                for (int j = 0; j < _lonicera.NodeCount; j++) {
-                    if (i != j) {
-                        otherDyads.Add(_lonicera.GetValue(i, j));
-                    }
-                }
+                targetIndex = i;
                 _lonicera.MutateNode(i, FertilizeWithFlowers);
             }
 
@@ -109,8 +113,6 @@ namespace SineVita.Muguet.Nelumbo {
             // * Fertilize with Flowers to Fruits
             for (int i = 0; i < _lonicera.NodeCount; i++) {CrossFlowerFertilization(i);}
             _lonicera.Grow();
-            
-
 
         }
 
