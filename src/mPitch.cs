@@ -1,14 +1,14 @@
 using System;
-using SineVita.Basil.Muguet;
-using SineVita.Muguet.Asteraceae;
 using System.Text.Json;
 
 namespace SineVita.Muguet {
+    
     public enum PitchType {
         JustIntonation,
         CustomeToneEuqal,
         TwelveToneEqual,
-        Float
+        Float,
+        Compound
     }
 
     public abstract class Pitch : IComparable, ICloneable {
@@ -56,6 +56,14 @@ namespace SineVita.Muguet {
                         rootElement.GetProperty("PitchIndex").GetInt32(),
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
+                case PitchType.Compound:
+                    var pitch = FromJson(rootElement.GetProperty("Pitch").GetString() ?? Pitch.Empty.ToJson());
+                    var centOffsets = rootElement.GetProperty("CentOffsets").GetInt32();
+                    var intervals = rootElement.GetProperty("Intervals")
+                        .EnumerateArray()
+                        .Select(intervalElement => PitchInterval.FromJson(intervalElement.GetRawText()))
+                        .ToList();
+                    return new CompoundPitch(pitch, intervals, centOffsets);
                 default:
                     throw new ArgumentException("Invalid pitch type");
             }
@@ -75,7 +83,7 @@ namespace SineVita.Muguet {
         public FloatPitch IncrementPitch(PitchInterval pitchInterval) {
             return new FloatPitch((float)(Frequency * pitchInterval.FrequencyRatio));
         }
-        public FloatPitch Decrement(PitchInterval pitchInterval) {
+        public FloatPitch DecrementPitch(PitchInterval pitchInterval) {
             return new FloatPitch((float)(Frequency / pitchInterval.FrequencyRatio));
         }
         public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false, PitchType targetType = PitchType.Float) {
@@ -174,7 +182,38 @@ namespace SineVita.Muguet {
                 "}"
             );
         }
-    
+    }
+    public class CompoundPitch : Pitch {
+        // * Properties
+        public List<PitchInterval> Intervals { get; set; }
+        public Pitch Pitch { get; set; }
+
+        // * Constructor
+        public CompoundPitch(Pitch pitch, List<PitchInterval>? intervals = null, int centOffsets = 0)
+            : base(PitchType.Compound, centOffsets) {
+            Pitch = pitch;
+            Intervals = intervals ?? new();
+        }
+        
+        // * Overrides
+        public override double GetFrequency() {
+            double origin = Math.Pow(2, CentOffsets / 1200.0) * Pitch.GetFrequency();
+            foreach (var interval in Intervals) {
+                origin *= interval.GetFrequencyRatio();
+            }
+            return origin;
+        }
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"Pitch\": {Pitch.ToJson()},",
+                $"\"Intervals\": [{string.Join(", ", Intervals.Select(interval => interval.ToJson()))}],",
+                
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
+        }
     }
 
     public class CustomTetPitch : Pitch {

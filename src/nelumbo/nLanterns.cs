@@ -1,8 +1,8 @@
 using System;
 using System.Numerics;
 using System.Collections.Generic;
-using SineVita.Lonicera;
-using SineVita.Muguet.Petal.ScalerPetal;
+using Caprifolium;
+using SineVita.Muguet;
 using System.Security.Cryptography.X509Certificates;
 namespace SineVita.Muguet.Nelumbo {
     public class Lantern {
@@ -79,7 +79,7 @@ namespace SineVita.Muguet.Nelumbo {
 
         // * Bloom
         public void Bloom() {
-            _lonicera.Grow(); // all dyads generated
+            _lonicera.GrowAll(); // all dyads generated
 
             // * Working Captial
             int targetIndex;
@@ -109,10 +109,10 @@ namespace SineVita.Muguet.Nelumbo {
 
             // * Fertilize with Buds to flower
             for (int i = 0; i < _lonicera.NodeCount; i++) {CrossBudFertilization(i);}
-            _lonicera.Grow();
+            _lonicera.GrowAll();
             // * Fertilize with Flowers to Fruits
             for (int i = 0; i < _lonicera.NodeCount; i++) {CrossFlowerFertilization(i);}
-            _lonicera.Grow();
+            _lonicera.GrowAll();
 
         }
 
@@ -157,7 +157,7 @@ namespace SineVita.Muguet.Nelumbo {
         }
 
         public List<MidiPitchName> GetDiatonicScales(ScaleType type = ScaleType.Ionian) {
-            if (!Scale.DiatonicScales.Contains(type)) {throw new NotImplementedException();}
+            if (!Scale.DiatonicScaleTypes.Contains(type)) {throw new NotImplementedException();}
 
             int rootOffSet = type switch {
                 ScaleType.Lydian => 0,

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System;
-using SineVita.Basil;
+
 namespace SineVita.Muguet
 {
     public static class HarmonyHelper
@@ -108,5 +108,8 @@ namespace SineVita.Muguet
         public static string HtzToIntervalName(double htz, int rounding = 0) {
             return MidiToIntervalName((int)HtzToMidiInterval(htz, rounding : rounding));
         }
+    
+    
+    
     }
 }

@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.VisualBasic;
-using SineVita.Lonicera;
+using Caprifolium;
 
 namespace SineVita.Muguet.Nelumbo {
     public enum LotusStage {
