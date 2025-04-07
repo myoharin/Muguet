@@ -6,8 +6,12 @@ using SineVita.Muguet;
 using System.Security.Cryptography.X509Certificates;
 namespace SineVita.Muguet.Nelumbo {
     public class Lantern {
+
+        // ! NEED TO ISOLATE SELF NODE LIST FROM LONICERA AND MIGRATE, MAYBE ENTIRELY TO KNAUTIA
+
         // * Variables
         private Lonicera<Lotus,LotusDyad> _lonicera { get; set; }
+        private Knautia<Lotus, LotusTriad> _knautia { get; set; }
 
         // * Derived Gets
         public IReadOnlyList<Lotus> Lotuses { get {return _lonicera.Nodes;} }
@@ -15,13 +19,26 @@ namespace SineVita.Muguet.Nelumbo {
         public LotusDyad GetDyad(int index1, int index2) {
             return _lonicera.GetValue(index1, index2);
         }
+        public LotusTriad? GetTriad(int index1, int index2, int index3) {
+            return _knautia.GetLink(new List<int>(){index1, index2, index3});
+        }
     
+        // * Statics
+        private static Func<Lotus, Lotus, LotusDyad> _loniceraGrowthFunction = (pitch1, pitch2) => {
+            return new LotusDyad(pitch1, pitch2);
+        };
+        private static Func<Lotus[], LotusTriad> _knautiaGrowthFunction = (lotuses) => {
+            return new LotusTriad(lotuses[0], lotuses[1], lotuses[2]);
+        };
+
         // * Constructor
         public Lantern() {
-            _lonicera = new Lonicera<Lotus, LotusDyad>(_growthFunction, true);
+            _lonicera = new Lonicera<Lotus, LotusDyad>(_loniceraGrowthFunction, true);
+            _knautia = new Knautia<Lotus, LotusTriad>(3, _knautiaGrowthFunction);
         }
         public Lantern(List<Lotus> lotuses, bool bloom = true) {
-            _lonicera = new Lonicera<Lotus, LotusDyad>(_growthFunction, true);
+            _lonicera = new Lonicera<Lotus, LotusDyad>(_loniceraGrowthFunction, true);
+            _knautia = new Knautia<Lotus, LotusTriad>(3, _knautiaGrowthFunction);
             foreach (var lotus in lotuses) {
                 Add(lotus.Pitch, replantAll: false, bloom: false);
             }
@@ -29,31 +46,24 @@ namespace SineVita.Muguet.Nelumbo {
             
         }
         public Lantern(List<Pitch> pitches, bool bloom = true) {
-            _lonicera = new Lonicera<Lotus, LotusDyad>(_growthFunction, true);
+            _lonicera = new Lonicera<Lotus, LotusDyad>(_loniceraGrowthFunction, true);
+            _knautia = new Knautia<Lotus, LotusTriad>(3, _knautiaGrowthFunction);
             foreach (var pitch in pitches) {
                 Add(pitch, replantAll: false, bloom: false);
             }
             if (bloom) {Bloom();}
         }
 
-        // * Lonicera Add Remove Delete
+        // * Caprifolium Add Remove Delete
         public void Remove(Lotus lotus) {
             _lonicera.Remove(lotus);
+            _knautia.Remove(lotus);
         }
         public void RemoveAt(int i) {
             _lonicera.RemoveAt(i);
+            _knautia.RemoveAt(i);
         }
         public void Add(Pitch pitch, bool replantAll = true, bool bloom = true) {
-            // * Mutation Func
-            Lotus replant(Lotus l) {
-                l.Replant(l.IsRoot);
-                return l;
-            }
-            Lotus uproot(Lotus l) {
-                l.IsRoot = false;
-                return l;
-            }
-
             // * find index to insert.
             int index = _lonicera.NodeCount;
             for (int i = 0; i < _lonicera.NodeCount; i++) {
@@ -62,23 +72,33 @@ namespace SineVita.Muguet.Nelumbo {
                 }
             }
 
-            // * lonicera.Insert
+            // * Caprifolium.Insert
             if (index == 0) {
-                _lonicera.MutateNode(0, uproot);          
+                var newLotus = _lonicera[0];
+                newLotus.IsRoot = false;
+
+                _lonicera.MutateNode(0, newLotus);
+                _knautia.MutateNode(0, newLotus);        
             }
             _lonicera.Insert(index, new Lotus(pitch, index == 0));
+            _knautia.Insert(index, new Lotus(pitch, index == 0));
             
             // * Parameter Settings
+
             if (replantAll) {
-               for (int i = 0 ; i < _lonicera.NodeCount ; i++) { // replant all
-                _lonicera.MutateNode(i, replant);
+                for (int i = 0 ; i < _lonicera.NodeCount ; i++) { // replant all
+                    var newLotus = _lonicera[i];
+                    newLotus.Replant(newLotus.IsRoot);
+
+                    _lonicera.MutateNode(i, newLotus);
+                    _knautia.MutateNode(i, newLotus);
                 } 
             }
             if (bloom) {Bloom();}
         }
 
         // * Bloom
-        public void Bloom() {
+        public void Bloom() { // ! MAY HAVE LAMDA ERRORS & ADD KNAUTIA SUPPORT
             _lonicera.GrowAll(); // all dyads generated
 
             // * Working Captial
@@ -116,16 +136,7 @@ namespace SineVita.Muguet.Nelumbo {
 
         }
 
-
-
-
-        
-        
-        
-        // * Statics
-        private static Func<Lotus, Lotus, LotusDyad> _growthFunction = (pitch1, pitch2) => {
-            return new LotusDyad(pitch1, pitch2);
-        };
+              
 
         // * Lantern Properties
         public List<Pitch> GetStructualTonics() {
@@ -157,7 +168,7 @@ namespace SineVita.Muguet.Nelumbo {
         }
 
         public List<MidiPitchName> GetDiatonicScales(ScaleType type = ScaleType.Ionian) {
-            if (!Scale.DiatonicScaleTypes.Contains(type)) {throw new NotImplementedException();}
+            if (!Scale.DiatonicScaleTypes.Contains(type)) {throw new NotImplementedException($"Scale {type} is not implemented.");}
 
             int rootOffSet = type switch {
                 ScaleType.Lydian => 0,
@@ -221,11 +232,30 @@ namespace SineVita.Muguet.Nelumbo {
         }
 
     }
-    public class LotusThread {
+    public class LotusThread {  // ! NOT DONE
         public PitchInterval Interval { get; set; }
-    
-        // * Constructors
 
+        public bool IsNegative { get {return Interval.IsNegative;} }
+        public bool IsPositive { get {return Interval.IsPositive;} }
+
+        public bool IsDiesisStep { get {return Interval < new MidiPitchInterval(3); } }
+        public bool IsThirdsStep { get {
+            return new MidiPitchInterval(2) < Interval && Interval < new MidiPitchInterval(5); 
+        } }
+        public bool IsBalancedStep { get {
+            return new MidiPitchInterval(4) < Interval && Interval < new MidiPitchInterval(8); 
+        } }
+        public bool IsWideStep { get {
+            return new MidiPitchInterval(7) < Interval && Interval < new MidiPitchInterval(12); 
+        } }
+        public bool IsMassiveStep { get {
+            return new MidiPitchInterval(11) < Interval;
+        } }
+    
+
+
+
+        // * Constructors
         public LotusThread(Lotus masterLotus, Lotus slaveLotus) { // ! NOT DONE
             Interval = PitchInterval.CreateInterval(masterLotus.Pitch, slaveLotus.Pitch, false);
 

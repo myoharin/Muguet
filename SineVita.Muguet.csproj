@@ -10,8 +10,7 @@
   <ItemGroup>
     <!-- Exclude specific files -->
 
-    <Compile Remove="src\asteraceae\cosmosia\**\*" />
-    <Compile Remove="src\basil\*" />
+    <Compile Remove="src\basil\basil-muguet-cosmosia.cs" />
     
     <!-- <Compile Remove="FolderToIgnore\**\*" /> -->
     <Reference Include="Caprifolium">

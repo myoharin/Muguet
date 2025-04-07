@@ -33,7 +33,7 @@ namespace SineVita.Basil.Muguet.Nelumbo
                     pitchList.Add(pitch);
                 }
                 Log($"Chord {i}");
-                LogPitchList(pitchList);
+                Log(pitchList);
                 lanterns.Add(new Lantern(pitchList));
             }
 
@@ -48,7 +48,7 @@ namespace SineVita.Basil.Muguet.Nelumbo
         public static void LogLantern(Lantern lantern) {
             Log("Lantern:");
             foreach (Lotus lotus in lantern.Lotuses) {
-                LogPitch(lotus.Pitch);
+                Log(lotus.Pitch);
             }
         }
     }

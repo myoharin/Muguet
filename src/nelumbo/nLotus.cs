@@ -190,4 +190,16 @@ namespace SineVita.Muguet.Nelumbo {
             else {Stage = LotusStage.Budding;}
         }
     }
+
+    public class LotusTriad {
+        public readonly PitchInterval Interval_2_1;
+        public readonly PitchInterval Interval_2_0;
+        public readonly PitchInterval Interval_1_0;
+
+        public LotusTriad(Lotus lotus1, Lotus lotus2, Lotus lotus3) {
+            
+        }
+
+
+    }
 }

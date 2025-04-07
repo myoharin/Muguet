@@ -10,17 +10,21 @@ namespace SineVita.Muguet { // ! NOTE DONE
 
         // * Reduction and Transformation
         public Pitch OctaveReduced(Pitch octaveMarker, bool markerIsRoot = true) {
-            octaveMarker = markerIsRoot ? octaveMarker : octaveMarker.DecrementPitch(PitchInterval.Octave);
+            return Reduced(octaveMarker, PitchInterval.Octave, markerIsRoot);
+        }
+
+        public Pitch Reduced(Pitch octaveMarker, PitchInterval reductionInterval, bool markerIsRoot = true) {
+            octaveMarker = markerIsRoot ? octaveMarker : octaveMarker.DecrementPitch(reductionInterval);
             var newPitch = ReferencePitch;
             if (newPitch < octaveMarker) {
                 while (octaveMarker > newPitch) {
-                    newPitch = newPitch.IncrementPitch(PitchInterval.Octave);  
+                    newPitch = newPitch.IncrementPitch(reductionInterval);  
                 }
                 return newPitch;
             }
-            else if (newPitch >= octaveMarker.IncrementPitch(PitchInterval.Octave)) {
-                while (newPitch >= octaveMarker.IncrementPitch(PitchInterval.Octave)) {
-                    newPitch = newPitch.DecrementPitch(PitchInterval.Octave);
+            else if (newPitch >= octaveMarker.IncrementPitch(reductionInterval)) {
+                while (newPitch >= octaveMarker.IncrementPitch(reductionInterval)) {
+                    newPitch = newPitch.DecrementPitch(reductionInterval);
                 }
                 return newPitch;
             }
