@@ -1,5 +1,5 @@
 using System;
-namespace SineVita.Muguet { // ! NOTE DONE
+namespace SineVita.Muguet {
     public class PitchClass {
         public Pitch ReferencePitch { get; set; }
         

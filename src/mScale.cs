@@ -56,10 +56,10 @@ namespace SineVita.Muguet {
         public static PitchClassScale DiatonicScaleTwelveTet(ScaleType type, MidiPitchName midiPitchName) {
             return DiatonicScaleTwelveTet(type, new MidiPitch(60+(int)midiPitchName));
         }
-        public static PitchClassScale DiatonicScaleTwelveTet(ScaleType type, Pitch tonic) { // ! NOT DONE
+        public static PitchClassScale DiatonicScaleTwelveTet(ScaleType type, Pitch tonic) {
             
-            List<PitchInterval> lydianScaleRelativeInterval = new() {
-                 new MidiPitchInterval(0),
+            List<MidiPitchInterval> lydianScaleRelativeInterval = new() {
+                new MidiPitchInterval(0),
                 new MidiPitchInterval(7),
                 new MidiPitchInterval(2),
                 new MidiPitchInterval(9),
@@ -94,12 +94,11 @@ namespace SineVita.Muguet {
             }
 
             for (int i = 0; i<flatCount ; i++) {
-                // lydianScaleRelativeInterval[6-i].Decrememt
+                lydianScaleRelativeInterval[6-i].Down();
             }
-
-
-
-            throw new NotImplementedException();
+            
+            List<Pitch> tonicGrounded = lydianScaleRelativeInterval.Select(x => tonic.IncrementPitch(x)).ToList<Pitch>();
+            return new PitchClassScale(tonicGrounded);
         }
        
     
@@ -132,6 +131,10 @@ namespace SineVita.Muguet {
         // * Constructor
         public PitchClassScale(List<PitchClass>? pitchClasses = null) {
             _pitchClasses = pitchClasses ?? new();
+        }
+        public PitchClassScale(List<Pitch> pitches) {
+            _pitchClasses = pitches.Select(x => new PitchClass(x)).ToList();
+            
         }
 
         // * Transformation

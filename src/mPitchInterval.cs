@@ -3,9 +3,17 @@ using System.Text.Json;
 
 namespace SineVita.Muguet {
 
+    public enum PitchIntervalType {
+        JustIntonation,
+        CustomeToneEuqal,
+        TwelveToneEqual,
+        Float,
+        Compound
+    }
+
     public abstract class PitchInterval : IComparable, ICloneable{
         // * Properties
-        public PitchType Type { get; set; }
+        public PitchIntervalType Type { get; set; }
         public int CentOffsets { get; set; }
 
         // * Derived Gets
@@ -58,7 +66,7 @@ namespace SineVita.Muguet {
         public static PitchInterval Unison { get {return Empty;}}
 
         // ! NOT DONE - Override below
-        public static FloatPitchInterval CreateInterval(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false, PitchType targetType = PitchType.Float) {
+        public static FloatPitchInterval CreateInterval(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false, PitchIntervalType targetType = PitchIntervalType.Float) {
             Pitch higherPitch, lowerPitch;
             if (absoluteInterval) { // * Absolute value of the interval
                 if (basePitch.Frequency > upperPitch.Frequency) {
@@ -77,16 +85,16 @@ namespace SineVita.Muguet {
             // working capital
             var frequency = higherPitch.Frequency / lowerPitch.Frequency;          
             switch (targetType) {
-            case PitchType.Float:
+            case PitchIntervalType.Float:
                 return new FloatPitchInterval(frequency);
-            case PitchType.JustIntonation:
+            case PitchIntervalType.JustIntonation:
                 throw new NotImplementedException(); // ! NOT DONE
-            case PitchType.TwelveToneEqual:
+            case PitchIntervalType.TwelveToneEqual:
                 throw new NotImplementedException(); // ! NOT DONE
-            case PitchType.CustomeToneEuqal:
+            case PitchIntervalType.CustomeToneEuqal:
                 throw new NotImplementedException(); // ! NOT DONE
             default:
-                throw new ArgumentException("Unsupported PitchType");
+                throw new ArgumentException("Unsupported PitchIntervalType");
             }
         }
 
@@ -102,24 +110,24 @@ namespace SineVita.Muguet {
         public static PitchInterval FromJson(string jsonString) {
             var jsonDocument = JsonDocument.Parse(jsonString);
             var rootElement = jsonDocument.RootElement;
-            PitchType type = Enum.Parse<PitchType>(rootElement.GetProperty("Type").GetString() ?? "Float");
+            PitchIntervalType type = Enum.Parse<PitchIntervalType>(rootElement.GetProperty("Type").GetString() ?? "Float");
             switch (type) {
-                case PitchType.Float:
+                case PitchIntervalType.Float:
                     return new FloatPitchInterval(rootElement.GetProperty("FrequencyRatio").GetDouble());
-                case PitchType.JustIntonation:
+                case PitchIntervalType.JustIntonation:
                     var justFrequency = rootElement.GetProperty("JustRatio");
                     return new JustIntonalPitchInterval(
                         (justFrequency.GetProperty("Numerator").GetInt32(), justFrequency.GetProperty("Denominator").GetInt32()),
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
-                case PitchType.CustomeToneEuqal:
+                case PitchIntervalType.CustomeToneEuqal:
                     return new CustomTetPitchInterval(
                         rootElement.GetProperty("Base").GetInt32(),
                         rootElement.GetProperty("PitchIntervalIndex").GetInt32(),
                         type,
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
-                case PitchType.TwelveToneEqual:
+                case PitchIntervalType.TwelveToneEqual:
                     return new MidiPitchInterval(
                         rootElement.GetProperty("PitchIntervalIndex").GetInt32(),
                         rootElement.GetProperty("CentOffsets").GetInt32()
@@ -130,7 +138,7 @@ namespace SineVita.Muguet {
         }
 
         // * Constructor
-        protected PitchInterval(PitchType type = PitchType.Float, int centOffsets = 0) {Type = type; CentOffsets = centOffsets;}
+        protected PitchInterval(PitchIntervalType type = PitchIntervalType.Float, int centOffsets = 0) {Type = type; CentOffsets = centOffsets;}
 
         // * virtual methods
         public virtual double GetFrequencyRatio() {return 1;}
@@ -183,7 +191,7 @@ namespace SineVita.Muguet {
         private double _frequencyRatio;
 
         // * Constructor
-        public FloatPitchInterval(double frequencyRatio) : base(PitchType.Float, 0) {
+        public FloatPitchInterval(double frequencyRatio) : base(PitchIntervalType.Float, 0) {
             _frequencyRatio = frequencyRatio;
         }
 
@@ -213,7 +221,7 @@ namespace SineVita.Muguet {
 
         // * Constructor
         public JustIntonalPitchInterval((int, int) justRatio, double? frequencyRatio = null, int centOffsets = 0)
-            : base(PitchType.JustIntonation, centOffsets) {
+            : base(PitchIntervalType.JustIntonation, centOffsets) {
             JustRatio = justRatio;
         }
 
@@ -241,7 +249,7 @@ namespace SineVita.Muguet {
         public int PitchIntervalIndex { get; set; }
 
         // * Constructors
-        public CustomTetPitchInterval(int baseValue, int pitchIntervalIndex, PitchType type = PitchType.CustomeToneEuqal, int centOffsets = 0)
+        public CustomTetPitchInterval(int baseValue, int pitchIntervalIndex, PitchIntervalType type = PitchIntervalType.CustomeToneEuqal, int centOffsets = 0)
             : base(type, centOffsets) {
             Base = baseValue;
             PitchIntervalIndex = pitchIntervalIndex;
@@ -279,6 +287,16 @@ namespace SineVita.Muguet {
             PitchIntervalIndex -= downBy;
         }
 
+        public static CustomTetPitchInterval operator ++(CustomTetPitchInterval interval) {
+            interval.Up();
+            return interval;
+        }
+        public static CustomTetPitchInterval operator --(CustomTetPitchInterval interval) {
+            interval.Down();
+            return interval;
+        }
+
+
         // * To Pitch Index
         public static float ToPitchIndex(int baseValue, double frequencyRatio, bool round = true) {
             if (round) {return (float)Math.Round(baseValue * Math.Log2(frequencyRatio));}
@@ -294,8 +312,8 @@ namespace SineVita.Muguet {
         public const int Base = 12;
         public int PitchIntervalIndex { get; set; }
         public MidiPitchInterval(int midiValue, int centOffsets = 0)
-            : base(PitchType.TwelveToneEqual, centOffsets) {PitchIntervalIndex = midiValue;}
-        public MidiPitchInterval(double frequencyRatio, bool round = true) : base (PitchType.TwelveToneEqual, 0) {
+            : base(PitchIntervalType.TwelveToneEqual, centOffsets) {PitchIntervalIndex = midiValue;}
+        public MidiPitchInterval(double frequencyRatio, bool round = true) : base (PitchIntervalType.TwelveToneEqual, 0) {
             double cacheIndex = Base * Math.Log2(frequencyRatio);
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIntervalIndex = (int)Math.Floor(cacheIndex);}            
             else {PitchIntervalIndex = (int)Math.Ceiling(cacheIndex);}
@@ -308,10 +326,18 @@ namespace SineVita.Muguet {
             else {return (float)(12 * Math.Log2(frequencyRatio));}
         }
         public static float ToIndex(PitchInterval interval, bool round = true) {
-            if (interval.Type == PitchType.TwelveToneEqual) {
+            if (interval.Type == PitchIntervalType.TwelveToneEqual) {
                 return ((MidiPitchInterval)interval).PitchIntervalIndex;
             }
             else {return ToIndex(interval.FrequencyRatio, round);}
+        }
+
+        // * TET increment system
+        public void Up(int upBy = 1) {
+            PitchIntervalIndex += upBy;
+        }
+        public void Down(int downBy = 1) {
+            PitchIntervalIndex -= downBy;
         }
 
         // * Overrides

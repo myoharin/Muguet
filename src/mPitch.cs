@@ -86,7 +86,7 @@ namespace SineVita.Muguet {
         public FloatPitch DecrementPitch(PitchInterval pitchInterval) {
             return new FloatPitch((float)(Frequency / pitchInterval.FrequencyRatio));
         }
-        public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false, PitchType targetType = PitchType.Float) {
+        public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false, PitchIntervalType targetType = PitchIntervalType.Float) {
             return PitchInterval.CreateInterval(this, pitch2, absoluteInterval, targetType);
         }
     
@@ -130,6 +130,20 @@ namespace SineVita.Muguet {
             return left is null ? right is null : left.CompareTo(right) >= 0;
         }
         
+            // arithmetic operations
+        public static Pitch operator +(Pitch pitch, PitchInterval pitchInterval) {
+            pitch.IncrementPitch(pitchInterval);
+            return pitch;
+        }
+        public static Pitch operator +(PitchInterval pitchInterval, Pitch pitch) {
+            pitch.IncrementPitch(pitchInterval);
+            return pitch;
+        }
+
+        public static Pitch operator -(Pitch pitch, PitchInterval pitchInterval) {
+            pitch.DecrementPitch(pitchInterval);
+            return pitch;
+        }
      
      }
 
@@ -215,7 +229,7 @@ namespace SineVita.Muguet {
             );
         }
     }
-
+    
     public class CustomTetPitch : Pitch {
         public int Base { get; set; }
         public int TuningIndex { get; set; }
@@ -264,7 +278,18 @@ namespace SineVita.Muguet {
         public void Down(int downBy = 1) {
             PitchIndex -= downBy;
         }
-    
+        
+        public static CustomTetPitch operator ++(CustomTetPitch pitch) {
+            pitch.Up();
+            return pitch;
+        }
+        public static CustomTetPitch operator --(CustomTetPitch pitch) {
+            pitch.Down();
+            return pitch;
+        }
+
+
+
         // * To Pitch Index
         public static float ToPitchIndex(double frequency, int baseValue, int tuningIndex, float tuningFrequency, bool round = true) {
             if (round) {return (float)Math.Round(baseValue * Math.Log2(frequency / tuningFrequency) + tuningIndex);}
