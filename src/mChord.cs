@@ -32,8 +32,8 @@ namespace SineVita.Muguet {
         }
 
         public void SetChord(List<Pitch> notes) {
-            notes.Sort();
-            _notes = notes;
+            _notes = new List<Pitch>(notes);
+            _notes.Sort();
         }
         public void SetNotes(List<Pitch> notes) {
             SetChord(notes);
@@ -45,14 +45,40 @@ namespace SineVita.Muguet {
         public void Modulate(PitchInterval interval, bool up = true) {
             if (!up) {interval.Invert();}
             for (int i = 0; i < Notes.Count; i++) {
-                _notes[i] = _notes[i].IncrementPitch(interval);
+                _notes[i] += interval;
             }
         }
 
         public Chord Modulated(PitchInterval interval, bool up = true) {
-            var returnChord = this;
+            var returnChord = (Chord)this.Clone();
             returnChord.Modulate(interval, up);
             return returnChord;
+        }
+
+        // * Overrides
+        public override bool Equals(object? obj) {
+            if (obj is Chord otherChord) {
+                if (Notes.Count != otherChord.Notes.Count) {
+                    return false;
+                }
+                for (int i = 0; i < Notes.Count; i++) {
+                    if (Notes[i] != otherChord.Notes[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+        public override int GetHashCode() {
+            int hash = 17;
+            foreach (var note in Notes) {
+            hash = hash * 31 + note.GetHashCode();
+            }
+            return hash;
+        }
+        public object Clone() {
+            return new Chord(_notes);
         }
 
     }

@@ -1,6 +1,6 @@
 using System;
 namespace SineVita.Muguet {
-    public class PitchClass {
+    public class PitchClass : ICloneable { // Assumes all octave equivalency
         public Pitch ReferencePitch { get; set; }
         
         public PitchClass(Pitch referencePitch) {
@@ -14,17 +14,17 @@ namespace SineVita.Muguet {
         }
 
         public Pitch Reduced(Pitch octaveMarker, PitchInterval reductionInterval, bool markerIsRoot = true) {
-            octaveMarker = markerIsRoot ? octaveMarker : octaveMarker.DecrementPitch(reductionInterval);
-            var newPitch = ReferencePitch;
+            octaveMarker = markerIsRoot ? octaveMarker : octaveMarker.Decremented(reductionInterval);
+            var newPitch = (Pitch)ReferencePitch.Clone();
             if (newPitch < octaveMarker) {
                 while (octaveMarker > newPitch) {
-                    newPitch = newPitch.IncrementPitch(reductionInterval);  
+                    newPitch.Increment(reductionInterval);  
                 }
                 return newPitch;
             }
-            else if (newPitch >= octaveMarker.IncrementPitch(reductionInterval)) {
-                while (newPitch >= octaveMarker.IncrementPitch(reductionInterval)) {
-                    newPitch = newPitch.DecrementPitch(reductionInterval);
+            else if (newPitch >= octaveMarker.Incremented(reductionInterval)) {
+                while (newPitch >= octaveMarker.Incremented(reductionInterval)) {
+                    newPitch.Decrement(reductionInterval);
                 }
                 return newPitch;
             }
@@ -35,16 +35,22 @@ namespace SineVita.Muguet {
         public bool IsEqual(PitchClass other) {
             return ReferencePitch.Equals(
                 other.OctaveReduced(
-                    ReferencePitch.DecrementPitch(
+                    ReferencePitch.Decremented(
                         PitchInterval.Perfect5th
             )));
         }
         public bool IsEqual(Pitch other) {
             return other.Equals(
                 this.OctaveReduced(
-                    other.DecrementPitch(
+                    other.Decremented(
                         PitchInterval.Perfect5th
             )));
         }
+    
+        // * Overrides
+        public object Clone() {
+            return new PitchClass(ReferencePitch);
+        }
+
     }
 }

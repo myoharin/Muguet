@@ -17,11 +17,11 @@ namespace SineVita.Muguet {
         MelodicMinor,
     }
 
-    public abstract class Scale {
+    public abstract class Scale : ICloneable {
         // * Transformation
         public List<Pitch> MapToRange(Pitch referencePitch, PitchInterval range, bool referencePitchIsRoot = true) {
             var otherPitch = referencePitchIsRoot ? 
-                referencePitch.IncrementPitch(range) : referencePitch.DecrementPitch(range);
+                referencePitch.Incremented(range) : referencePitch.Decremented(range);
             var rootPitch = referencePitchIsRoot ? referencePitch : otherPitch;
             var topPitch = !referencePitchIsRoot ? referencePitch : otherPitch;
             return MapToRange(rootPitch, topPitch);
@@ -29,6 +29,7 @@ namespace SineVita.Muguet {
 
         // * Abstracts Methods
         public abstract List<Pitch> MapToRange(Pitch rootPitch, Pitch topPitch);
+        public abstract object Clone();
 
         // * Statics
         public static readonly IReadOnlyList<ScaleType> DiatonicScaleTypes = new List<ScaleType> {
@@ -97,7 +98,7 @@ namespace SineVita.Muguet {
                 lydianScaleRelativeInterval[6-i].Down();
             }
             
-            List<Pitch> tonicGrounded = lydianScaleRelativeInterval.Select(x => tonic.IncrementPitch(x)).ToList<Pitch>();
+            List<Pitch> tonicGrounded = lydianScaleRelativeInterval.Select(x => tonic.Incremented(x)).ToList<Pitch>();
             return new PitchClassScale(tonicGrounded);
         }
        
@@ -173,9 +174,9 @@ namespace SineVita.Muguet {
             int i = 0;
             Pitch evaluatedPitch;
             do {
-                evaluatedPitch = rootList[i % rootList.Count];
+                evaluatedPitch = (Pitch)rootList[i % rootList.Count].Clone();
                 for (int _ = 0; _ < Math.Floor((float)i / (float)rootList.Count); _++) {
-                    evaluatedPitch.IncrementPitch(PitchInterval.Octave);
+                    evaluatedPitch.Increment(PitchInterval.Octave);
                 }
 
                 if (evaluatedPitch < topPitch) {
@@ -187,7 +188,9 @@ namespace SineVita.Muguet {
 
             return returnList;
         }
-        
+        public override object Clone() {
+            return new PitchClassScale(PitchClasses);
+        }
     }
 
     public class ChordReferencedScale : Scale {
@@ -197,15 +200,16 @@ namespace SineVita.Muguet {
             set {
                 if (value.Notes.Count == 0) {_referenceChord = value;}
                 if (value.Range >= _repetitionInterval) {
+                    var valueCloned = (Chord)value.Clone();
                     var noteList = new List<Pitch>();
-                    var repitionMarker = value.Root.IncrementPitch(RepetitionInterval);
-                    foreach(var note in value.Notes) {
+                    var repitionMarker = valueCloned.Root.Incremented(RepetitionInterval);
+                    foreach(var note in valueCloned.Notes) {
                         while (note > repitionMarker) {
-                            note.DecrementPitch(_repetitionInterval);
+                            note.Decrement(_repetitionInterval);
                         }
                         noteList.Add(note);
                     }
-                    _referenceChord = new Chord(noteList); // * Autosort
+                    _referenceChord = new Chord(noteList); // * Autosorted
                 }
                 else {
                     _referenceChord = value;
@@ -217,8 +221,9 @@ namespace SineVita.Muguet {
         public PitchInterval RepetitionInterval {
             get { return _repetitionInterval; }
             set {
-                if (value.IsNegative) {value.Invert();}
-                _repetitionInterval = value;
+                var valueCloned = (PitchInterval)value.Clone();
+                if (valueCloned.IsNegative) {valueCloned.Invert();}
+                _repetitionInterval = valueCloned;
                 ReferenceChord = _referenceChord; // re-set this to trigger range check
             }
         }
@@ -252,9 +257,9 @@ namespace SineVita.Muguet {
             int i = 0;
             Pitch evaluatedPitch;
             do {
-                evaluatedPitch = rootList[i % rootList.Count];
+                evaluatedPitch = (Pitch)rootList[i % rootList.Count].Clone();
                 for (int _ = 0; _ < Math.Floor((float)i / (float)rootList.Count); _++) {
-                    evaluatedPitch.IncrementPitch(RepetitionInterval);
+                    evaluatedPitch.Increment(RepetitionInterval);
                 }
 
                 if (evaluatedPitch < topPitch) {
@@ -265,6 +270,9 @@ namespace SineVita.Muguet {
             while (evaluatedPitch < topPitch);
 
             return returnList;
+        }
+        public override object Clone() {
+            return new ChordReferencedScale(_referenceChord, RepetitionInterval);
         }
     }
 }
