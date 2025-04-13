@@ -4,7 +4,6 @@ using System.Text.Json;
 namespace SineVita.Muguet {
     
     public enum PitchType {
-        JustIntonation,
         CustomeToneEuqal,
         TwelveToneEqual,
         Float,
@@ -36,19 +35,12 @@ namespace SineVita.Muguet {
             switch (type) {
                 case PitchType.Float:
                     return new FloatPitch(rootElement.GetProperty("Frequency").GetDouble());
-                case PitchType.JustIntonation:
-                    var justFrequency = rootElement.GetProperty("JustFrequency");
-                    return new JustIntonalPitch(
-                        (justFrequency.GetProperty("Numerator").GetInt32(), justFrequency.GetProperty("Denominator").GetInt32()),
-                        rootElement.GetProperty("CentOffsets").GetInt32()
-                    );
                 case PitchType.CustomeToneEuqal:
                     return new CustomTetPitch(
                         rootElement.GetProperty("Base").GetInt32(),
                         rootElement.GetProperty("TuningIndex").GetInt32(),
                         rootElement.GetProperty("TuningFrequency").GetSingle(),
                         rootElement.GetProperty("PitchIndex").GetInt32(),
-                        type,
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
                 case PitchType.TwelveToneEqual:
@@ -59,11 +51,9 @@ namespace SineVita.Muguet {
                 case PitchType.Compound:
                     var pitch = FromJson(rootElement.GetProperty("Pitch").GetString() ?? Pitch.Empty.ToJson());
                     var centOffsets = rootElement.GetProperty("CentOffsets").GetInt32();
-                    var intervals = rootElement.GetProperty("Intervals")
-                        .EnumerateArray()
-                        .Select(intervalElement => PitchInterval.FromJson(intervalElement.GetRawText()))
-                        .ToList();
-                    return new CompoundPitch(pitch, intervals, centOffsets);
+                    string? intervalStr = rootElement.GetProperty("Interval").GetString();
+                    CompoundPitchInterval? interval = intervalStr != null ? (CompoundPitchInterval)(PitchInterval.FromJson(intervalStr)) : null;
+                    return (interval == null) ? new CompoundPitch(pitch, centOffsets:centOffsets) : new CompoundPitch(pitch, interval, centOffsets);
                 default:
                     throw new ArgumentException("Invalid pitch type");
             }
@@ -80,16 +70,23 @@ namespace SineVita.Muguet {
         public virtual string ToJson() {return "";}
 
         // * General Methods
-        public FloatPitch IncrementPitch(PitchInterval pitchInterval) {
+        public FloatPitch Incremented(PitchInterval pitchInterval) {
             return new FloatPitch((float)(Frequency * pitchInterval.FrequencyRatio));
         }
-        public FloatPitch DecrementPitch(PitchInterval pitchInterval) {
+        public FloatPitch Decremented(PitchInterval pitchInterval) {
             return new FloatPitch((float)(Frequency / pitchInterval.FrequencyRatio));
         }
         public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false, PitchIntervalType targetType = PitchIntervalType.Float) {
             return PitchInterval.CreateInterval(this, pitch2, absoluteInterval, targetType);
         }
-    
+
+        public virtual void Increment(PitchInterval interval) {
+            
+        } // ! NOT DONE FIX MIXED SIGNATURE
+        public virtual void Decrement(PitchInterval interval) {
+            
+        } // ! NOT DONE FIX MIXED SIGNATURE
+
         // * Interfaces
         public int CompareTo(object? obj) {
             if (obj == null) return 1; // Null is considered less than any object
@@ -98,9 +95,7 @@ namespace SineVita.Muguet {
             }
             throw new ArgumentException("Object is not a Pitch");
         }
-        public object Clone() { // ! NOT DONE, add clone for all subclasses
-            return New(Frequency);
-        }
+        public abstract object Clone();
      
         public override bool Equals(object? obj) {
             if (obj == null || GetType() != obj.GetType()) return false;
@@ -132,16 +127,16 @@ namespace SineVita.Muguet {
         
             // arithmetic operations
         public static Pitch operator +(Pitch pitch, PitchInterval pitchInterval) {
-            pitch.IncrementPitch(pitchInterval);
+            pitch.Increment(pitchInterval);
             return pitch;
         }
         public static Pitch operator +(PitchInterval pitchInterval, Pitch pitch) {
-            pitch.IncrementPitch(pitchInterval);
+            pitch.Increment(pitchInterval);
             return pitch;
         }
 
         public static Pitch operator -(Pitch pitch, PitchInterval pitchInterval) {
-            pitch.DecrementPitch(pitchInterval);
+            pitch.Decrement(pitchInterval);
             return pitch;
         }
      
@@ -171,80 +166,75 @@ namespace SineVita.Muguet {
                 "}"
             );
         }
-    }
-
-    public class JustIntonalPitch : Pitch {
-        // * Properties
-        public (int Numerator, int Denominator) JustFrequency { get; set; }
-
-        // * Constructor
-        public JustIntonalPitch((int, int) justFrequency, int centOffsets = 0)
-            : base(PitchType.JustIntonation, centOffsets) {
-            JustFrequency = justFrequency;
-        }
-        
-        // * Overrides
-        public override double GetFrequency() {
-            return (float)Math.Pow(2, CentOffsets / 1200.0) * JustFrequency.Numerator / JustFrequency.Denominator;
-        }
-        public override string ToJson() {
-            return string.Concat(
-                "{",
-                $"\"JustFrequency\": {{ \"Numerator\": {JustFrequency.Numerator}, \"Denominator\": {JustFrequency.Denominator} }},",
-                $"\"Type\": \"{Type.ToString()}\",",
-                $"\"CentOffsets\": {CentOffsets}",
-                "}"
-            );
+        public override object Clone() {
+            return new FloatPitch(_frequency);
         }
     }
+
     public class CompoundPitch : Pitch {
         // * Properties
-        public List<PitchInterval> Intervals { get; set; }
+        public CompoundPitchInterval Interval { get; set; }
         public Pitch Pitch { get; set; }
 
         // * Constructor
         public CompoundPitch(Pitch pitch, List<PitchInterval>? intervals = null, int centOffsets = 0)
             : base(PitchType.Compound, centOffsets) {
             Pitch = pitch;
-            Intervals = intervals ?? new();
+
+            Interval = intervals != null ? new CompoundPitchInterval(intervals) : new();
+        }
+        public CompoundPitch(Pitch pitch, PitchInterval interval, int centOffsets = 0)
+            : base(PitchType.Compound, centOffsets) {
+            Pitch = pitch;
+            Interval = new CompoundPitchInterval(interval);
         }
         
         // * Overrides
         public override double GetFrequency() {
             double origin = Math.Pow(2, CentOffsets / 1200.0) * Pitch.GetFrequency();
-            foreach (var interval in Intervals) {
-                origin *= interval.GetFrequencyRatio();
-            }
+            origin *= Interval.GetFrequencyRatio();
             return origin;
         }
         public override string ToJson() {
             return string.Concat(
                 "{",
                 $"\"Pitch\": {Pitch.ToJson()},",
-                $"\"Intervals\": [{string.Join(", ", Intervals.Select(interval => interval.ToJson()))}],",
+                $"\"Interval\": {Interval.ToJson()},",
                 
                 $"\"Type\": \"{Type.ToString()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );
         }
+        public override object Clone() {
+            return new CompoundPitch(Pitch, Interval, CentOffsets);
+        }
+
+
+        public override void Increment(PitchInterval interval) { // ! NOT DONE
+
+        }
+        public override void Decrement(PitchInterval interval) { // ! NOT DONE
+             
+        }
+    
     }
     
-    public class CustomTetPitch : Pitch {
+    public class CustomTetPitch : Pitch { // ! Implement global memory to store same copy of the same CustomTET
         public int Base { get; set; }
         public int TuningIndex { get; set; }
         public float TuningFrequency { get; set; }
         public int PitchIndex { get; set; }
 
-        public CustomTetPitch(int baseValue, int tuningIndex, float tuningFrequency, int pitchIndex, PitchType pitchType = PitchType.CustomeToneEuqal, int centOffsets = 0)
-            : base(pitchType, centOffsets) {
+        public CustomTetPitch(int baseValue, int tuningIndex, float tuningFrequency, int pitchIndex, int centOffsets = 0)
+            : base(PitchType.CustomeToneEuqal, centOffsets) {
             Base = baseValue;
             TuningIndex = tuningIndex;
             TuningFrequency = tuningFrequency;
             PitchIndex = pitchIndex;
         }
-        public CustomTetPitch(float frequency, int baseValue, int tuningIndex, float tuningFrequency, PitchType pitchType = PitchType.CustomeToneEuqal)
-            : base(pitchType, 0) {
+        public CustomTetPitch(float frequency, int baseValue, int tuningIndex, float tuningFrequency)
+            : base(PitchType.CustomeToneEuqal, 0) {
             Base = baseValue;
             TuningIndex = tuningIndex;
             TuningFrequency = tuningFrequency;
@@ -269,6 +259,9 @@ namespace SineVita.Muguet {
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );
+        }
+        public override object Clone() {
+            return new CustomTetPitch(Base, TuningIndex, TuningFrequency, PitchIndex);
         }
 
         // * TET increment system
@@ -336,6 +329,16 @@ namespace SineVita.Muguet {
             PitchIndex -= downBy;
         }
    
+        public static MidiPitch operator ++(MidiPitch pitch) {
+            pitch.Up();
+            return pitch;
+        }
+        public static MidiPitch operator --(MidiPitch pitch) {
+            pitch.Down();
+            return pitch;
+        }
+
+
         // * Overrides
         public override double GetFrequency() {
             return (float)Math.Pow(2, CentOffsets / 1200.0) * TuningFrequency * (float)Math.Pow(2, (PitchIndex - TuningIndex) / (double)Base);
@@ -348,6 +351,9 @@ namespace SineVita.Muguet {
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );
+        }
+        public override object Clone() {
+            return new MidiPitch(PitchIndex);
         }
     }
 

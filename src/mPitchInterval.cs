@@ -5,7 +5,7 @@ namespace SineVita.Muguet {
 
     public enum PitchIntervalType {
         JustIntonation,
-        CustomeToneEuqal,
+        CustomeToneEqual,
         TwelveToneEqual,
         Float,
         Compound
@@ -91,7 +91,7 @@ namespace SineVita.Muguet {
                 throw new NotImplementedException(); // ! NOT DONE
             case PitchIntervalType.TwelveToneEqual:
                 throw new NotImplementedException(); // ! NOT DONE
-            case PitchIntervalType.CustomeToneEuqal:
+            case PitchIntervalType.CustomeToneEqual:
                 throw new NotImplementedException(); // ! NOT DONE
             default:
                 throw new ArgumentException("Unsupported PitchIntervalType");
@@ -120,11 +120,10 @@ namespace SineVita.Muguet {
                         (justFrequency.GetProperty("Numerator").GetInt32(), justFrequency.GetProperty("Denominator").GetInt32()),
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
-                case PitchIntervalType.CustomeToneEuqal:
+                case PitchIntervalType.CustomeToneEqual:
                     return new CustomTetPitchInterval(
                         rootElement.GetProperty("Base").GetInt32(),
                         rootElement.GetProperty("PitchIntervalIndex").GetInt32(),
-                        type,
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
                 case PitchIntervalType.TwelveToneEqual:
@@ -132,6 +131,13 @@ namespace SineVita.Muguet {
                         rootElement.GetProperty("PitchIntervalIndex").GetInt32(),
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
+                case PitchIntervalType.Compound:
+                    var centOffsets = rootElement.GetProperty("CentOffsets").GetInt32();
+                    var intervals = rootElement.GetProperty("Intervals")
+                        .EnumerateArray()
+                        .Select(intervalElement => PitchInterval.FromJson(intervalElement.GetRawText()))
+                        .ToList();
+                    return new CompoundPitchInterval(intervals, centOffsets);
                 default:
                     throw new ArgumentException("Invalid pitch type");
             }
@@ -144,6 +150,25 @@ namespace SineVita.Muguet {
         public virtual double GetFrequencyRatio() {return 1;}
         public virtual string ToJson() {return "";}
 
+        // * Incrementation
+        public void Increment(PitchInterval interval) { // ! NOT DONE
+
+        }
+        public void Decrement(PitchInterval interval) { // ! NOT DONE
+            
+        }
+
+        public PitchInterval Incremented(PitchInterval interval) {
+            var newInterval = (PitchInterval)this.Clone();
+            newInterval.Increment(interval);
+            return newInterval;
+        }
+        public PitchInterval Decremented(PitchInterval interval) {
+            var newInterval = (PitchInterval)this.Clone();
+            newInterval.Decrement(interval);
+            return newInterval;
+        }
+
         // * Interfaces
         public int CompareTo(object? obj) {
             if (obj == null) return 1; // Null is considered less than any object
@@ -152,10 +177,7 @@ namespace SineVita.Muguet {
             }
             throw new ArgumentException("Object is not a Pitch");
         }
-        public object Clone() {
-            var newThis = this;
-            return newThis;
-        }
+        public abstract object Clone();
             
         public override bool Equals(object? obj) {
             if (obj == null || GetType() != obj.GetType()) return false;
@@ -186,6 +208,49 @@ namespace SineVita.Muguet {
         }
     }
 
+    public class CompoundPitchInterval : PitchInterval {
+        // * Properties
+        public List<PitchInterval> Intervals { get; set; }
+
+        // * Constructor
+        public CompoundPitchInterval(List<PitchInterval>? intervals = null, int centOffsets = 0)
+            : base(PitchIntervalType.Compound, centOffsets) {
+            Intervals = intervals ?? new();
+        }
+        public CompoundPitchInterval(PitchInterval interval, int centOffsets = 0)
+            : base(PitchIntervalType.Compound, centOffsets) {
+            Intervals = new(){interval};
+        }
+        
+        // * Overrides
+        public override double GetFrequencyRatio() {
+            double origin = 1.0d;
+            foreach (var interval in Intervals) {
+                origin *= interval.GetFrequencyRatio();
+            }
+            return origin;
+        }
+        public override void Invert() {
+            Intervals = Intervals.Select(x => x.Inverted()).ToList();
+        }  
+        public override string ToJson() {
+            return string.Concat(
+                "{",
+                $"\"Intervals\": [{string.Join(", ", Intervals.Select(interval => interval.ToJson()))}],",
+                
+                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"CentOffsets\": {CentOffsets}",
+                "}"
+            );
+        }
+        public override object Clone() {
+            return new CompoundPitchInterval(Intervals, CentOffsets);
+        }
+    
+        
+
+    }
+
     public class FloatPitchInterval : PitchInterval {
         // * Properties
         private double _frequencyRatio;
@@ -213,6 +278,10 @@ namespace SineVita.Muguet {
                 "}"
             );
         }
+        public override object Clone() {
+            return new FloatPitchInterval(_frequencyRatio);
+        }
+    
     }
 
     public class JustIntonalPitchInterval : PitchInterval {
@@ -220,7 +289,7 @@ namespace SineVita.Muguet {
         public (int Numerator, int Denominator) JustRatio { get; set; }
 
         // * Constructor
-        public JustIntonalPitchInterval((int, int) justRatio, double? frequencyRatio = null, int centOffsets = 0)
+        public JustIntonalPitchInterval((int, int) justRatio, int centOffsets = 0)
             : base(PitchIntervalType.JustIntonation, centOffsets) {
             JustRatio = justRatio;
         }
@@ -241,6 +310,9 @@ namespace SineVita.Muguet {
                 "}"
             );
         }
+        public override object Clone() {
+            return new JustIntonalPitchInterval(JustRatio, CentOffsets);
+        }
     }
 
     public class CustomTetPitchInterval : PitchInterval {
@@ -249,8 +321,8 @@ namespace SineVita.Muguet {
         public int PitchIntervalIndex { get; set; }
 
         // * Constructors
-        public CustomTetPitchInterval(int baseValue, int pitchIntervalIndex, PitchIntervalType type = PitchIntervalType.CustomeToneEuqal, int centOffsets = 0)
-            : base(type, centOffsets) {
+        public CustomTetPitchInterval(int baseValue, int pitchIntervalIndex, int centOffsets = 0)
+            : base(PitchIntervalType.CustomeToneEqual, centOffsets) {
             Base = baseValue;
             PitchIntervalIndex = pitchIntervalIndex;
         }
@@ -277,6 +349,9 @@ namespace SineVita.Muguet {
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );
+        }
+        public override object Clone() {
+            return new CustomTetPitchInterval(Base, PitchIntervalIndex, CentOffsets);
         }
 
         // * TET increment system
@@ -340,6 +415,15 @@ namespace SineVita.Muguet {
             PitchIntervalIndex -= downBy;
         }
 
+        public static MidiPitchInterval operator ++(MidiPitchInterval interval) {
+            interval.Up();
+            return interval;
+        }
+        public static MidiPitchInterval operator --(MidiPitchInterval interval) {
+            interval.Down();
+            return interval;
+        }
+
         // * Overrides
         public override void Invert() {
             PitchIntervalIndex *= -1;
@@ -356,6 +440,10 @@ namespace SineVita.Muguet {
                 "}"
             );
         }
+        public override object Clone() {
+            return new MidiPitchInterval(PitchIntervalIndex, CentOffsets);
+        }
+    
     }
 
 }
