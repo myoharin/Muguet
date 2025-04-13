@@ -28,7 +28,7 @@ namespace SineVita.Muguet {
         }
 
         // * Abstracts Methods
-        public abstract List<Pitch> MapToRange(Pitch rootPitch, Pitch topPitch);
+        public abstract List<Pitch> MapToRange(Pitch rootPitch, Pitch topPitch); // inclusive of range
         public abstract object Clone();
 
         // * Statics
@@ -275,4 +275,53 @@ namespace SineVita.Muguet {
             return new ChordReferencedScale(_referenceChord, RepetitionInterval);
         }
     }
+
+    public class CustomTETScale : Scale {
+        // * Properties
+        public int Base { get; set; }
+        public int TuningIndex { get; set; }
+        public float TuningFrequency { get; set; }
+
+        // * Constructor
+        public CustomTETScale(int baseTET, int tuningIndex, float tuningFrequency) {
+            Base = baseTET;
+            TuningIndex = tuningIndex;
+            TuningFrequency = tuningFrequency;
+        }
+
+        public float ToIndex(double frequency, bool round = true) {
+            if (round) {return (float)Math.Round(Base * Math.Log2(frequency / TuningFrequency) + TuningIndex);}
+            else {return (float)(Base * Math.Log2(frequency / TuningFrequency) + TuningIndex);}
+        }
+        public CustomTetPitch GetPitch(int index) {
+            return new CustomTetPitch(Base, TuningIndex, TuningFrequency, index);
+        }
+
+        // * Overrides
+        public override List<Pitch> MapToRange(Pitch rootPitch, Pitch topPitch) {
+            int rootIndex = (int)ToIndex(rootPitch.Frequency, true) - 1;
+            int topIndex = (int)ToIndex(topPitch.Frequency, true) + 1;
+            List<Pitch> returnList = new();
+            for (int i = rootIndex; i < topIndex + 1; i++) {
+                var newPitch = GetPitch(i);
+                if (newPitch >= rootPitch && newPitch <= topPitch) {
+                    returnList.Add((Pitch)newPitch.Clone());
+                }
+            }
+            return returnList;
+        }
+        public override object Clone() {
+            return new CustomTETScale(Base, TuningIndex, TuningFrequency);
+        }
+        public override int GetHashCode() {
+            unchecked {
+                int hash = 17;
+                hash = hash * 41 + Base.GetHashCode();
+                hash = hash * 31 + TuningIndex.GetHashCode();
+                hash = hash * 47 + TuningFrequency.GetHashCode();
+                return hash;
+            }
+        }
+    }
+
 }

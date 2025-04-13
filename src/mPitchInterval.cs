@@ -66,20 +66,23 @@ namespace SineVita.Muguet {
         public static PitchInterval Unison { get {return Empty;}}
 
         // ! NOT DONE - Override below
+        public static PitchInterval FromPitches(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false, PitchIntervalType targetType = PitchIntervalType.Float) {
+            return CreateInterval(basePitch, upperPitch, absoluteInterval, targetType);
+        }
         public static FloatPitchInterval CreateInterval(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false, PitchIntervalType targetType = PitchIntervalType.Float) {
             Pitch higherPitch, lowerPitch;
             if (absoluteInterval) { // * Absolute value of the interval
                 if (basePitch.Frequency > upperPitch.Frequency) {
-                    higherPitch = basePitch;
-                    lowerPitch = upperPitch;
+                    higherPitch = (Pitch)basePitch.Clone();
+                    lowerPitch = (Pitch)upperPitch.Clone();
                 }
                 else {
-                    higherPitch = upperPitch;
-                    lowerPitch = basePitch;
+                    higherPitch = (Pitch)upperPitch.Clone();
+                    lowerPitch = (Pitch)basePitch.Clone();
                 }
             } else {
-                lowerPitch = basePitch;
-                higherPitch = upperPitch;
+                lowerPitch = (Pitch)basePitch.Clone();
+                higherPitch = (Pitch)upperPitch.Clone();
             }
             
             // working capital
@@ -150,13 +153,9 @@ namespace SineVita.Muguet {
         public virtual double GetFrequencyRatio() {return 1;}
         public virtual string ToJson() {return "";}
 
-        // * Incrementation
-        public void Increment(PitchInterval interval) { // ! NOT DONE
-
-        }
-        public void Decrement(PitchInterval interval) { // ! NOT DONE
-            
-        }
+        // * Incrementation - base type preserved
+        public abstract void Increment(PitchInterval interval);
+        public abstract void Decrement(PitchInterval interval);
 
         public PitchInterval Incremented(PitchInterval interval) {
             var newInterval = (PitchInterval)this.Clone();
@@ -206,11 +205,22 @@ namespace SineVita.Muguet {
         public static bool operator >=(PitchInterval left, PitchInterval right) {
             return left is null ? right is null : left.CompareTo(right) >= 0;
         }
+    
     }
 
     public class CompoundPitchInterval : PitchInterval {
         // * Properties
-        public List<PitchInterval> Intervals { get; set; }
+        private List<PitchInterval> _intervals;
+        public List<PitchInterval> Intervals {
+            get { return new(_intervals); } // already reduced when added
+            set { // make sure it has no more than 1 layer when setting and adding
+                List<PitchInterval> valueCloned = new(value);
+                _intervals = new(); // reset to base, to unison
+                foreach(var interval in valueCloned) {
+                    Increment(interval); // handles all the logic
+                }
+            }
+        }
 
         // * Constructor
         public CompoundPitchInterval(List<PitchInterval>? intervals = null, int centOffsets = 0)
@@ -220,6 +230,12 @@ namespace SineVita.Muguet {
         public CompoundPitchInterval(PitchInterval interval, int centOffsets = 0)
             : base(PitchIntervalType.Compound, centOffsets) {
             Intervals = new(){interval};
+        }
+
+        // * Try Compress
+
+        private void tryCompress() { // compress the intervals together // ! NOT DONE
+
         }
         
         // * Overrides
@@ -246,8 +262,13 @@ namespace SineVita.Muguet {
         public override object Clone() {
             return new CompoundPitchInterval(Intervals, CentOffsets);
         }
-    
-        
+
+        public override void Increment(PitchInterval interval) { // ! NOT DONE
+            throw new NotImplementedException();
+        }
+        public override void Decrement(PitchInterval interval) {
+            Increment(interval.Inverted());
+        }
 
     }
 
@@ -281,7 +302,13 @@ namespace SineVita.Muguet {
         public override object Clone() {
             return new FloatPitchInterval(_frequencyRatio);
         }
-    
+
+        public override void Increment(PitchInterval interval) {
+            _frequencyRatio *= interval.FrequencyRatio;
+        }
+        public override void Decrement(PitchInterval interval) {
+            _frequencyRatio /= interval.FrequencyRatio;
+        }
     }
 
     public class JustIntonalPitchInterval : PitchInterval {
@@ -313,6 +340,17 @@ namespace SineVita.Muguet {
         public override object Clone() {
             return new JustIntonalPitchInterval(JustRatio, CentOffsets);
         }
+    
+        public override void Increment(PitchInterval interval) { // ! NOT DONE
+            if (interval is JustIntonalPitchInterval justInterval) {
+
+            }   
+        }
+        public override void Decrement(PitchInterval interval) {  // ! NOT DONE
+            throw new NotImplementedException();
+        }
+    
+    
     }
 
     public class CustomTetPitchInterval : PitchInterval {
@@ -354,6 +392,15 @@ namespace SineVita.Muguet {
             return new CustomTetPitchInterval(Base, PitchIntervalIndex, CentOffsets);
         }
 
+        public override void Increment(PitchInterval interval) { // ! NOT DONE
+            if (interval is MidiPitchInterval midiInterval) {
+
+            }   
+        }
+        public override void Decrement(PitchInterval interval) {  // ! NOT DONE
+            throw new NotImplementedException();
+        }
+    
         // * TET increment system
         public void Up(int upBy = 1) {
             PitchIntervalIndex += upBy;
@@ -414,7 +461,18 @@ namespace SineVita.Muguet {
         public void Down(int downBy = 1) {
             PitchIntervalIndex -= downBy;
         }
-
+        
+        public MidiPitchInterval Incremented(int upBy = 1) {
+            var newInterval = (MidiPitchInterval)this.Clone();
+            newInterval.Increment(upBy);
+            return newInterval;
+        }
+        public MidiPitchInterval Decremented(int downBy = 1) {
+            var newInterval = (MidiPitchInterval)this.Clone();
+            newInterval.Decrement(downBy);
+            return newInterval;
+        }    
+        
         public static MidiPitchInterval operator ++(MidiPitchInterval interval) {
             interval.Up();
             return interval;
@@ -443,7 +501,29 @@ namespace SineVita.Muguet {
         public override object Clone() {
             return new MidiPitchInterval(PitchIntervalIndex, CentOffsets);
         }
-    
+
+        public override void Increment(PitchInterval interval) {
+            if (interval is MidiPitchInterval midiInterval) {
+                PitchIntervalIndex += midiInterval.PitchIntervalIndex;
+            }
+            else {
+                PitchIntervalIndex += interval.ToMidiIndex;
+            }  
+        }
+        public void Increment(int upBy = 1) {
+            PitchIntervalIndex += upBy;
+        }
+        public override void Decrement(PitchInterval interval) {
+            if (interval is MidiPitchInterval midiInterval) {
+                PitchIntervalIndex -= midiInterval.PitchIntervalIndex;
+            }
+            else {
+                PitchIntervalIndex -= interval.ToMidiIndex;
+            }  
+        }
+        public void Decrement(int downBy = 1) {
+            PitchIntervalIndex -= downBy;
+        }
     }
 
 }
