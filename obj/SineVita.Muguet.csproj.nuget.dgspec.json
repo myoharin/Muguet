@@ -60,10 +60,6 @@
               "version": "[8.0.13, 8.0.13]"
             },
             {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.13, 8.0.13]"
-            },
-            {
               "name": "Microsoft.NETCore.App.Ref",
               "version": "[8.0.13, 8.0.13]"
             },

@@ -3,14 +3,6 @@ using System.Text.Json;
 
 namespace SineVita.Muguet {
 
-    public enum PitchIntervalType {
-        JustIntonation,
-        CustomeToneEqual,
-        TwelveToneEqual,
-        Float,
-        Compound
-    }
-
     public abstract class PitchInterval : IComparable, ICloneable{
         // * Properties
         public PitchIntervalType Type { get; set; }
