@@ -276,14 +276,14 @@ namespace SineVita.Muguet {
         }
     }
 
-    public class CustomTETScale : Scale {
+    public class CustomTetScale : Scale {
         // * Properties
         public int Base { get; set; }
         public int TuningIndex { get; set; }
         public float TuningFrequency { get; set; }
 
         // * Constructor
-        public CustomTETScale(int baseTET, int tuningIndex, float tuningFrequency) {
+        public CustomTetScale(int baseTET, int tuningIndex, float tuningFrequency) {
             Base = baseTET;
             TuningIndex = tuningIndex;
             TuningFrequency = tuningFrequency;
@@ -311,7 +311,7 @@ namespace SineVita.Muguet {
             return returnList;
         }
         public override object Clone() {
-            return new CustomTETScale(Base, TuningIndex, TuningFrequency);
+            return new CustomTetScale(Base, TuningIndex, TuningFrequency);
         }
         public override int GetHashCode() {
             unchecked {

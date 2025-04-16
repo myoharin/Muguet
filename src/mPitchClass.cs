@@ -49,8 +49,9 @@ namespace SineVita.Muguet {
     
         // * Overrides
         public object Clone() {
-            return new PitchClass(ReferencePitch);
+            return new PitchClass((Pitch)ReferencePitch.Clone());
         }
+
 
     }
 }

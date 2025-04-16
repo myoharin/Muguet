@@ -11,6 +11,7 @@
     <!-- Exclude specific files -->
 
     <Compile Remove="src\basil\basil-muguet-cosmosia.cs" />
+    <Compile Remove="src\basil\basil-muguet-nelumbo.cs" />
     
     <!-- <Compile Remove="FolderToIgnore\**\*" /> -->
     <Reference Include="Caprifolium">

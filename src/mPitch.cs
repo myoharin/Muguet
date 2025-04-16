@@ -274,11 +274,15 @@ namespace SineVita.Muguet {
         // * Constructor
         public CompoundPitch(Pitch pitch, List<PitchInterval>? intervals = null, int centOffsets = 0)
             : base(PitchType.Compound, centOffsets) {
+            _interval = new CompoundPitchInterval();
+            _pitch = Pitch.Empty;
             Interval = intervals != null ? new CompoundPitchInterval(intervals) : new();
             Pitch = pitch;
         }
         public CompoundPitch(Pitch pitch, PitchInterval interval, int centOffsets = 0)
             : base(PitchType.Compound, centOffsets) {
+            _interval = new CompoundPitchInterval();
+            _pitch = Pitch.Empty;
             Interval = new CompoundPitchInterval(interval);
             Pitch = pitch;
         }
@@ -311,7 +315,7 @@ namespace SineVita.Muguet {
             );
         }
         public override object Clone() {
-            return new CompoundPitch(Pitch, Interval, CentOffsets);
+            return new CompoundPitch((Pitch)Pitch.Clone(), (PitchInterval)Interval.Clone(), CentOffsets);
         }
 
 
@@ -330,7 +334,7 @@ namespace SineVita.Muguet {
     
     public class CustomTetPitch : Pitch {
         // * Global Mememory Hash
-        private static Dictionary<int,CustomTETScale> _globalScales = new();
+        private static Dictionary<int,CustomTetScale> _globalScales = new();
         
         // * Properties
         public int PitchIndex { get; set; } // * Only Actual Value
@@ -340,24 +344,24 @@ namespace SineVita.Muguet {
         public int Base { get { return Scale.Base; } }
         public int TuningIndex { get { return Scale.TuningIndex; } }
         public float TuningFrequency { get { return Scale.TuningFrequency; } }
-        public CustomTETScale Scale { get {
-            return (CustomTETScale)_globalScales[_customTetScaleHash].Clone();
+        public CustomTetScale Scale { get {
+            return (CustomTetScale)_globalScales[_customTetScaleHash].Clone();
         } }
 
-        // * Constructor
+        // * Constructors
         public CustomTetPitch(int baseValue, int tuningIndex, float tuningFrequency, int pitchIndex, int centOffsets = 0)
             : base(PitchType.CustomeToneEuqal, centOffsets) {
 
             PitchIndex = pitchIndex;
 
-            var newScale = new CustomTETScale(baseValue, tuningIndex, tuningFrequency);
+            var newScale = new CustomTetScale(baseValue, tuningIndex, tuningFrequency);
             _customTetScaleHash = newScale.GetHashCode();
             if (!_globalScales.ContainsKey(_customTetScaleHash)) {
                 _globalScales.TryAdd(_customTetScaleHash, newScale);
             }
 
         }
-        public CustomTetPitch(float frequency, int baseValue, int tuningIndex, float tuningFrequency)
+        public CustomTetPitch(int baseValue, int tuningIndex, float tuningFrequency, double frequency)
             : base(PitchType.CustomeToneEuqal, 0) {    
 
             double cacheIndex = baseValue * Math.Log2(frequency / tuningFrequency) + tuningIndex;
@@ -365,13 +369,39 @@ namespace SineVita.Muguet {
             else {PitchIndex = (int)Math.Ceiling(cacheIndex);}
             CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / baseValue * 1200.0);
 
-            var newScale = new CustomTETScale(baseValue, tuningIndex, tuningFrequency);
+            var newScale = new CustomTetScale(baseValue, tuningIndex, tuningFrequency);
             _customTetScaleHash = newScale.GetHashCode();
             if (!_globalScales.ContainsKey(_customTetScaleHash)) {
                 _globalScales.TryAdd(_customTetScaleHash, newScale);
             }
         }
         
+        public CustomTetPitch(CustomTetScale scale, int pitchIndex, int centOffsets = 0) {
+            PitchIndex = pitchIndex;
+            CentOffsets = centOffsets;
+
+            _customTetScaleHash = scale.GetHashCode();
+            if (!_globalScales.ContainsKey(_customTetScaleHash)) {
+                _globalScales.TryAdd(_customTetScaleHash, scale);
+            }
+        }
+        public CustomTetPitch(CustomTetScale scale, double frequency) {
+            double cacheIndex = scale.Base * Math.Log2(frequency / scale.TuningFrequency) + scale.TuningIndex;
+            if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIndex = (int)Math.Floor(cacheIndex);}            
+            else {PitchIndex = (int)Math.Ceiling(cacheIndex);}
+            CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / scale.Base * 1200.0);
+
+            _customTetScaleHash = scale.GetHashCode();
+            if (!_globalScales.ContainsKey(_customTetScaleHash)) {
+                _globalScales.TryAdd(_customTetScaleHash, scale);
+            }
+        }
+        
+        private CustomTetPitch(int customTetScaleHash, int pitchIndex, int centOffsets = 0) {
+            PitchIndex = pitchIndex;
+            CentOffsets = centOffsets;
+            _customTetScaleHash = customTetScaleHash;
+        }
         
         // * Overrides
         public override double GetFrequency() {
@@ -390,17 +420,7 @@ namespace SineVita.Muguet {
             );
         }
         public override object Clone() {
-            return new CustomTetPitch(Base, TuningIndex, TuningFrequency, PitchIndex);
-        }
-
-
-        public override void Increment(PitchInterval interval) { // ! NOT DONE
-            if (interval is CustomTetPitchInterval customTetInterval) {
-
-            }   
-        }
-        public override void Decrement(PitchInterval interval) {  // ! NOT DONE
-            throw new NotImplementedException();
+            return new CustomTetPitch(_customTetScaleHash, PitchIndex);
         }
 
         // * TET increment system
@@ -419,10 +439,66 @@ namespace SineVita.Muguet {
             pitch.Down();
             return pitch;
         }
+        
+        public void Increment(int upBy = 1) {
+            PitchIndex += upBy;
+        }
+        public override void Increment(PitchInterval interval) {
+            if (interval is CustomTetPitchInterval customTetInterval) {
+                if (customTetInterval.Base == Scale.Base) {
+                    PitchIndex += customTetInterval.PitchIntervalIndex;
+                    return;
+                }
+            }
+            var tunedInterval = new CustomTetPitchInterval(Scale.Base, interval.FrequencyRatio);
+            PitchIndex += tunedInterval.PitchIntervalIndex;
+        }
 
+        public void Decrement(int downBy = 1) {
+            PitchIndex -= downBy;
+        }
+        public override void Decrement(PitchInterval interval) {
+            if (interval is CustomTetPitchInterval customTetInterval) {
+                if (customTetInterval.Base == Scale.Base) {
+                    PitchIndex -= customTetInterval.PitchIntervalIndex;
+                    return;
+                }
+            }
+            var tunedInterval = new CustomTetPitchInterval(Scale.Base, interval.FrequencyRatio);
+            PitchIndex -= tunedInterval.PitchIntervalIndex;
+        }
 
+            // arithmetic operations with int
+        public static CustomTetPitch operator +(CustomTetPitch pitch, int upBy) {
+            pitch.Increment(upBy);
+            return pitch;
+        }
+        public static CustomTetPitch operator +(int upBy, CustomTetPitch pitch) {
+            pitch.Increment(upBy);
+            return pitch;
+        }
 
+        public static CustomTetPitch operator -(CustomTetPitch pitch, int downBy) {
+            pitch.Decrement(downBy);
+            return pitch;
+        }
+        public static PitchInterval operator -(CustomTetPitch upperPitch, CustomTetPitch basePitch) { // TODO implemented very poorly
+            if (upperPitch.Scale == basePitch.Scale) {
+                return new CustomTetPitchInterval(
+                    upperPitch.Scale.Base, 
+                    upperPitch.PitchIndex - basePitch.PitchIndex, 
+                    upperPitch.CentOffsets - basePitch.CentOffsets
+                );
+            }
+            else {
+                return PitchInterval.CreateInterval(basePitch, upperPitch);
+            }
+        }
+        
         // * To Pitch Index
+        public static float ToPitchIndex(double frequency, CustomTetScale scale, bool round = true) {
+            return ToPitchIndex(frequency, scale.Base, scale.TuningIndex, scale.TuningFrequency, round);
+        }
         public static float ToPitchIndex(double frequency, int baseValue, int tuningIndex, float tuningFrequency, bool round = true) {
             if (round) {return (float)Math.Round(baseValue * Math.Log2(frequency / tuningFrequency) + tuningIndex);}
             else {return (float)(baseValue * Math.Log2(frequency / tuningFrequency) + tuningIndex);}
@@ -431,6 +507,8 @@ namespace SineVita.Muguet {
             var scale = Scale;
             return ToPitchIndex(frequency??Frequency, scale.Base, scale.TuningIndex, scale.TuningFrequency, round);
         }
+        
+    
     }
 
     public class MidiPitch : Pitch {
@@ -444,7 +522,7 @@ namespace SineVita.Muguet {
 
         public MidiPitch(int midiValue, int centOffsets = 0)
             : base(PitchType.TwelveToneEqual, centOffsets) {PitchIndex = midiValue;}
-        public MidiPitch(float frequency)
+        public MidiPitch(double frequency)
             : base(PitchType.TwelveToneEqual) {
             double cacheIndex = Base * Math.Log2(frequency / TuningFrequency) + TuningIndex;
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIndex = (int)Math.Floor(cacheIndex);}            
@@ -469,12 +547,12 @@ namespace SineVita.Muguet {
             PitchIndex -= downBy;
         }
    
-         public MidiPitch Incremented(int upBy = 1) {
+        public MidiPitch Incremented(int upBy = 1) { // derived from Increment()
             var newPitch = (MidiPitch)this.Clone();
             newPitch.Increment(upBy);
             return newPitch;
         }
-        public MidiPitch Decremented(int downBy = 1) {
+        public MidiPitch Decremented(int downBy = 1) { // derived from Decrement()
             var newPitch = (MidiPitch)this.Clone();
             newPitch.Decrement(downBy);
             return newPitch;
@@ -489,6 +567,23 @@ namespace SineVita.Muguet {
             return pitch;
         }
 
+            // arithmetic operations with int
+        public static MidiPitch operator +(MidiPitch pitch, int upBy) {
+            pitch.Increment(upBy);
+            return pitch;
+        }
+        public static MidiPitch operator +(int upBy, MidiPitch pitch) {
+            pitch.Increment(upBy);
+            return pitch;
+        }
+
+        public static MidiPitch operator -(MidiPitch pitch, int downBy) {
+            pitch.Decrement(downBy);
+            return pitch;
+        }
+        public static MidiPitchInterval operator -(MidiPitch upperPitch, MidiPitch basePitch) {
+            return new MidiPitchInterval(upperPitch.PitchIndex - basePitch.PitchIndex, upperPitch.CentOffsets - basePitch.CentOffsets);
+        }
         
 
         // * Overrides
@@ -511,9 +606,12 @@ namespace SineVita.Muguet {
         public override void Increment(PitchInterval interval) {
             if (interval is MidiPitchInterval midiInterval) {
                 PitchIndex += midiInterval.PitchIntervalIndex;
+                CentOffsets += interval.CentOffsets;
             }
             else {
-                PitchIndex += interval.ToMidiIndex;
+                var tunedInterval = new MidiPitch(interval.FrequencyRatio);
+                PitchIndex += tunedInterval.ToMidiIndex;
+                CentOffsets += tunedInterval.CentOffsets;
             }  
         }
         public void Increment(int upBy = 1) {
@@ -522,9 +620,12 @@ namespace SineVita.Muguet {
         public override void Decrement(PitchInterval interval) {
             if (interval is MidiPitchInterval midiInterval) {
                 PitchIndex -= midiInterval.PitchIntervalIndex;
+                CentOffsets -= interval.CentOffsets;
             }
             else {
-                PitchIndex -= interval.ToMidiIndex;
+                var tunedInterval = new MidiPitch(interval.FrequencyRatio);
+                PitchIndex -= tunedInterval.ToMidiIndex;
+                CentOffsets -= tunedInterval.CentOffsets;
             }  
         }
         public void Decrement(int downBy = 1) {

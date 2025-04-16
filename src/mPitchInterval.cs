@@ -29,7 +29,7 @@ namespace SineVita.Muguet {
             return MidiPitchInterval.ToIndex(this, false);
         } }
             // ? Harmony Helper Derives
-        public string IntervalName { get {
+        public virtual string IntervalName { get { // can be more specific in subclass.
             return HarmonyHelper.HtzToIntervalName(FrequencyRatio);
         } }
         
@@ -96,7 +96,10 @@ namespace SineVita.Muguet {
                 throw new NotImplementedException(); // ! NOT DONE
             case PitchIntervalType.CustomeToneEqual:
                 throw new NotImplementedException(); // ! NOT DONE
+            case PitchIntervalType.Compound:
+                throw new NotImplementedException(); // ! NOT DONE
             default:
+                return new FloatPitchInterval(frequency); // ! temporary
                 throw new ArgumentException("Unsupported PitchIntervalType");
             }
         }
@@ -225,10 +228,12 @@ namespace SineVita.Muguet {
         // * Constructor
         public CompoundPitchInterval(List<PitchInterval>? intervals = null, int centOffsets = 0)
             : base(PitchIntervalType.Compound, centOffsets) {
+            _intervals = new();
             Intervals = intervals ?? new();
         }
         public CompoundPitchInterval(PitchInterval interval, int centOffsets = 0)
             : base(PitchIntervalType.Compound, centOffsets) {
+            _intervals = new();
             Intervals = new(){interval};
         }
 
@@ -260,7 +265,7 @@ namespace SineVita.Muguet {
             );
         }
         public override object Clone() {
-            return new CompoundPitchInterval(Intervals, CentOffsets);
+            return new CompoundPitchInterval(new List<PitchInterval>(Intervals), CentOffsets);
         }
 
         public override void Increment(PitchInterval interval) { // ! NOT DONE
@@ -342,6 +347,7 @@ namespace SineVita.Muguet {
         }
     
         public override void Increment(PitchInterval interval) { // ! NOT DONE
+            // * ALL THE LOGIC
             if (interval is JustIntonalPitchInterval justInterval) {
 
             }   
@@ -435,12 +441,16 @@ namespace SineVita.Muguet {
         public int PitchIntervalIndex { get; set; }
         public MidiPitchInterval(int midiValue, int centOffsets = 0)
             : base(PitchIntervalType.TwelveToneEqual, centOffsets) {PitchIntervalIndex = midiValue;}
-        public MidiPitchInterval(double frequencyRatio, bool round = true) : base (PitchIntervalType.TwelveToneEqual, 0) {
+        public MidiPitchInterval(double frequencyRatio) : base (PitchIntervalType.TwelveToneEqual, 0) {
             double cacheIndex = Base * Math.Log2(frequencyRatio);
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIntervalIndex = (int)Math.Floor(cacheIndex);}            
             else {PitchIntervalIndex = (int)Math.Ceiling(cacheIndex);}
             CentOffsets = (int)Math.Round((cacheIndex - Math.Floor(cacheIndex)) / Base * 1200.0);
         }
+
+        // * Derived Gets
+        public int Index { get {return PitchIntervalIndex;} }
+        public override string IntervalName { get {return HarmonyHelper.MidiToIntervalName(Index); } }
 
         // * ToIndex
         public static float ToIndex(double frequencyRatio, bool round = true) {
@@ -480,6 +490,24 @@ namespace SineVita.Muguet {
         public static MidiPitchInterval operator --(MidiPitchInterval interval) {
             interval.Down();
             return interval;
+        }
+
+            // arithmetic operations with int
+        public static MidiPitchInterval operator +(MidiPitchInterval interval, int upBy) {
+            interval.Increment(upBy);
+            return interval;
+        }
+        public static MidiPitchInterval operator +(int upBy, MidiPitchInterval interval) {
+            interval.Increment(upBy);
+            return interval;
+        }
+
+        public static MidiPitchInterval operator -(MidiPitchInterval interval, int downBy) {
+            interval.Decrement(downBy);
+            return interval;
+        }
+        public static MidiPitchInterval operator -(MidiPitchInterval upperInterval, MidiPitchInterval baseInterval) {
+            return new MidiPitchInterval(upperInterval.PitchIntervalIndex - baseInterval.PitchIntervalIndex, upperInterval.CentOffsets - baseInterval.CentOffsets);
         }
 
         // * Overrides
