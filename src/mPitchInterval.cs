@@ -1,12 +1,22 @@
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text.Json;
+using Microsoft.VisualBasic;
 
 namespace SineVita.Muguet {
 
     public abstract class PitchInterval : IComparable, ICloneable{
         // * Properties
-        public PitchIntervalType Type { get; set; }
-        public int CentOffsets { get; set; }
+        public PitchIntervalType Type { get; init; }
+        protected int _centOffsets;
+        public virtual int CentOffsets {
+            get {
+                return _centOffsets;
+            }
+            set {
+                _centOffsets = value;
+            }
+        }
 
         // * Derived Gets
         public bool IsNegative { get {return FrequencyRatio < 1;} }
@@ -97,7 +107,7 @@ namespace SineVita.Muguet {
         }
 
         // * Inversion | other Abstractions
-        public abstract void Invert();
+        public abstract void Invert(); 
         public PitchInterval Inverted() {
             var returnInterval = this;
             returnInterval.Invert();
@@ -113,7 +123,7 @@ namespace SineVita.Muguet {
                 case PitchIntervalType.Float:
                     return new FloatPitchInterval(rootElement.GetProperty("FrequencyRatio").GetDouble());
                 case PitchIntervalType.JustIntonation:
-                    var justFrequency = rootElement.GetProperty("JustRatio");
+                    var justFrequency = rootElement.GetProperty("Ratio");
                     return new JustIntonalPitchInterval(
                         (justFrequency.GetProperty("Numerator").GetInt32(), justFrequency.GetProperty("Denominator").GetInt32()),
                         rootElement.GetProperty("CentOffsets").GetInt32()
@@ -142,7 +152,7 @@ namespace SineVita.Muguet {
         }
 
         // * Constructor
-        protected PitchInterval(PitchIntervalType type = PitchIntervalType.Float, int centOffsets = 0) {Type = type; CentOffsets = centOffsets;}
+        protected PitchInterval(PitchIntervalType type, int centOffsets = 0) {Type = type; CentOffsets = centOffsets;}
 
         // * virtual methods
         public virtual double GetFrequencyRatio() {return 1;}
@@ -178,7 +188,7 @@ namespace SineVita.Muguet {
             PitchInterval other = (PitchInterval)obj;
             return Math.Abs(FrequencyRatio - other.FrequencyRatio) < 0.0001;
         }
-        public override int GetHashCode() {
+        public override int GetHashCode() { // ! NOT DONE EVERYONE NEED UNIQUE HASH CODES
             return FrequencyRatio.GetHashCode();
         }
         public static bool operator ==(PitchInterval? left, PitchInterval? right) {
@@ -201,6 +211,9 @@ namespace SineVita.Muguet {
             return left is null ? right is null : left.CompareTo(right) >= 0;
         }
     
+        // ! NOT DONE
+        // TODO ADD Arythmetic Operators bewteen Intervals
+
     }
 
     public class CompoundPitchInterval : PitchInterval {
@@ -217,6 +230,24 @@ namespace SineVita.Muguet {
             }
         }
 
+        // * Derived Gets
+        public bool ContainsIntervalType(PitchIntervalType type) {
+            foreach (var interval in _intervals) {
+                if (interval.Type == type) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool ContainsIntervalType(System.Type type) {
+            foreach (var interval in _intervals) {
+                if (interval.GetType() == type) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         // * Constructor
         public CompoundPitchInterval(List<PitchInterval>? intervals = null, int centOffsets = 0)
             : base(PitchIntervalType.Compound, centOffsets) {
@@ -229,8 +260,7 @@ namespace SineVita.Muguet {
             Intervals = new(){interval};
         }
 
-        // * Try Compress
-
+        // * Private Methods
         private void tryCompress() { // compress the intervals together // ! NOT DONE
 
         }
@@ -244,6 +274,7 @@ namespace SineVita.Muguet {
             return origin;
         }
         public override void Invert() {
+            CentOffsets *= -1;
             Intervals = Intervals.Select(x => x.Inverted()).ToList();
         }  
         public override string ToJson() {
@@ -260,11 +291,81 @@ namespace SineVita.Muguet {
             return new CompoundPitchInterval(new List<PitchInterval>(Intervals), CentOffsets);
         }
 
-        public override void Increment(PitchInterval interval) { // ! NOT DONE
-            throw new NotImplementedException();
+        public override void Increment(PitchInterval interval) {
+            // deal with cents
+            this.CentOffsets += interval.CentOffsets;
+            interval.CentOffsets = 0;
+
+            // try compress as compound
+            if (interval is CompoundPitchInterval compoundInterval) {
+                foreach (var internalInterval in compoundInterval.Intervals) {
+                    Increment(internalInterval);
+                }
+                return;
+            }
+
+            // compres as other
+            foreach (var existingInterval in Intervals) {
+                if (existingInterval.Type == interval.Type) {
+                    switch (interval.Type) {
+                        case PitchIntervalType.CustomeToneEqual:
+                            if (((CustomTetPitchInterval)existingInterval).Base == 
+                                ((CustomTetPitchInterval)interval).Base) {
+                                existingInterval.Increment(interval);
+                                return;
+                            }
+                            break; // bass does not match, hence continue on
+                        case PitchIntervalType.JustIntonation: // very easy to
+                        case PitchIntervalType.TwelveToneEqual: // very easy to
+                        case PitchIntervalType.Float: // very easy to
+                            existingInterval.Increment(interval);
+                            return;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+            }
+            
+            // Compression Unsuccessful, add as new.
+            Intervals.Add(interval);
         }
         public override void Decrement(PitchInterval interval) {
-            Increment(interval.Inverted());
+            // deal with cents
+            this.CentOffsets += interval.CentOffsets;
+            interval.CentOffsets = 0;
+
+            // try compress as compound
+            if (interval is CompoundPitchInterval compoundInterval) {
+                foreach (var internalInterval in compoundInterval.Intervals) {
+                    Decrement(internalInterval);
+                }
+                return;
+            }
+
+            // compres as other
+            foreach (var existingInterval in Intervals) {
+                if (existingInterval.Type == interval.Type) {
+                    switch (interval.Type) {
+                        case PitchIntervalType.CustomeToneEqual:
+                            if (((CustomTetPitchInterval)existingInterval).Base == 
+                                ((CustomTetPitchInterval)interval).Base) {
+                                existingInterval.Decrement(interval);
+                                return;
+                            }
+                            break; // bass does not match, hence continue on
+                        case PitchIntervalType.JustIntonation: // very easy to
+                        case PitchIntervalType.TwelveToneEqual: // very easy to
+                        case PitchIntervalType.Float: // very easy to
+                            existingInterval.Decrement(interval);
+                            return;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+            }
+            
+            // Compression Unsuccessful, add as new.
+            Intervals.Add(interval.Inverted());
         }
 
     }
@@ -274,19 +375,27 @@ namespace SineVita.Muguet {
         private double _frequencyRatio;
 
         // * Constructor
-        public FloatPitchInterval(double frequencyRatio) : base(PitchIntervalType.Float, 0) {
-            _frequencyRatio = frequencyRatio;
+        public FloatPitchInterval(double frequencyRatio, int centOffsets = 0) : base(PitchIntervalType.Float, 0) {
+            _frequencyRatio = frequencyRatio * Math.Pow(2, centOffsets/1200d);
+            CentOffsets = 0;
         }
 
         // * Overrides
         public override void Invert() {
+            CentOffsets *= -1;
             _frequencyRatio = 1/_frequencyRatio;
         }
         public new int CentOffsets {
             get { return 0; }
             set { _frequencyRatio *= Math.Pow(2, 1+value/1200);}
         }
-        public override double GetFrequencyRatio() {return _frequencyRatio;}
+        public override double GetFrequencyRatio() {
+            if (CentOffsets != 0) {
+                _frequencyRatio *= Math.Pow(2, CentOffsets/1200d);
+                CentOffsets = 0;
+            }
+            return _frequencyRatio;
+        }
         public override string ToJson() {
             return string.Concat(
                 "{",
@@ -308,34 +417,59 @@ namespace SineVita.Muguet {
         }
     }
 
-    public class JustIntonalPitchInterval : PitchInterval {
+    public class JustIntonalPitchInterval : PitchInterval { 
         // * Properties
-        public (int Numerator, int Denominator) JustRatio { get; set; }
+        public (int Numerator, int Denominator) _ratio;
+        public (int Numerator, int Denominator) Ratio { // strictly maintained as coprimes
+            get {
+                return _ratio;
+            }
+            set {
+                _ratio = value;
+                var lcmNum = lcm(_ratio.Numerator, _ratio.Denominator);
+                while (lcmNum != 1) {
+                    _ratio =  (_ratio.Numerator / lcmNum, _ratio.Numerator / lcmNum);
+                    lcmNum = lcm(_ratio.Numerator, _ratio.Denominator);
+                }
+            }
+        }
+
+        // * Helper
+        private static int lcm(int a, int b) {
+            a = Math.Abs(a);
+            b = Math.Abs(b);
+            while (a != b) {
+                if (a < b) {b -= a;}
+                if (a > b) {a -= b;}
+            }
+            return a;
+        }
 
         // * Constructor
         public JustIntonalPitchInterval((int, int) justRatio, int centOffsets = 0)
             : base(PitchIntervalType.JustIntonation, centOffsets) {
-            JustRatio = justRatio;
+            Ratio = justRatio;
         }
 
         // * Overrides
         public override void Invert() {
-            JustRatio = (JustRatio.Denominator, JustRatio.Numerator);
+            CentOffsets *= -1;
+            Ratio = (Ratio.Denominator, Ratio.Numerator);
         }
         public override double GetFrequencyRatio()  {
-            return Math.Pow(2, CentOffsets / 1200.0) * JustRatio.Numerator / JustRatio.Denominator;
+            return Math.Pow(2, CentOffsets / 1200.0) * Ratio.Numerator / Ratio.Denominator;
         }
         public override string ToJson() {
             return string.Concat(
                 "{",
-                $"\"JustRatio\": {JustRatio},",
+                $"\"Ratio\": {Ratio},",
                 $"\"Type\": \"{Type.ToString()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );
         }
         public override object Clone() {
-            return new JustIntonalPitchInterval(JustRatio, CentOffsets);
+            return new JustIntonalPitchInterval(Ratio, CentOffsets);
         }
     
         public override void Increment(PitchInterval interval) { // ! NOT DONE
@@ -344,14 +478,76 @@ namespace SineVita.Muguet {
 
             }   
         }
-        public override void Decrement(PitchInterval interval) {  // ! NOT DONE
+        public void Increment(double ratio) { // ! NOT DONE
             throw new NotImplementedException();
         }
-    
+        public void Increment((int Numerator, int Denominator) ratio) {
+            var newRatio = (ratio.Numerator * _ratio.Numerator, ratio.Denominator * _ratio.Denominator);
+            _ratio = newRatio; // Automatically reduced
+        }
+         
+        public override void Decrement(PitchInterval interval) { // ! NOT DONE
+            throw new NotImplementedException();
+        }
+        public void Decrement(double ratio) { // ! NOT DONE
+            throw new NotImplementedException();
+        }
+        public void Decrement((int Numerator, int Denominator) ratio) {
+            var newRatio = (ratio.Denominator * _ratio.Numerator, ratio.Numerator * _ratio.Denominator);
+            _ratio = newRatio; // Automatically reduced
+        }
+
+        public JustIntonalPitchInterval Incremented(double ratio) {
+            var interval = (JustIntonalPitchInterval)Clone();
+            interval.Increment(ratio);
+            return interval;
+        }
+        public JustIntonalPitchInterval Incremented((int Numerator, int Denominator) ratio) {
+            var interval = (JustIntonalPitchInterval)Clone();
+            interval.Increment(ratio);
+            return interval;
+        }
+        public JustIntonalPitchInterval Decremented(double ratio) {
+            var interval = (JustIntonalPitchInterval)Clone();
+            interval.Decrement(ratio);
+            return interval;
+        }
+        public JustIntonalPitchInterval Decremented((int Numerator, int Denominator) ratio) {
+            var interval = (JustIntonalPitchInterval)Clone();
+            interval.Decrement(ratio);
+            return interval;
+        }
+
+        // * Operations
+        public static JustIntonalPitchInterval operator +(JustIntonalPitchInterval interval, double ratio) {
+            interval.Increment(ratio);
+            return interval;
+        }
+        public static JustIntonalPitchInterval operator +(double ratio, JustIntonalPitchInterval interval) {
+            interval.Increment(ratio);
+            return interval;
+        }
+        public static JustIntonalPitchInterval operator -(JustIntonalPitchInterval interval, double ratio) {
+            interval.Decrement(ratio);
+            return interval;
+        }
+
+        public static JustIntonalPitchInterval operator +(JustIntonalPitchInterval interval, (int Numerator, int Denominator) ratio) {
+            interval.Increment(ratio);
+            return interval;
+        }
+        public static JustIntonalPitchInterval operator +((int Numerator, int Denominator) ratio, JustIntonalPitchInterval interval) {
+            interval.Increment(ratio);
+            return interval;
+        }
+        public static JustIntonalPitchInterval operator -(JustIntonalPitchInterval interval, (int Numerator, int Denominator) ratio) {
+            interval.Decrement(ratio);
+            return interval;
+        }
     
     }
 
-    public class CustomTetPitchInterval : PitchInterval {
+    public class CustomTetPitchInterval : PitchInterval, IIncrementOperators<CustomTetPitchInterval> {
         // * Properties
         public int Base { get; set; }
         public int PitchIntervalIndex { get; set; }
@@ -371,6 +567,7 @@ namespace SineVita.Muguet {
 
         // * Overrides
         public override void Invert() {
+            CentOffsets *= -1;
             PitchIntervalIndex *= -1;
         }
         public override double GetFrequencyRatio() {
@@ -428,7 +625,7 @@ namespace SineVita.Muguet {
 
     }
 
-    public class MidiPitchInterval : PitchInterval {
+    public class MidiPitchInterval : PitchInterval, IIncrementOperators<MidiPitchInterval> {
         public const int Base = 12;
         public int PitchIntervalIndex { get; set; }
         public MidiPitchInterval(int midiValue, int centOffsets = 0)
@@ -504,6 +701,7 @@ namespace SineVita.Muguet {
 
         // * Overrides
         public override void Invert() {
+            CentOffsets *= -1;
             PitchIntervalIndex *= -1;
         }
         public override double GetFrequencyRatio() {

@@ -1,19 +1,13 @@
 using System;
 using System.Security.Permissions;
+using System.Numerics;
 using System.Text.Json;
 
 namespace SineVita.Muguet {
-    
-    public enum PitchType {
-        CustomeToneEuqal,
-        TwelveToneEqual,
-        Float,
-        Compound
-    }
 
     public abstract class Pitch : IComparable, ICloneable {
         // * Properties
-        public PitchType Type { get; set; }
+        public PitchType Type { get; init; }
         public int CentOffsets { get; set; }
 
         // * Derived Gets
@@ -332,7 +326,7 @@ namespace SineVita.Muguet {
     
     }
     
-    public class CustomTetPitch : Pitch {
+    public class CustomTetPitch : Pitch, IIncrementOperators<CustomTetPitch> {
         // * Global Mememory Hash
         private static Dictionary<int,CustomTetScale> _globalScales = new();
         
@@ -511,7 +505,7 @@ namespace SineVita.Muguet {
     
     }
 
-    public class MidiPitch : Pitch {
+    public class MidiPitch : Pitch, IIncrementOperators<MidiPitch> {
         // * Constants
         public const int Base = 12;
         public const double TuningFrequency = 440;
