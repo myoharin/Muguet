@@ -5,7 +5,11 @@ using Microsoft.VisualBasic;
 
 namespace SineVita.Muguet {
 
-    public abstract class PitchInterval : IComparable, ICloneable{
+    public abstract class PitchInterval : 
+            IComparable, 
+            ICloneable, 
+            IEquatable<PitchInterval> 
+        {
         // * Properties
         public PitchIntervalType Type { get; init; }
         protected int _centOffsets;
@@ -174,7 +178,7 @@ namespace SineVita.Muguet {
         }
 
         // * Interfaces
-        public int CompareTo(object? obj) {
+        public int CompareTo(object? obj) { // ! NOT DONE - account for numerics comparison as well
             if (obj == null) return 1; // Null is considered less than any object
             if (obj is PitchInterval otherPitch) {
                 return FrequencyRatio.CompareTo(otherPitch.FrequencyRatio); // Compare by Frequency
@@ -183,11 +187,16 @@ namespace SineVita.Muguet {
         }
         public abstract object Clone();
             
-        public override bool Equals(object? obj) {
+        public override bool Equals(object? obj) { // ! NOT DONE - account for numerics comparison as well
             if (obj == null || GetType() != obj.GetType()) return false;
             PitchInterval other = (PitchInterval)obj;
             return Math.Abs(FrequencyRatio - other.FrequencyRatio) < 0.0001;
         }
+        public bool Equals(PitchInterval? other) {
+            if (other == null || GetType() != other.GetType()) {return false;}
+            return Math.Abs(FrequencyRatio - other.FrequencyRatio) < 0.0001;
+        }
+
         public override int GetHashCode() { // ! NOT DONE EVERYONE NEED UNIQUE HASH CODES
             return FrequencyRatio.GetHashCode();
         }
@@ -209,6 +218,44 @@ namespace SineVita.Muguet {
         }
         public static bool operator >=(PitchInterval left, PitchInterval right) {
             return left is null ? right is null : left.CompareTo(right) >= 0;
+        }
+    
+        public static bool operator ==(double left, PitchInterval right) {
+            return Math.Abs(left - right.FrequencyRatio) < 0.001;
+        }
+        public static bool operator !=(double left, PitchInterval right) {
+            return !(left == right);
+        }
+        public static bool operator <(double left, PitchInterval right) {
+            return left.CompareTo(right) < 0;
+        }
+        public static bool operator <=(double left, PitchInterval right) {
+            return left.CompareTo(right) <= 0;
+        }
+        public static bool operator >(double left, PitchInterval right) {
+            return left.CompareTo(right) > 0;
+        }
+        public static bool operator >=(double left, PitchInterval right) {
+            return left.CompareTo(right) >= 0;
+        }
+    
+        public static bool operator ==(PitchInterval? left, double right) {
+            return Math.Abs(left.FrequencyRatio - right) < 0.001;
+        }
+        public static bool operator !=(PitchInterval left, double right) {
+            return !(left == right);
+        }
+        public static bool operator <(PitchInterval left, double right) {
+            return left is not null && left.CompareTo(right) < 0;
+        }
+        public static bool operator <=(PitchInterval left, double right) {
+            return left is null || left.CompareTo(right) <= 0;
+        }
+        public static bool operator >(PitchInterval left, double right) {
+            return left is not null && left.CompareTo(right) > 0;
+        }
+        public static bool operator >=(PitchInterval left, double right) {
+            return left is null ? false : left.CompareTo(right) >= 0;
         }
     
         // ! NOT DONE

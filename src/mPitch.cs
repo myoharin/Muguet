@@ -5,7 +5,11 @@ using System.Text.Json;
 
 namespace SineVita.Muguet {
 
-    public abstract class Pitch : IComparable, ICloneable {
+    public abstract class Pitch : 
+            IComparable, 
+            ICloneable, 
+            IEquatable<Pitch> 
+        {
         // * Properties
         public PitchType Type { get; init; }
         public int CentOffsets { get; set; }
@@ -86,7 +90,7 @@ namespace SineVita.Muguet {
         public abstract void Decrement(PitchInterval interval);
 
         // * Interfaces
-        public int CompareTo(object? obj) {
+        public int CompareTo(object? obj) { // ! NOT DONE - account for numerics comparison as well
             if (obj == null) return 1; // Null is considered less than any object
             if (obj is Pitch otherPitch) {
                 return Frequency.CompareTo(otherPitch.Frequency); // Compare by Frequency
@@ -94,16 +98,22 @@ namespace SineVita.Muguet {
             throw new ArgumentException("Object is not a Pitch");
         }
         public abstract object Clone();
-     
-        public override bool Equals(object? obj) {
-            if (obj == null || GetType() != obj.GetType()) return false;
+
+        public override bool Equals(object? obj) { // ! NOT DONE - account for numerics comparison as well
+            if (obj == null || GetType() != obj.GetType()) {return false;}
             Pitch other = (Pitch)obj;
             return Math.Abs(Frequency - other.Frequency) < 0.0001;
         }
+        public bool Equals(Pitch? other) {
+            if (other == null || GetType() != other.GetType()) {return false;}
+            return Math.Abs(Frequency - other.Frequency) < 0.0001;
+        }
+        
+        
         public override int GetHashCode() {
             return Frequency.GetHashCode();
         }
-        public static bool operator ==(Pitch left, Pitch right) {
+        public static bool operator ==(Pitch? left, Pitch? right) {
             if (left is null) return right is null;
             return left.Equals(right);
         }
