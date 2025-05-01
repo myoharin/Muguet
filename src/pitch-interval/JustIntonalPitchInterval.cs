@@ -37,7 +37,7 @@ namespace SineVita.Muguet {
 
         // * Constructor
         public JustIntonalPitchInterval((int, int) justRatio, int centOffsets = 0)
-            : base(PitchIntervalType.JustIntonation, centOffsets) {
+            : base(centOffsets) {
             Ratio = justRatio;
         }
 
@@ -53,7 +53,7 @@ namespace SineVita.Muguet {
             return string.Concat(
                 "{",
                 $"\"Ratio\": {Ratio},",
-                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"Type\": \"{GetType().ToString()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );

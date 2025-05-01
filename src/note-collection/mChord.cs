@@ -26,11 +26,22 @@ namespace SineVita.Muguet {
         
 
         // * Constructor
-        public Chord(List<Pitch>? notes) {
+        public Chord(List<Pitch>? notes = null) {
             SetChord(notes??new List<Pitch>());
             if (_notes == null) {_notes = new List<Pitch>();}
         }
 
+        public int Add(Pitch pitch) { // return the index which it is inserted
+            for (int i = 0; i < Notes.Count; i++) {
+                if (pitch < _notes[i]) {
+                    _notes.Insert(i, pitch);
+                    return i;
+                }
+            }
+            _notes.Add(pitch);
+            return Notes.Count - 1;
+            
+        }
         public void SetChord(List<Pitch> notes) {
             _notes = new List<Pitch>(notes);
             _notes.Sort();

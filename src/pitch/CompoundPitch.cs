@@ -1,6 +1,6 @@
 using System.Text.Json;
 namespace SineVita.Muguet {
-    public class CompoundPitch : Pitch { // ! NOT DONE
+    public class CompoundPitch : Pitch {
         
         // * Properties
         private CompoundPitchInterval _interval;
@@ -78,10 +78,41 @@ namespace SineVita.Muguet {
             return updated;
         }
         
-        private bool tryCompressIntervalIntoPitch(PitchInterval interval) { // ! NOT DONE
+        private bool tryCompressIntervalIntoPitch(PitchInterval interval) {
             // try to compress the intervals into the pitch
-            this._centOffsets += 0;
-            return interval.IsUnison;
+
+            if (interval.IsUnison) {return true;} // check unison
+
+            if (interval.CentOffsets != 0) { // cull cent offsets if that hadnt been done already
+                _basePitch.CentOffsets += interval.CentOffsets;
+                interval.CentOffsets = 0;
+            }          
+
+            switch (interval.GetType()) {
+                case Type t when t == typeof(CustomTetPitchInterval):
+                    if (_basePitch is CustomTetPitch customTetPitch &&
+                        interval is CustomTetPitchInterval customTetInterval &&
+                        customTetPitch.Scale.Base == customTetInterval.Base) {
+                        customTetPitch.PitchIndex += customTetInterval.PitchIntervalIndex;
+                        return true;
+                    }
+                    break;
+                case Type t when t == typeof(FloatPitchInterval):
+                    if (_basePitch is FloatPitch floatPitch) {
+                        floatPitch.Increment(interval);
+                        return true;
+                    }
+                    break;
+                case Type t when t == typeof(MidiPitchInterval):
+                    if (_basePitch is MidiPitch midiPitch) {
+                        midiPitch.Increment(interval);
+                        return true;
+                    }
+                    break;
+                default:
+                    return false;
+            }
+            return false;
         }
 
         // * Overrides

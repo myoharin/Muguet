@@ -8,7 +8,7 @@ namespace SineVita.Muguet {
 
         // * Constructors
         public CustomTetPitchInterval(int baseValue, int pitchIntervalIndex, int centOffsets = 0)
-            : base(PitchIntervalType.CustomeToneEqual, centOffsets) {
+            : base(centOffsets) {
             Base = baseValue;
             PitchIntervalIndex = pitchIntervalIndex;
         }
@@ -32,7 +32,7 @@ namespace SineVita.Muguet {
                 "{",
                 $"\"Base\": {Base},",
                 $"\"PitchIntervalIndex\": {PitchIntervalIndex},",
-                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"Type\": \"{GetType().ToString()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );

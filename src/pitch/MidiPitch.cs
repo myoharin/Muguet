@@ -99,7 +99,8 @@ namespace SineVita.Muguet {
         public override object Clone() {
             return new MidiPitch(PitchIndex);
         }
-    
+     
+
         public override void Increment(PitchInterval interval) {
             if (interval is MidiPitchInterval midiInterval) {
                 PitchIndex += midiInterval.PitchIntervalIndex;

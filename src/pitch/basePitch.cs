@@ -9,6 +9,8 @@ namespace SineVita.Muguet {
             IComparable, 
             ICloneable, 
             IEquatable<Pitch>  // made redunant later
+            // ! NOT DONE
+            
             // INumber<Pitch>,
             // IUnsignedNumber<Pitch>,
             // IMinMaxValue<Pitch>,
@@ -84,8 +86,8 @@ namespace SineVita.Muguet {
             newPitch.Decrement(interval);
             return newPitch;
         }
-        public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false, PitchIntervalType targetType = PitchIntervalType.Float) {
-            return PitchInterval.CreateInterval(this, pitch2, absoluteInterval, targetType);
+        public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false) {
+            return PitchInterval.CreateInterval(this, pitch2, absoluteInterval);
         }
 
         public abstract void Increment(PitchInterval interval);

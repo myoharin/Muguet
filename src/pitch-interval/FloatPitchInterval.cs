@@ -4,7 +4,7 @@ namespace SineVita.Muguet {
         private double _frequencyRatio;
 
         // * Constructor
-        public FloatPitchInterval(double frequencyRatio, int centOffsets = 0) : base(PitchIntervalType.Float, 0) {
+        public FloatPitchInterval(double frequencyRatio, int centOffsets = 0) : base(0) {
             _frequencyRatio = frequencyRatio * Math.Pow(2, centOffsets/1200d);
             CentOffsets = 0;
         }
@@ -29,7 +29,7 @@ namespace SineVita.Muguet {
             return string.Concat(
                 "{",
                 $"\"FrequencyRatio\": {FrequencyRatio},",
-                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"Type\": \"{GetType().ToString()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );

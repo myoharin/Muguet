@@ -7,6 +7,7 @@ namespace SineVita.Muguet {
             IComparable, 
             ICloneable, 
             IEquatable<PitchInterval> // made redunant later
+            // ! NOT DONE
             // INumber<PitchInterval>,
             // ISignedNumber<PitchInterval>,
 
@@ -20,7 +21,6 @@ namespace SineVita.Muguet {
             // LINK https://learn.microsoft.com/en-us/dotnet/standard/generics/math
         {
         // * Properties
-        public PitchIntervalType Type { get; init; }
         protected int _centOffsets;
         public virtual int CentOffsets {
             get {
@@ -80,11 +80,11 @@ namespace SineVita.Muguet {
         } }
         public static PitchInterval Unison { get {return Empty;}}
 
-        // ! NOT DONE - Override below
-        public static PitchInterval FromPitches(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false, PitchIntervalType targetType = PitchIntervalType.Float) {
-            return CreateInterval(basePitch, upperPitch, absoluteInterval, targetType);
+        // ! NOT DONE - OVERHAULT BELOW
+        public static PitchInterval FromPitches(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false) {
+            return CreateInterval(basePitch, upperPitch, absoluteInterval);
         }
-        public static FloatPitchInterval CreateInterval(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false, PitchIntervalType targetType = PitchIntervalType.Float) {
+        public static FloatPitchInterval CreateInterval(Pitch basePitch, Pitch upperPitch, bool absoluteInterval = false) {
             Pitch higherPitch, lowerPitch;
             if (absoluteInterval) { // * Absolute value of the interval
                 if (basePitch.Frequency > upperPitch.Frequency) {
@@ -102,23 +102,23 @@ namespace SineVita.Muguet {
             
             // working capital
             var frequency = higherPitch.Frequency / lowerPitch.Frequency;          
-            switch (targetType) {
-            case PitchIntervalType.Float:
-                return new FloatPitchInterval(frequency);
-            case PitchIntervalType.JustIntonation:
-                throw new NotImplementedException(); // ! NOT DONE
-            case PitchIntervalType.TwelveToneEqual:
-                throw new NotImplementedException(); // ! NOT DONE
-            case PitchIntervalType.CustomeToneEqual:
-                throw new NotImplementedException(); // ! NOT DONE
-            case PitchIntervalType.Compound:
-                throw new NotImplementedException(); // ! NOT DONE
-            default:
-                return new FloatPitchInterval(frequency); // ! temporary
-                throw new ArgumentException("Unsupported PitchIntervalType");
-            }
+            throw new NotImplementedException();
+            // switch (targetType) {
+            // case PitchIntervalType.Float:
+            //     return new FloatPitchInterval(frequency);
+            // case PitchIntervalType.JustIntonation:
+            //     throw new NotImplementedException(); // ! NOT DONE
+            // case PitchIntervalType.TwelveToneEqual:
+            //     throw new NotImplementedException(); // ! NOT DONE
+            // case PitchIntervalType.CustomeToneEqual:
+            //     throw new NotImplementedException(); // ! NOT DONE
+            // case PitchIntervalType.Compound:
+            //     throw new NotImplementedException(); // ! NOT DONE
+            // default:
+            //     return new FloatPSitchInterval(frequency); // ! temporary
+            //     throw new ArgumentException("Unsupported PitchIntervalType");
+            // }
         }
-
         // * Inversion | other Abstractions
         public abstract void Invert(); 
         public PitchInterval Inverted() {
@@ -131,28 +131,28 @@ namespace SineVita.Muguet {
         public static PitchInterval FromJson(string jsonString) { // ! NEED TO MAKE PITCH INTERVAL TYPE REDUNANT
             var jsonDocument = JsonDocument.Parse(jsonString);
             var rootElement = jsonDocument.RootElement;
-            PitchIntervalType type = Enum.Parse<PitchIntervalType>(rootElement.GetProperty("Type").GetString() ??  throw new ArgumentException("Invalid JsonString"));
+            var type = System.Type.GetType(rootElement.GetProperty("Type").GetString() ??  throw new ArgumentException("Invalid JsonString"));
             switch (type) {
-                case PitchIntervalType.Float:
+                case Type t when t == typeof(FloatPitchInterval):
                     return new FloatPitchInterval(rootElement.GetProperty("FrequencyRatio").GetDouble());
-                case PitchIntervalType.JustIntonation:
+                case Type t when t == typeof(JustIntonalPitchInterval):
                     var justFrequency = rootElement.GetProperty("Ratio");
                     return new JustIntonalPitchInterval(
                         (justFrequency.GetProperty("Numerator").GetInt32(), justFrequency.GetProperty("Denominator").GetInt32()),
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
-                case PitchIntervalType.CustomeToneEqual:
+                case Type t when t == typeof(CustomTetPitchInterval):
                     return new CustomTetPitchInterval(
                         rootElement.GetProperty("Base").GetInt32(),
                         rootElement.GetProperty("PitchIntervalIndex").GetInt32(),
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
-                case PitchIntervalType.TwelveToneEqual:
+                case Type t when t == typeof(MidiPitchInterval):
                     return new MidiPitchInterval(
                         rootElement.GetProperty("PitchIntervalIndex").GetInt32(),
                         rootElement.GetProperty("CentOffsets").GetInt32()
                     );
-                case PitchIntervalType.Compound:
+                case Type t when t == typeof(CompoundPitchInterval):
                     var centOffsets = rootElement.GetProperty("CentOffsets").GetInt32();
                     var intervals = rootElement.GetProperty("Intervals")
                         .EnumerateArray()
@@ -165,7 +165,7 @@ namespace SineVita.Muguet {
         }
 
         // * Constructor
-        protected PitchInterval(PitchIntervalType type, int centOffsets = 0) {Type = type; CentOffsets = centOffsets;}
+        protected PitchInterval(int centOffsets = 0) {CentOffsets = centOffsets;}
 
         // * virtual methods
         public abstract double GetFrequencyRatio();

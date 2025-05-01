@@ -5,8 +5,8 @@ namespace SineVita.Muguet {
         public const int Base = 12;
         public int PitchIntervalIndex { get; set; }
         public MidiPitchInterval(int midiValue, int centOffsets = 0)
-            : base(PitchIntervalType.TwelveToneEqual, centOffsets) {PitchIntervalIndex = midiValue;}
-        public MidiPitchInterval(double frequencyRatio) : base (PitchIntervalType.TwelveToneEqual, 0) {
+            : base(centOffsets) {PitchIntervalIndex = midiValue;}
+        public MidiPitchInterval(double frequencyRatio) : base (0) {
             double cacheIndex = Base * Math.Log2(frequencyRatio);
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIntervalIndex = (int)Math.Floor(cacheIndex);}            
             else {PitchIntervalIndex = (int)Math.Ceiling(cacheIndex);}
@@ -23,7 +23,7 @@ namespace SineVita.Muguet {
             else {return (float)(12 * Math.Log2(frequencyRatio));}
         }
         public static float ToIndex(PitchInterval interval, bool round = true) {
-            if (interval.Type == PitchIntervalType.TwelveToneEqual) {
+            if (interval.GetType() == typeof(MidiPitchInterval)) {
                 return ((MidiPitchInterval)interval).PitchIntervalIndex;
             }
             else {return ToIndex(interval.FrequencyRatio, round);}
@@ -87,7 +87,7 @@ namespace SineVita.Muguet {
             return string.Concat(
                 "{",
                 $"\"PitchIntervalIndex\": {PitchIntervalIndex},",
-                $"\"Type\": \"{Type.ToString()}\",",
+                $"\"Type\": \"{GetType().ToString()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );

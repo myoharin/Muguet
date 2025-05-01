@@ -24,7 +24,7 @@ namespace SineVita.Muguet {
                 referencePitch.Incremented(range) : referencePitch.Decremented(range);
             var rootPitch = referencePitchIsRoot ? referencePitch : otherPitch;
             var topPitch = !referencePitchIsRoot ? referencePitch : otherPitch;
-            return MapToRange(rootPitch, topPitch);
+            return this.MapToRange(rootPitch, topPitch);
         }
 
         // * Abstracts Methods
@@ -140,12 +140,7 @@ namespace SineVita.Muguet {
 
         // * Transformation
         public bool Contains(Pitch pitch) {
-            foreach (var pitchClass in _pitchClasses) {
-                if (pitchClass.Equals(pitch)) {
-                    return true;
-                }
-            }
-            return false;
+            return _pitchClasses.Any(pitchClass => pitchClass.Equals(pitch));
         }
         public bool Contains(PitchClass pitchClass) {
             foreach (var pitchClassI in _pitchClasses) {
@@ -320,6 +315,14 @@ namespace SineVita.Muguet {
                 hash = hash * 31 + TuningIndex.GetHashCode();
                 hash = hash * 47 + TuningFrequency.GetHashCode();
                 return hash;
+            }
+        }
+        public override bool Equals(object? obj) {
+            if (obj is CustomTetScale scale) {
+                return this.GetHashCode == scale.GetHashCode;
+            }
+            else {
+                return false;
             }
         }
     }
