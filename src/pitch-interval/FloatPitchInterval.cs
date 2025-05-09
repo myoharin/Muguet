@@ -10,6 +10,13 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
+        public static FloatPitchInterval CreatePitchInterval(Pitch root, Pitch terminal, bool absolute = false) { // ! NOT DONE
+            throw new NotImplementedException();
+        }
+        public static FloatPitchInterval New(Pitch root, Pitch terminal, bool absolute = false) {
+            return CreatePitchInterval(root, terminal, absolute);
+        }
+
         public override void Invert() {
             CentOffsets *= -1;
             _frequencyRatio = 1/_frequencyRatio;

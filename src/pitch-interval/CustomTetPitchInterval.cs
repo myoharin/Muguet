@@ -20,6 +20,13 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
+        public static CustomTetPitchInterval CreatePitchInterval(Pitch root, Pitch terminal, bool absolute = false) { // ! NOT DONE
+            throw new NotImplementedException();
+        }
+        public static CustomTetPitchInterval New(Pitch root, Pitch terminal, bool absolute = false) {
+            return CreatePitchInterval(root, terminal, absolute);
+        }
+
         public override void Invert() {
             CentOffsets *= -1;
             PitchIntervalIndex *= -1;
@@ -41,13 +48,23 @@ namespace SineVita.Muguet {
             return new CustomTetPitchInterval(Base, PitchIntervalIndex, CentOffsets);
         }
 
-        public override void Increment(PitchInterval interval) { // ! NOT DONE
-            if (interval is MidiPitchInterval midiInterval) {
-
-            }   
+        public override void Increment(PitchInterval interval) {
+            if (interval is CustomTetPitchInterval customInterval && customInterval.Base == this.Base) {
+                this.CentOffsets += customInterval.CentOffsets;
+                this.PitchIntervalIndex += customInterval.PitchIntervalIndex;
+            }
+            else {
+                 this.Increment(new CustomTetPitchInterval(this.Base, interval.FrequencyRatio));
+            }
         }
-        public override void Decrement(PitchInterval interval) {  // ! NOT DONE
-            throw new NotImplementedException();
+        public override void Decrement(PitchInterval interval) {
+            if (interval is CustomTetPitchInterval customInterval && customInterval.Base == this.Base) {
+                this.CentOffsets -= customInterval.CentOffsets;
+                this.PitchIntervalIndex -= customInterval.PitchIntervalIndex;
+            }
+            else {
+                 this.Decrement(new CustomTetPitchInterval(this.Base, interval.FrequencyRatio));
+            }
         }
     
         // * TET increment system

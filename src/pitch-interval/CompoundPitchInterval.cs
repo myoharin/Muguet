@@ -36,6 +36,13 @@ namespace SineVita.Muguet {
         }
         
         // * Overrides
+        public static CompoundPitchInterval CreatePitchInterval(Pitch root, Pitch terminal, bool absolute = false) { // ! NOT DONE
+            throw new NotImplementedException();
+        }
+        public static CompoundPitchInterval New(Pitch root, Pitch terminal, bool absolute = false) {
+            return CreatePitchInterval(root, terminal, absolute);
+        }
+
         public override double GetFrequencyRatio() {
             double origin = 1.0d;
             foreach (var interval in Intervals) {

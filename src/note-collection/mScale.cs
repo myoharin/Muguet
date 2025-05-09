@@ -217,7 +217,7 @@ namespace SineVita.Muguet {
             get { return _repetitionInterval; }
             set {
                 var valueCloned = (PitchInterval)value.Clone();
-                if (valueCloned.IsNegative) {valueCloned.Invert();}
+                if (PitchInterval.IsNegative(valueCloned)) {valueCloned.Invert();}
                 _repetitionInterval = valueCloned;
                 ReferenceChord = _referenceChord; // re-set this to trigger range check
             }
