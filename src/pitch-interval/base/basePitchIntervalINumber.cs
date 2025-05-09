@@ -110,7 +110,6 @@ namespace SineVita.Muguet {
         public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // ! NOT DONE
         public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // ! NOT DONE
         
-        
         public string ToString(string? format, IFormatProvider? formatProvider) {  // ! NOT DONE
             throw new NotImplementedException();
         }
