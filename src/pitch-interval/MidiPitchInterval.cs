@@ -94,7 +94,7 @@ namespace SineVita.Muguet {
             return string.Concat(
                 "{",
                 $"\"PitchIntervalIndex\": {PitchIntervalIndex},",
-                $"\"Type\": \"{GetType().ToString()}\",",
+                $"\"Type\": \"{GetType()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );

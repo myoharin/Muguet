@@ -43,7 +43,15 @@ namespace SineVita.Muguet {
         public static PitchInterval MultiplicativeIdentity => PitchInterval.Default;
         
         public static PitchInterval Abs(PitchInterval value) => value.IsAbsolute ? value : value.Inverted();
-        public static PitchInterval Clamp(PitchInterval value, PitchInterval min, PitchInterval max) => value <= min ? min : value >= max ? max : value;
+        public static PitchInterval Clamp(PitchInterval value, PitchInterval min, PitchInterval max) {
+            if (value <= min) {
+                return min;
+            } else if (value >= max) {
+                return max;
+            } else {
+                return value;
+            }
+        }
         public static PitchInterval Create<TOther>(TOther value) where TOther : INumber<TOther> => new FloatPitchInterval(Convert.ToDouble(value));
         public static PitchInterval CreateSaturating<TOther>(TOther value) where TOther : System.Numerics.INumberBase<TOther> => new FloatPitchInterval(Convert.ToDouble(value));
         

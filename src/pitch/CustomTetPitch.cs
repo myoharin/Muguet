@@ -2,7 +2,7 @@ using System.Numerics;
 using System.Text.Json;
 namespace SineVita.Muguet {
         public class CustomTetPitch : Pitch, IIncrementOperators<CustomTetPitch> {
-        // * Global Mememory Hash
+        // * Global Memory Hash
         private static Dictionary<int,CustomTetScale> _globalScales = new();
         
         // * Properties

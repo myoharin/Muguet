@@ -1,25 +1,25 @@
 namespace SineVita.Muguet {
     public class JustIntonalPitchInterval : PitchInterval { 
         // * Properties
-        public (int Numerator, int Denominator) _ratio;
+        private (int Numerator, int Denominator) _ratio;
         public (int Numerator, int Denominator) Ratio { // strictly maintained as coprimes
             get {
                 return _ratio;
             }
             set {
                 _ratio = value;
-                var lcmNum = lcm(_ratio.Numerator, _ratio.Denominator);
+                var lcmNum = _Lcm(_ratio.Numerator, _ratio.Denominator);
                 while (lcmNum != 1) {
                     _ratio =  (_ratio.Numerator / lcmNum, _ratio.Numerator / lcmNum);
-                    lcmNum = lcm(_ratio.Numerator, _ratio.Denominator);
+                    lcmNum = _Lcm(_ratio.Numerator, _ratio.Denominator);
                 }
             }
         }
 
-        private const int _defaultRatioEstimateToleranceCent = 3;
+        private const int DefaultRatioEstimateToleranceCent = 3;
 
         // * Statics
-        private static int lcm(int a, int b) {
+        private static int _Lcm(int a, int b) {
             a = Math.Abs(a);
             b = Math.Abs(b);
             while (a != b) {
@@ -60,7 +60,7 @@ namespace SineVita.Muguet {
             return string.Concat(
                 "{",
                 $"\"Ratio\": {Ratio},",
-                $"\"Type\": \"{GetType().ToString()}\",",
+                $"\"Type\": \"{GetType()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );
@@ -82,7 +82,7 @@ namespace SineVita.Muguet {
             Increment(interval, Math.Pow(2,tolerenceCents/1200d));
         }
         public override void Increment(PitchInterval interval) {
-            Increment(interval, _defaultRatioEstimateToleranceCent);
+            Increment(interval, DefaultRatioEstimateToleranceCent);
         }
         public void Increment(double ratio, double toleranceRatio = 1) { // ! NOT DONE
             throw new NotImplementedException();
@@ -105,7 +105,7 @@ namespace SineVita.Muguet {
             Decrement(interval, Math.Pow(2,tolerenceCents/1200d));
         }
         public override void Decrement(PitchInterval interval) {
-            Decrement(interval, _defaultRatioEstimateToleranceCent);
+            Decrement(interval, DefaultRatioEstimateToleranceCent);
         }
         public void Decrement(double ratio, double toleranceRatio = 1) { // ! NOT DONE
             throw new NotImplementedException();

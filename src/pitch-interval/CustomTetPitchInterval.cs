@@ -39,7 +39,7 @@ namespace SineVita.Muguet {
                 "{",
                 $"\"Base\": {Base},",
                 $"\"PitchIntervalIndex\": {PitchIntervalIndex},",
-                $"\"Type\": \"{GetType().ToString()}\",",
+                $"\"Type\": \"{GetType()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );

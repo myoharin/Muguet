@@ -20,7 +20,7 @@ namespace SineVita.Muguet {
             set {
                 var valueCloned = (PitchInterval)value.Clone();
                 if (valueCloned is CompoundPitchInterval clonedCompoundInterval) {
-                    _interval = clonedCompoundInterval; // guanteed to be reduced
+                    _interval = clonedCompoundInterval; // guaranteed to be reduced
                 }
                 else {
                     _interval = new CompoundPitchInterval(valueCloned);  // base case
@@ -135,10 +135,10 @@ namespace SineVita.Muguet {
         public static new CompoundPitch FromJson(string jsonString) {
             var rootElement = JsonDocument.Parse(jsonString).RootElement;
 
-            var pitch = FromJson(rootElement.GetProperty("BasePitch").GetString() ?? Pitch.Empty.ToJson());
+            var pitch = Pitch.FromJson(rootElement.GetProperty("BasePitch").GetString() ?? Pitch.Empty.ToJson());
             var centOffsets = rootElement.GetProperty("CentOffsets").GetInt32();
             string? intervalStr = rootElement.GetProperty("Interval").GetString();
-            CompoundPitchInterval? interval = intervalStr != null ? (CompoundPitchInterval)(PitchInterval.FromJson(intervalStr)) : null;
+            CompoundPitchInterval? interval = intervalStr != null ? (CompoundPitchInterval)PitchInterval.FromJson(intervalStr) : null;
             return (interval == null) ? new CompoundPitch(pitch, centOffsets:centOffsets) : new CompoundPitch(pitch, interval, centOffsets);
         }
         public override object Clone() {

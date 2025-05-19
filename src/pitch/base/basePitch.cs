@@ -1,31 +1,16 @@
-using System;
-using System.Security.Permissions;
-using System.Numerics;
 using System.Text.Json;
 
-namespace SineVita.Muguet {
-
+namespace SineVita.Muguet 
+{
     public abstract partial class Pitch : 
             IComparable, 
             ICloneable
-            // ! NOT DONE
-            
-            // INumber<Pitch>,
-            // IUnsignedNumber<Pitch>,
-            // IMinMaxValue<Pitch>,
-
-
-            // LINK https://learn.microsoft.com/en-us/dotnet/standard/generics/math
         {
         // * Properties
         protected int _centOffsets;
-        public virtual int CentOffsets { 
-            get {
-                return _centOffsets;
-            }
-            set {
-                _centOffsets = value;
-            }
+        public int CentOffsets { 
+            get => _centOffsets;
+            set { _centOffsets = value;  }
          }
 
         // * Derived Gets

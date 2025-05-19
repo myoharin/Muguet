@@ -14,8 +14,8 @@ namespace SineVita.Muguet {
 
         // * Overrides
         public new int CentOffsets {
-            get { return _centOffsets - _centOffsets; }
-            set { _centOffsets = 0; this._frequency *= Math.Pow(2, 1+value/1200);}
+            get => 0;
+            set { _centOffsets = 0; this._frequency *= Math.Pow(2, 1+value/1200d);}
         }
         public override double GetFrequency() {return _frequency;}
         public override string ToJson() {

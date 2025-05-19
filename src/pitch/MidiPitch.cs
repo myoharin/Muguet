@@ -12,8 +12,7 @@ namespace SineVita.Muguet {
 
         public MidiPitch(int midiValue, int centOffsets = 0)
             : base(centOffsets) {PitchIndex = midiValue;}
-        public MidiPitch(double frequency)
-            : base() {
+        public MidiPitch(double frequency) {
             double cacheIndex = Base * Math.Log2(frequency / TuningFrequency) + TuningIndex;
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIndex = (int)Math.Floor(cacheIndex);}            
             else {PitchIndex = (int)Math.Ceiling(cacheIndex);}
@@ -84,12 +83,12 @@ namespace SineVita.Muguet {
             return string.Concat(
                 "{",
                 $"\"PitchIndex\": {PitchIndex},",
-                $"\"Type\": \"{GetType().ToString()}\",",
+                $"\"Type\": \"{GetType()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );
         }
-        public static new MidiPitch FromJson(string jsonString) {
+        public new static MidiPitch FromJson(string jsonString) {
             var rootElement = JsonDocument.Parse(jsonString).RootElement;
             return new MidiPitch(
                 rootElement.GetProperty("PitchIndex").GetInt32(),
@@ -99,7 +98,24 @@ namespace SineVita.Muguet {
         public override object Clone() {
             return new MidiPitch(PitchIndex);
         }
-     
+        
+        public new int CentOffsets {
+            get => base.CentOffsets;
+            set {
+                _centOffsets = value;
+                while (_centOffsets < 100)
+                {
+                    _centOffsets += 100;
+                    PitchIndex -= 1;
+                }
+
+                while (_centOffsets > 100)
+                {
+                    _centOffsets -= 100;
+                    PitchIndex += 1;
+                }
+            }
+        }
 
         public override void Increment(PitchInterval interval) {
             if (interval is MidiPitchInterval midiInterval) {

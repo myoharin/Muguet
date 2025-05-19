@@ -23,7 +23,7 @@ namespace SineVita.Muguet {
         }
         public new int CentOffsets {
             get { return 0; }
-            set { _frequencyRatio *= Math.Pow(2, 1+value/1200);}
+            set { _frequencyRatio *= Math.Pow(2, 1+value/1200d);}
         }
         public override double GetFrequencyRatio() {
             if (CentOffsets != 0) {
@@ -36,7 +36,7 @@ namespace SineVita.Muguet {
             return string.Concat(
                 "{",
                 $"\"FrequencyRatio\": {FrequencyRatio},",
-                $"\"Type\": \"{GetType().ToString()}\",",
+                $"\"Type\": \"{GetType()}\",",
                 $"\"CentOffsets\": {CentOffsets}",
                 "}"
             );

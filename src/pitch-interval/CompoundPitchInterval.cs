@@ -16,7 +16,7 @@ namespace SineVita.Muguet {
         // * Derived Gets
         public bool ContainsIntervalType(System.Type type) {
             foreach (var interval in _intervals) {
-                if (interval.GetType() == type) {
+                if (interval.GetType() == type) {   
                     return true;
                 }
             }
@@ -34,13 +34,10 @@ namespace SineVita.Muguet {
             _intervals = new();
             Intervals = new(){interval};
         }
-        
+
         // * Overrides
-        public static CompoundPitchInterval CreatePitchInterval(Pitch root, Pitch terminal, bool absolute = false) { // ! NOT DONE
-            throw new NotImplementedException();
-        }
         public static CompoundPitchInterval New(Pitch root, Pitch terminal, bool absolute = false) {
-            return CreatePitchInterval(root, terminal, absolute);
+            return (CompoundPitchInterval)CompoundPitchInterval.CreateInterval(root, terminal, absolute);
         }
 
         public override double GetFrequencyRatio() {
