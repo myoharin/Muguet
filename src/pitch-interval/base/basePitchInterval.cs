@@ -132,9 +132,5 @@ namespace SineVita.Muguet
             return newInterval;
         }
 
-        // ! NOT DONE
-        // TODO ADD Arythmetic Operators bewteen Intervals
-        // + * are synonymous | - / are synonymous
-
     }
 }

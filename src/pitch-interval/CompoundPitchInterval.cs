@@ -3,7 +3,7 @@ namespace SineVita.Muguet {
         // * Properties
         private List<PitchInterval> _intervals;
         public List<PitchInterval> Intervals {
-            get { return new(_intervals); } // already reduced when added
+            get => new(_intervals); // already reduced when added
             set { // make sure it has no more than 1 layer when setting and adding
                 List<PitchInterval> valueCloned = new(value);
                 _intervals = new(); // reset to base, to unison
@@ -110,37 +110,35 @@ namespace SineVita.Muguet {
                 foreach (var internalInterval in compoundInterval.Intervals) {
                     Decrement(internalInterval);
                 }
-                return;
             }
-
-            // compres as other
-            foreach (var existingInterval in Intervals) {
-                if (existingInterval.GetType() == interval.GetType()) {
-                    switch (interval.GetType()) {
-                        case Type t when t == typeof(CustomTetPitchInterval):
-                            if (((CustomTetPitchInterval)existingInterval).Base == 
-                                ((CustomTetPitchInterval)interval).Base) {
+            else { // compress as other
+                foreach (var existingInterval in Intervals) {
+                    if (existingInterval.GetType() == interval.GetType()) {
+                        switch (interval.GetType()) {
+                            case Type t when t == typeof(CustomTetPitchInterval):
+                                if (((CustomTetPitchInterval)existingInterval).Base == 
+                                    ((CustomTetPitchInterval)interval).Base) {
+                                    existingInterval.Decrement(interval);
+                                    return;
+                                }
+                                break; // bass does not match, hence continue on
+                            case Type t when t == typeof(JustIntonalPitchInterval): // very easy to
                                 existingInterval.Decrement(interval);
                                 return;
-                            }
-                            break; // bass does not match, hence continue on
-                        case Type t when t == typeof(JustIntonalPitchInterval): // very easy to
-                            existingInterval.Decrement(interval);
-                            return;
-                        case Type t when t == typeof(MidiPitchInterval): // very easy to
-                            existingInterval.Decrement(interval);
-                            return;
-                        case Type t when t == typeof(FloatPitchInterval): // very easy to
-                            existingInterval.Decrement(interval);
-                            return;
-                        default:
-                            throw new NotImplementedException();
+                            case Type t when t == typeof(MidiPitchInterval): // very easy to
+                                existingInterval.Decrement(interval);
+                                return;
+                            case Type t when t == typeof(FloatPitchInterval): // very easy to
+                                existingInterval.Decrement(interval);
+                                return;
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
+                // Compression Unsuccessful, add as new.
+                _intervals.Add(interval.Inverted());
             }
-            
-            // Compression Unsuccessful, add as new.
-            _intervals.Add(interval.Inverted());
         }
 
     }

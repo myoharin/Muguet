@@ -58,8 +58,8 @@ namespace SineVita.Muguet {
         public static bool IsNegative(PitchInterval value) => value.FrequencyRatio < 1;
         public static bool IsPositive(PitchInterval value) => value.FrequencyRatio > 1;
         
-        public static string ToBase(PitchInterval value) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval From(string value) => throw new NotImplementedException(); // ! NOT DONE
+        public static string ToBase(PitchInterval value) => throw new NotImplementedException(); // TODO
+        public static PitchInterval From(string value) => throw new NotImplementedException(); // TODO
         public static int Radix => 10;
 
         public static bool IsNegativeInfinity(PitchInterval value) => value.FrequencyRatio <= 0;
@@ -72,24 +72,24 @@ namespace SineVita.Muguet {
         public static PitchInterval Min(PitchInterval x, PitchInterval y) => x >= y ? y : x;
         
         // * IParse
-        public static PitchInterval Parse(ReadOnlySpan<char> s) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval Parse(string s) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval Parse(string s, IFormatProvider? provider) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => throw new NotImplementedException(); // ! NOT DONE
+        public static PitchInterval Parse(ReadOnlySpan<char> s) => throw new NotImplementedException(); // TODO
+        public static PitchInterval Parse(string s) => throw new NotImplementedException(); // TODO
+        public static PitchInterval Parse(string s, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
+        public static PitchInterval Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
         
-        public static bool TryParse(string? s, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryParse(string? s, out PitchInterval result) => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryParse(ReadOnlySpan<char> s, out PitchInterval result) => throw new NotImplementedException(); // ! NOT DONE
+        public static bool TryParse(string? s, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
+        public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
+        public static bool TryParse(string? s, out PitchInterval result) => throw new NotImplementedException(); // TODO
+        public static bool TryParse(ReadOnlySpan<char> s, out PitchInterval result) => throw new NotImplementedException(); // TODO
         
-        public static PitchInterval operator ++(PitchInterval value) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval operator --(PitchInterval value) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval operator checked ++(PitchInterval value) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval operator checked --(PitchInterval value) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval operator +(PitchInterval value) => throw new NotImplementedException(); // ! NOT DONE
+        public static PitchInterval operator ++(PitchInterval value) => throw new NotImplementedException(); // TODO
+        public static PitchInterval operator --(PitchInterval value) => throw new NotImplementedException(); // TODO
+        public static PitchInterval operator checked ++(PitchInterval value) => throw new NotImplementedException(); // TODO
+        public static PitchInterval operator checked --(PitchInterval value) => throw new NotImplementedException(); // TODO
+        public static PitchInterval operator +(PitchInterval value) => throw new NotImplementedException(); // TODO
         
         // * I-dk
-        public static bool IsCanonical(PitchInterval value) => value.GetType() == typeof(FloatPitch);
+        public static bool IsCanonical(PitchInterval value) => value is FloatPitchInterval;
         public static bool IsComplexNumber(PitchInterval value) => false;
         public static bool IsEvenInteger(PitchInterval value) => double.IsEvenInteger(value.FrequencyRatio);
         public static bool IsImaginaryNumber(PitchInterval value) => false;
@@ -100,28 +100,28 @@ namespace SineVita.Muguet {
         public static bool IsSubnormal(PitchInterval value) => double.IsSubnormal(value.FrequencyRatio);
         public static bool IsZero(PitchInterval value) => IsNegativeInfinity(value);
 
-        public static PitchInterval MaxMagnitude(PitchInterval x, PitchInterval y) => throw new NotImplementedException();  // ! NOT DONE
-        public static PitchInterval MaxMagnitudeNumber(PitchInterval x, PitchInterval y) => throw new NotImplementedException();  // ! NOT DONE
-        public static PitchInterval MinMagnitude(PitchInterval x, PitchInterval y) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval MinMagnitudeNumber(PitchInterval x, PitchInterval y) => throw new NotImplementedException(); // ! NOT DONE
+        public static PitchInterval MaxMagnitude(PitchInterval x, PitchInterval y) => throw new NotImplementedException();  // TODO
+        public static PitchInterval MaxMagnitudeNumber(PitchInterval x, PitchInterval y) => throw new NotImplementedException();  // TODO
+        public static PitchInterval MinMagnitude(PitchInterval x, PitchInterval y) => throw new NotImplementedException(); // TODO
+        public static PitchInterval MinMagnitudeNumber(PitchInterval x, PitchInterval y) => throw new NotImplementedException(); // TODO
         
-        public static PitchInterval Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // ! NOT DONE
-        public static PitchInterval Parse(string s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // ! NOT DONE
+        public static PitchInterval Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
+        public static PitchInterval Parse(string s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
         
-        public static bool TryConvertFromChecked<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryConvertFromSaturating<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryConvertFromTruncating<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryConvertToChecked<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryConvertToSaturating<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryConvertToTruncating<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // ! NOT DONE
+        public static bool TryConvertFromChecked<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
+        public static bool TryConvertFromSaturating<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
+        public static bool TryConvertFromTruncating<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
+        public static bool TryConvertToChecked<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
+        public static bool TryConvertToSaturating<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
+        public static bool TryConvertToTruncating<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
         
-        public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // ! NOT DONE
-        public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // ! NOT DONE
+        public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
+        public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
         
-        public string ToString(string? format, IFormatProvider? formatProvider) {  // ! NOT DONE
+        public string ToString(string? format, IFormatProvider? formatProvider) {  // TODO
             throw new NotImplementedException();
         }
-        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider) {  // ! NOT DONE
+        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider) {  // TODO
             // Example implementation (you can adjust as needed)
             string result = ToString(format.ToString(), formatProvider);
             if (result.Length > destination.Length) {

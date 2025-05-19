@@ -14,19 +14,19 @@ namespace SineVita.Muguet {
         }
 
         // * Derived Gets
-        public int Index { get {return PitchIntervalIndex;} }
-        public override string IntervalName { get {return HarmonyHelper.MidiToIntervalName(Index); } }
+        public int Index => PitchIntervalIndex;
+        public override string IntervalName => HarmonyHelper.MidiToIntervalName(Index);
 
         // * ToIndex
         public static float ToIndex(double frequencyRatio, bool round = true) {
-            if (round) {return (float)Math.Round(12 * Math.Log2(frequencyRatio));}
-            else {return (float)(12 * Math.Log2(frequencyRatio));}
+            return round
+                ? (float)Math.Round(12 * Math.Log2(frequencyRatio))
+                : (float)(12 * Math.Log2(frequencyRatio));
         }
         public static float ToIndex(PitchInterval interval, bool round = true) {
-            if (interval is MidiPitchInterval midiInterval) {
-                return midiInterval.PitchIntervalIndex;
-            }
-            else {return ToIndex(interval.FrequencyRatio, round);}
+            return interval is MidiPitchInterval midiInterval
+                ? midiInterval.PitchIntervalIndex
+                : ToIndex(interval.FrequencyRatio, round);
         }
 
         // * TET increment system
@@ -98,10 +98,11 @@ namespace SineVita.Muguet {
 
         public override void Increment(PitchInterval interval) {
             if (interval is MidiPitchInterval midiInterval) {
+                CentOffsets += interval.CentOffsets;
                 PitchIntervalIndex += midiInterval.PitchIntervalIndex;
             }
             else {
-                PitchIntervalIndex += interval.ToMidiIndex;
+                Increment(new MidiPitchInterval(interval.FrequencyRatio));
             }  
         }
         public void Increment(int upBy = 1) {
@@ -109,10 +110,11 @@ namespace SineVita.Muguet {
         }
         public override void Decrement(PitchInterval interval) {
             if (interval is MidiPitchInterval midiInterval) {
+                CentOffsets -= interval.CentOffsets; 
                 PitchIntervalIndex -= midiInterval.PitchIntervalIndex;
             }
             else {
-                PitchIntervalIndex -= interval.ToMidiIndex;
+                Decrement(new MidiPitchInterval(interval.FrequencyRatio));
             }  
         }
         public void Decrement(int downBy = 1) {
