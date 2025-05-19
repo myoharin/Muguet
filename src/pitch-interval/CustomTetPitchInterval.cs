@@ -1,7 +1,7 @@
 using System.Numerics;
 
 namespace SineVita.Muguet {
-    public class CustomTetPitchInterval : PitchInterval, IIncrementOperators<CustomTetPitchInterval> {
+    public sealed class CustomTetPitchInterval : PitchInterval, IIncrementOperators<CustomTetPitchInterval> {
         // * Properties
         public int Base { get; set; }
         public int PitchIntervalIndex { get; set; }

@@ -1,7 +1,7 @@
 using System.Numerics;
 using System.Text.Json;
 namespace SineVita.Muguet {
-        public class CustomTetPitch : Pitch, IIncrementOperators<CustomTetPitch> {
+        public sealed class CustomTetPitch : Pitch, IIncrementOperators<CustomTetPitch> {
         // * Global Memory Hash
         private static Dictionary<int,CustomTetScale> _globalScales = new();
         
@@ -10,12 +10,10 @@ namespace SineVita.Muguet {
         private int _customTetScaleHash { get; set; }
 
         // * Derived Gets
-        public int Base { get { return this.Scale.Base; } }
-        public int TuningIndex { get { return this.Scale.TuningIndex; } }
-        public float TuningFrequency { get { return this.Scale.TuningFrequency; } }
-        public CustomTetScale Scale { get {
-            return (CustomTetScale)_globalScales[this._customTetScaleHash].Clone();
-        } }
+        public int Base => this.Scale.Base;
+        public int TuningIndex => this.Scale.TuningIndex;
+        public float TuningFrequency => this.Scale.TuningFrequency;
+        public CustomTetScale Scale => (CustomTetScale)_globalScales[this._customTetScaleHash].Clone();
 
         // * Constructors
         public CustomTetPitch(int baseValue, int tuningIndex, float tuningFrequency, int pitchIndex, int centOffsets = 0)

@@ -68,6 +68,9 @@
         public override bool Equals(Scale? other) {
             throw new NotImplementedException();
         }
+        public override int GetHashCode() {
+            return 73 * PitchClasses.GetHashCode();
+        }
         
     }
 

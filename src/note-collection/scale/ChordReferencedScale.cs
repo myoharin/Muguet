@@ -1,5 +1,6 @@
 ﻿namespace SineVita.Muguet
 {
+    
     public class ChordReferencedScale : Scale
     {
         private Chord _referenceChord;
@@ -13,7 +14,7 @@
             if (_repetitionInterval == null) _repetitionInterval = PitchInterval.Octave;
         }
 
-        public ChordReferencedScale(List<Pitch> notes, PitchInterval repetitionInterval)
+        public ChordReferencedScale(ICollection<Pitch> notes, PitchInterval repetitionInterval)
             : this(new Chord(notes), repetitionInterval) { }
 
         public Chord ReferenceChord {
@@ -77,6 +78,9 @@
         }
         public override bool Equals(Scale? other) {
             throw new NotImplementedException();
+        }
+        public override int GetHashCode() {
+            return 71 * ReferenceChord.GetHashCode() + 13 * RepetitionInterval.GetHashCode();
         }
     }
 }

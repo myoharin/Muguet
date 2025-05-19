@@ -1,6 +1,6 @@
 using System.Text.Json;
 namespace SineVita.Muguet {
-    public class FloatPitch : Pitch {
+    public sealed class FloatPitch : Pitch {
         // * Properties
         private double _frequency;
 

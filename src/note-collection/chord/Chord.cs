@@ -1,11 +1,11 @@
 namespace SineVita.Muguet {
-    public class Chord {
+    public partial class Chord {
         private List<Pitch> _notes;
 
         // * Derived Gets
         public List<Pitch> Notes { 
-            get {return _notes;}
-            set {SetChord(value);}
+            get { return _notes; }
+            set { SetChord(value); }
         }
         public PitchInterval Range { get {
             if (Notes.Count <= 1) {return PitchInterval.Unison;}
@@ -20,14 +20,11 @@ namespace SineVita.Muguet {
 
 
         // * Statics / Templates
-        public static Chord Empty() {
-            return new Chord(new List<Pitch>());
-        }
-        
+
 
         // * Constructor
-        public Chord(List<Pitch>? notes = null) {
-            SetChord(notes??new List<Pitch>());
+        public Chord(ICollection<Pitch>? notes = null) {
+            SetChord(notes is null ? new List<Pitch>() : new List<Pitch>(notes));;
             if (_notes == null) {_notes = new List<Pitch>();}
         }
 
@@ -42,16 +39,16 @@ namespace SineVita.Muguet {
             return Notes.Count - 1;
             
         }
-        public void SetChord(List<Pitch> notes) {
+        public void SetChord(ICollection<Pitch> notes) {
             _notes = new List<Pitch>(notes);
             _notes.Sort();
         }
-        public void SetNotes(List<Pitch> notes) {
+        public void SetNotes(ICollection<Pitch> notes) {
             SetChord(notes);
         }
 
         // * Manipulation Methods
-        public void ModulateUp(PitchInterval interval) {Modulate(interval, true);}
+        public void ModulateUp(PitchInterval interval) {Modulate(interval);}
         public void ModulateDown(PitchInterval interval) {Modulate(interval, false);}
         public void Modulate(PitchInterval interval, bool up = true) {
             if (!up) {interval.Invert();}

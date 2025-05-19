@@ -14,9 +14,20 @@ namespace SineVita.Muguet
             ScaleType.Aeolian,
             ScaleType.Locrian
         }.AsReadOnly();
-
+        
+        // * Equatable
+        public override bool Equals(object? obj) {
+            if (obj is null) {
+                return false;
+            }
+            else if (obj is Scale scale) {
+                return Equals(scale);
+            }
+            return false;
+        }
+        
+        public abstract override int GetHashCode();
         public abstract object Clone();
-
         public abstract bool Equals(Scale? other);
 
         // * Transformation

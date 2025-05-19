@@ -1,12 +1,12 @@
 using System.Numerics;
 namespace SineVita.Muguet {
     
-    public class MidiPitchInterval : PitchInterval, IIncrementOperators<MidiPitchInterval> {
+    public sealed class MidiPitchInterval : PitchInterval, IIncrementOperators<MidiPitchInterval> {
         public const int Base = 12;
         public int PitchIntervalIndex { get; set; }
         public MidiPitchInterval(int midiValue, int centOffsets = 0)
             : base(centOffsets) {PitchIntervalIndex = midiValue;}
-        public MidiPitchInterval(double frequencyRatio) : base (0) {
+        public MidiPitchInterval(double frequencyRatio) {
             double cacheIndex = Base * Math.Log2(frequencyRatio);
             if (cacheIndex - Math.Floor(cacheIndex) < 0.5) {PitchIntervalIndex = (int)Math.Floor(cacheIndex);}            
             else {PitchIntervalIndex = (int)Math.Ceiling(cacheIndex);}
@@ -23,8 +23,8 @@ namespace SineVita.Muguet {
             else {return (float)(12 * Math.Log2(frequencyRatio));}
         }
         public static float ToIndex(PitchInterval interval, bool round = true) {
-            if (interval.GetType() == typeof(MidiPitchInterval)) {
-                return ((MidiPitchInterval)interval).PitchIntervalIndex;
+            if (interval is MidiPitchInterval midiInterval) {
+                return midiInterval.PitchIntervalIndex;
             }
             else {return ToIndex(interval.FrequencyRatio, round);}
         }

@@ -1,7 +1,7 @@
 using System.Numerics;
 using System.Text.Json;
 namespace SineVita.Muguet {
-    public class MidiPitch : Pitch, IIncrementOperators<MidiPitch> {
+    public sealed class MidiPitch : Pitch, IIncrementOperators<MidiPitch> {
         // * Constants
         public const int Base = 12;
         public const double TuningFrequency = 440;

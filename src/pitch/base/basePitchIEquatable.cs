@@ -38,19 +38,19 @@ namespace SineVita.Muguet {
             if (left is null) return right is null;
             return left.Equals(right);
         }
-        public static bool operator !=(Pitch left, Pitch right) {
+        public static bool operator !=(Pitch? left, Pitch? right) {
             return !(left == right);
         }
-        public static bool operator <(Pitch left, Pitch right) {
+        public static bool operator <(Pitch? left, Pitch? right) {
             return left is not null && left.CompareTo(right) < 0;
         }
-        public static bool operator <=(Pitch left, Pitch right) {
+        public static bool operator <=(Pitch? left, Pitch? right) {
             return left is null || left.CompareTo(right) <= 0;
         }
-        public static bool operator >(Pitch left, Pitch right) {
+        public static bool operator >(Pitch? left, Pitch? right) {
             return left is not null && left.CompareTo(right) > 0;
         }
-        public static bool operator >=(Pitch left, Pitch right) {
+        public static bool operator >=(Pitch? left, Pitch? right) {
             return left is null ? right is null : left.CompareTo(right) >= 0;
         }
         
@@ -108,6 +108,9 @@ namespace SineVita.Muguet {
             return pitch;
         }
         public static PitchInterval operator -(Pitch upperPitch, Pitch basePitch) {
+            return PitchInterval.CreateInterval(basePitch, upperPitch, false, false);
+        }
+        public static PitchInterval operator /(Pitch upperPitch, Pitch basePitch) {
             return PitchInterval.CreateInterval(basePitch, upperPitch, false, false);
         }
     }

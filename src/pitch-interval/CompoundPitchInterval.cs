@@ -1,5 +1,5 @@
 namespace SineVita.Muguet {
-    public class CompoundPitchInterval : PitchInterval {
+    public sealed class CompoundPitchInterval : PitchInterval {
         // * Properties
         private List<PitchInterval> _intervals;
         public List<PitchInterval> Intervals {

@@ -1,11 +1,9 @@
 namespace SineVita.Muguet {
-    public class JustIntonalPitchInterval : PitchInterval { 
+    public sealed class JustIntonalPitchInterval : PitchInterval { 
         // * Properties
         private (int Numerator, int Denominator) _ratio;
         public (int Numerator, int Denominator) Ratio { // strictly maintained as coprimes
-            get {
-                return _ratio;
-            }
+            get => _ratio; 
             set {
                 _ratio = value;
                 var lcmNum = _Lcm(_ratio.Numerator, _ratio.Denominator);
@@ -28,7 +26,11 @@ namespace SineVita.Muguet {
             }
             return a;
         }
-        public static (int Numerator, int Denominator) EstimateRatio(double ratio, double toleranceRatio) { // ! NOT DONE
+
+        private static IReadOnlyList<int> _defaultPrimeLimits = new List<int>() {
+            2, 3, 5
+        }.AsReadOnly();
+        public static (int Numerator, int Denominator) EstimateRatio(double ratio, ICollection<int>? primeLimits = null) { // ! NOT DONE
             throw new NotImplementedException();
         }
         // TODO This function can have many different varation, need to provide a range as welll
@@ -36,10 +38,11 @@ namespace SineVita.Muguet {
         // TODO there needs to be a parameterless converter either way
 
         // * Constructor
-        public JustIntonalPitchInterval((int, int) justRatio, int centOffsets = 0)
-            : base(centOffsets) {
-            Ratio = justRatio;
-        }
+        public JustIntonalPitchInterval((int, int) justRatio, int centOffsets = 0) : base(centOffsets) => Ratio = justRatio;
+        public JustIntonalPitchInterval(int numerator, int denominator, int centOffsets = 0) : base(centOffsets) => Ratio = (numerator, denominator);
+        
+        public JustIntonalPitchInterval(double frequencyRatio, int centOffsets = 0) : this(EstimateRatio(frequencyRatio), centOffsets) { }
+        public JustIntonalPitchInterval(double frequencyRatio, ICollection<int>? primeLimits = null, int centOffsets = 0) : this(EstimateRatio(frequencyRatio, primeLimits), centOffsets) { }
 
         // * Overrides
         public override void Invert() {

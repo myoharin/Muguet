@@ -1,6 +1,6 @@
 using System.Text.Json;
 namespace SineVita.Muguet {
-    public class CompoundPitch : Pitch {
+    public sealed class CompoundPitch : Pitch {
         
         // * Properties
         private CompoundPitchInterval _interval;

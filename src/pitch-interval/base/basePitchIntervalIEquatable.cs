@@ -47,16 +47,16 @@ namespace SineVita.Muguet {
         public static bool operator !=(PitchInterval? left, PitchInterval? right) {
             return !(left == right);
         }
-        public static bool operator <(PitchInterval left, PitchInterval right) {
+        public static bool operator <(PitchInterval? left, PitchInterval? right) {
             return left is not null && left.CompareTo(right) < 0;
         }
-        public static bool operator <=(PitchInterval left, PitchInterval right) {
+        public static bool operator <=(PitchInterval? left, PitchInterval? right) {
             return left is null || left.CompareTo(right) <= 0;
         }
-        public static bool operator >(PitchInterval left, PitchInterval right) {
+        public static bool operator >(PitchInterval? left, PitchInterval? right) {
             return left is not null && left.CompareTo(right) > 0;
         }
-        public static bool operator >=(PitchInterval left, PitchInterval right) {
+        public static bool operator >=(PitchInterval? left, PitchInterval? right) {
             return left is null ? right is null : left.CompareTo(right) >= 0;
         }
     

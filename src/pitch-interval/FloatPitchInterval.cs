@@ -1,5 +1,5 @@
 namespace SineVita.Muguet {
-    public class FloatPitchInterval : PitchInterval {
+    public sealed class FloatPitchInterval : PitchInterval {
         // * Properties
         private double _frequencyRatio;
 
