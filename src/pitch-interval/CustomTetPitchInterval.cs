@@ -20,13 +20,6 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
-        public static CustomTetPitchInterval CreatePitchInterval(Pitch root, Pitch terminal, bool absolute = false) { // ! NOT DONE
-            throw new NotImplementedException();
-        }
-        public static CustomTetPitchInterval New(Pitch root, Pitch terminal, bool absolute = false) {
-            return CreatePitchInterval(root, terminal, absolute);
-        }
-
         public override void Invert() {
             CentOffsets *= -1;
             PitchIntervalIndex *= -1;

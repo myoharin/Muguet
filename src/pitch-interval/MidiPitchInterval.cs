@@ -76,13 +76,6 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
-        public static MidiPitchInterval CreatePitchInterval(Pitch root, Pitch terminal, bool absolute = false) { // ! NOT DONE
-            throw new NotImplementedException();
-        }
-        public static MidiPitchInterval New(Pitch root, Pitch terminal, bool absolute = false) {
-            return CreatePitchInterval(root, terminal, absolute);
-        }
-
         public override void Invert() {
             CentOffsets *= -1;
             PitchIntervalIndex *= -1;

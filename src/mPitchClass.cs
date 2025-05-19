@@ -1,6 +1,10 @@
 using System;
 namespace SineVita.Muguet {
-    public class PitchClass : ICloneable { // Assumes all octave equivalency
+    public class PitchClass : // Assumes all octave equivalency
+        ICloneable,
+        IEquatable<PitchClass>,
+        IEquatable<Pitch>
+    {
         public Pitch ReferencePitch { get; set; }
         
         public PitchClass(Pitch referencePitch) {
@@ -32,14 +36,16 @@ namespace SineVita.Muguet {
         }
 
         // * Comparators
-        public bool IsEqual(PitchClass other) {
+        public bool Equals(PitchClass? other) {
+            if (other == null) {return false;}
             return ReferencePitch.Equals(
                 other.OctaveReduced(
                     ReferencePitch.Decremented(
                         PitchInterval.Perfect5th
             )));
         }
-        public bool IsEqual(Pitch other) {
+        public bool Equals(Pitch? other) {
+            if (other == null) {return false;}
             return other.Equals(
                 this.OctaveReduced(
                     other.Decremented(

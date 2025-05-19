@@ -171,7 +171,7 @@ namespace SineVita.Muguet {
                 );
             }
             else {
-                return CustomTetPitchInterval.New(basePitch, upperPitch, false);
+                return PitchInterval.CreateCustomTetPitchInterval(basePitch, upperPitch, false);
             }
         }
         
