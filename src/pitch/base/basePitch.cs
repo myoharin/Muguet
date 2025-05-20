@@ -3,6 +3,7 @@ using System.Text.Json;
 namespace SineVita.Muguet 
 {
     public abstract partial class Pitch : 
+            IReadOnlyPitch,
             IComparable, 
             ICloneable
         {
@@ -21,12 +22,12 @@ namespace SineVita.Muguet
         } }
 
         // * statics
-        public static FloatPitch New(double frequency) {return new FloatPitch(frequency);}
-        public static Pitch Empty { get { return new FloatPitch(256f); } }
+        public static FloatPitch New(double frequency) => new FloatPitch(frequency);
+        public static Pitch Empty => new FloatPitch(256f);
         private static readonly string[] noteNames = new string[] {
             "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
         };
-        public static string[] NoteNames { get { return noteNames; } }
+        public static string[] NoteNames => noteNames;
 
         // * FromJson
         public static Pitch FromJson(string jsonString) {

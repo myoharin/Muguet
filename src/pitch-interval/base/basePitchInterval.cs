@@ -5,47 +5,35 @@ namespace SineVita.Muguet
 {
 
     public abstract partial class PitchInterval :
+            IReadOnlyPitchInterval, 
             ICloneable
     {
         // * Properties
         private int _centOffsets;
-        public virtual int CentOffsets { get
-            {
-                return this._centOffsets;
-            }
-            set
-            {
+        public virtual int CentOffsets {
+            get => _centOffsets;
+            set {
                 _centOffsets = 0;
-                this._centOffsets = value;
+                _centOffsets = value;
             }
         }
 
         // * Derived Gets
-        public virtual bool IsUnison { get { return (FrequencyRatio - 1.0) < 0.001; } }
-        public bool IsMagnitude { get { return IsPositive(this) || IsUnison; } }
-        public bool IsAbsolute { get { return IsPositive(this) || IsUnison; } }
+        public virtual bool IsUnison => FrequencyRatio - 1.0 < 0.001;
+        public bool IsMagnitude => IsPositive(this) || IsUnison;
+        public bool IsAbsolute => IsPositive(this) || IsUnison;
 
-        public virtual double FrequencyRatio { get { return GetFrequencyRatio(); } }
-        public int ToMidiIndex { get
-            {
-                return (int)MidiPitchInterval.ToIndex(this);
-            }
-        }
-        public float ToMidiValue { get
-            {
-                return MidiPitchInterval.ToIndex(this, false);
-            }
-        }
+        public virtual double FrequencyRatio => GetFrequencyRatio();
+        public int ToMidiIndex => (int)MidiPitchInterval.ToIndex(this);
+        public float ToMidiValue => MidiPitchInterval.ToIndex(this, false); 
         // ? Harmony Helper Derives
         
-        public virtual string IntervalName { get { // can be more specific in subclass.
-                return HarmonyHelper.HtzToIntervalName(FrequencyRatio);
-            }
-        }
+        public virtual string IntervalName => HarmonyHelper.HtzToIntervalName(FrequencyRatio);
 
         // * Statics
-        public static PitchInterval Empty { get { return new FloatPitchInterval(1.0); } }
-        private static readonly string[] intervalNames = new string[] {
+        public static PitchInterval Empty => new FloatPitchInterval(1.0);
+
+        public static string[] IntervalNames { get; } = new[] {
             // Populate with actual interval names
             "R", "m2", "M2", "m3", "M3", "P4", "T1", "P5", "m6", "M6", "m7", "M7",
             "O1", "m9", "M9", "m10", "M10", "P11", "T2", "P12", "m13", "M13", "m14", "M14",
@@ -53,19 +41,14 @@ namespace SineVita.Muguet
             "O3", "m23", "M23", "m24", "M24", "P25", "T4", "P26", "m27", "M27", "m28", "M28",
             "O4"
         };
-        public static string[] IntervalNames { get { return intervalNames; } }
 
-        public static PitchInterval Octave { get
-            { return new JustIntonalPitchInterval((2, 1)); }
-                
-            
-        }
-        public static PitchInterval Perfect5th { get { return new JustIntonalPitchInterval((3, 2)); } }
-        public static PitchInterval Perfect4th { get { return new JustIntonalPitchInterval((4, 3)); } }
-        public static PitchInterval PerfectFifth { get { return new JustIntonalPitchInterval((3, 2)); } }
-        public static PitchInterval PerfectFourth { get { return new JustIntonalPitchInterval((4, 3)); } }
-        public static PitchInterval Unison { get { return Empty; } }
-        public static PitchInterval Default { get { return Empty; } }
+        public static PitchInterval Octave => new JustIntonalPitchInterval((2, 1));
+        public static PitchInterval Perfect5th => new JustIntonalPitchInterval((3, 2));
+        public static PitchInterval Perfect4th => new JustIntonalPitchInterval((4, 3));
+        public static PitchInterval PerfectFifth => new JustIntonalPitchInterval((3, 2));
+        public static PitchInterval PerfectFourth => new JustIntonalPitchInterval((4, 3));
+        public static PitchInterval Unison => Empty;
+        public static PitchInterval Default => Empty;
 
         // * FromJson
         public static PitchInterval FromJson(string jsonString) {var jsonDocument = JsonDocument.Parse(jsonString);
