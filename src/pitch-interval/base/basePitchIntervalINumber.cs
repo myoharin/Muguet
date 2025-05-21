@@ -26,7 +26,7 @@ namespace SineVita.Muguet {
         public static PitchInterval operator /(PitchInterval left, PitchInterval right) => left.Decremented(right);
         public static PitchInterval operator %(PitchInterval left, PitchInterval right) {
             bool sign = IsPositive(left);
-            left = Abs(left);
+            left = Abs((PitchInterval)left.Clone());
             right = Abs(right);
             while (left >= right) {
                 left.Decrement(right);
@@ -86,7 +86,7 @@ namespace SineVita.Muguet {
         public static PitchInterval operator --(PitchInterval value) => throw new NotImplementedException(); // TODO
         public static PitchInterval operator checked ++(PitchInterval value) => throw new NotImplementedException(); // TODO
         public static PitchInterval operator checked --(PitchInterval value) => throw new NotImplementedException(); // TODO
-        public static PitchInterval operator +(PitchInterval value) => throw new NotImplementedException(); // TODO
+        public static PitchInterval operator +(PitchInterval value) => value;
         
         // * I-dk
         public static bool IsCanonical(PitchInterval value) => value is FloatPitchInterval;

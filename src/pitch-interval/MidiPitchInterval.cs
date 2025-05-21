@@ -16,6 +16,7 @@ namespace SineVita.Muguet {
         // * Derived Gets
         public int Index => PitchIntervalIndex;
         public override string IntervalName => HarmonyHelper.MidiToIntervalName(Index);
+        public new int Radix => Base;
 
         // * ToIndex
         public static float ToIndex(double frequencyRatio, bool round = true) {

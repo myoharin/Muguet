@@ -57,6 +57,8 @@ namespace SineVita.Muguet
         public virtual double GetFrequency() { return 0; }
         public virtual string ToJson() {return "";}
 
+        public Pitch ToPitch() => (Pitch)Clone();
+
         // * Incrementation - base type preserved
         public Pitch Incremented(PitchInterval interval) {
             var newPitch = (Pitch)this.Clone();

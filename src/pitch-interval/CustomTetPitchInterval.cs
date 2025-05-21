@@ -5,6 +5,8 @@ namespace SineVita.Muguet {
         // * Properties
         public int Base { get; set; }
         public int PitchIntervalIndex { get; set; }
+        
+        public new int Radix => Base;
 
         // * Constructors
         public CustomTetPitchInterval(int baseValue, int pitchIntervalIndex, int centOffsets = 0)

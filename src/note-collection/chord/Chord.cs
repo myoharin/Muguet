@@ -12,6 +12,7 @@ namespace SineVita.Muguet
         
         // * IReadOnly
         IReadOnlyList<IReadOnlyPitch> IReadOnlyChord.Notes => _notes.AsReadOnly();
+        Chord IReadOnlyChord.ToChord() => Clone();
         
         // * Derived Gets
         public List<Pitch> Notes {
@@ -92,7 +93,7 @@ namespace SineVita.Muguet
             return hash;
         }
 
-        public object Clone() {
+        public Chord Clone() {
             return new Chord(_notes);
         }
     }

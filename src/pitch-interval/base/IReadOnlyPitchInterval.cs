@@ -23,5 +23,9 @@ namespace SineVita.Muguet
         public PitchInterval Inverted();
         public PitchInterval Incremented(PitchInterval interval);
         public PitchInterval Decremented(PitchInterval interval);
+        
+        public PitchInterval ToPitchInterval();
+        public PitchInterval ToInterval => ToPitchInterval();
+        public IReadOnlyPitchInterval AsReadOnly() => this;
     }
 }

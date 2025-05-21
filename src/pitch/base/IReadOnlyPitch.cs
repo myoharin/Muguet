@@ -8,5 +8,8 @@
         
         public Pitch Incremented(PitchInterval interval);
         public Pitch Decremented(PitchInterval interval);
+
+        public Pitch ToPitch();
+        public IReadOnlyPitch AsReadOnly() => this;
     }
 }

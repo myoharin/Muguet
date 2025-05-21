@@ -26,8 +26,8 @@ namespace SineVita.Muguet
         public virtual double FrequencyRatio => GetFrequencyRatio();
         public int ToMidiIndex => (int)MidiPitchInterval.ToIndex(this);
         public float ToMidiValue => MidiPitchInterval.ToIndex(this, false); 
-        // ? Harmony Helper Derives
         
+        // ? Harmony Helper Derives
         public virtual string IntervalName => HarmonyHelper.HtzToIntervalName(FrequencyRatio);
 
         // * Statics
@@ -90,7 +90,9 @@ namespace SineVita.Muguet
         // * Constructor
         protected PitchInterval(int centOffsets = 0) { CentOffsets = centOffsets; }
 
-        // * abstract methods
+        // * abstract overrides
+        public PitchInterval ToPitchInterval() => (PitchInterval)Clone();
+
         public abstract double GetFrequencyRatio();
         public abstract string ToJson();
 

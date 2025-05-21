@@ -2,8 +2,11 @@
 {
     public interface IReadOnlyChord
     {
-        IReadOnlyList<IReadOnlyPitch> Notes { get; }
-        PitchInterval Range { get; }
-        Pitch Root { get; }
+        public IReadOnlyList<IReadOnlyPitch> Notes { get; }
+        public PitchInterval Range { get; }
+        public Pitch Root { get; }
+        
+        public Chord ToChord();
+        public IReadOnlyChord AsReadOnly() => this;
     }
 }
