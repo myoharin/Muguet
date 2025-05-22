@@ -11,15 +11,15 @@ public partial class PitchInterval
         switch (targetType) {
             case null:
                 return Empty;
-            case Type t when t == typeof(CompoundPitchInterval):
+            case Type t when t == typeof(CompoundPitch):
                 return CreateCompoundPitchInterval(root, terminal, absolute);
-            case Type t when t == typeof(CustomTetPitchInterval):
+            case Type t when t == typeof(CustomTetPitch):
                 return CreateCustomTetPitchInterval(root, terminal, absolute);
-            case Type t when t == typeof(FloatPitchInterval):
+            case Type t when t == typeof(FloatPitch):
                 return CreateFloatPitchInterval(root, terminal, absolute);
-            case Type t when t == typeof(JustIntonalPitchInterval):
+            case Type t when t == typeof(JustIntonalPitchInterval): // TODO will never be the case
                 return CreateJustIntonalPitchInterval(root, terminal, null, absolute);
-            case Type t when t == typeof(MidiPitchInterval):
+            case Type t when t == typeof(MidiPitch):
                 return CreateMidiPitchInterval(root, terminal, absolute);
             default:
                 throw new NotImplementedException($"PitchInterval type {targetType} not found.");
@@ -96,6 +96,9 @@ public partial class PitchInterval
         (root, terminal) = absolute ? _AbsolutePitchPair(root, terminal) : (root, terminal);
         var midiRoot = root as MidiPitch ?? new MidiPitch(root.Frequency);
         var midiTerminal = terminal as MidiPitch ?? new MidiPitch(terminal.Frequency);
-        return new MidiPitchInterval(midiTerminal.PitchIndex - midiRoot.PitchIndex, terminal.CentOffsets - root.CentOffsets);
+        return new MidiPitchInterval(
+            midiTerminal.PitchIndex - midiRoot.PitchIndex, 
+            terminal.CentOffsets - root.CentOffsets
+        );
     }
 }

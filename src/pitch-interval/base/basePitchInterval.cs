@@ -1,9 +1,7 @@
-using System.Numerics;
 using System.Text.Json;
 
 namespace SineVita.Muguet
 {
-
     public abstract partial class PitchInterval :
             IReadOnlyPitchInterval, 
             ICloneable
@@ -19,7 +17,7 @@ namespace SineVita.Muguet
         }
 
         // * Derived Gets
-        public virtual bool IsUnison => FrequencyRatio - 1.0 < 0.001;
+        public virtual bool IsUnison => Math.Abs(FrequencyRatio - 1.0d) < 0.001;
         public bool IsMagnitude => IsPositive(this) || IsUnison;
         public bool IsAbsolute => IsPositive(this) || IsUnison;
 

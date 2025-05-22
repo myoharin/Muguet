@@ -4,7 +4,7 @@ namespace SineVita.Muguet {
         private double _frequencyRatio;
 
         // * Constructor
-        public FloatPitchInterval(double frequencyRatio, int centOffsets = 0) : base(0) {
+        public FloatPitchInterval(double frequencyRatio, int centOffsets = 0) : base() {
             _frequencyRatio = frequencyRatio * Math.Pow(2, centOffsets/1200d);
             CentOffsets = 0;
         }
@@ -16,7 +16,7 @@ namespace SineVita.Muguet {
         }
         public new int CentOffsets {
             get { return 0; }
-            set { _frequencyRatio *= Math.Pow(2, 1+value/1200d);}
+            set { _frequencyRatio *= Math.Pow(2, value/1200d);}
         }
         public override double GetFrequencyRatio() {
             if (CentOffsets != 0) {

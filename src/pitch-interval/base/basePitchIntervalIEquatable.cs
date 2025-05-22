@@ -1,7 +1,5 @@
 namespace SineVita.Muguet {
-    public abstract partial class PitchInterval :
-            IEquatable<PitchInterval>, IComparable
-        {
+    public abstract partial class PitchInterval {
         
         // * IEqualityComparerer
 
@@ -57,41 +55,41 @@ namespace SineVita.Muguet {
             return left is null ? right is null : left.CompareTo(right) >= 0;
         }
     
-        public static bool operator ==(double left, PitchInterval right) {
-            return Math.Abs(left - right.FrequencyRatio) < 0.001;
+        public static bool operator ==(double left, PitchInterval? right) {
+            return right is not null && Math.Abs(left - right.FrequencyRatio) < 0.001;
         }
-        public static bool operator !=(double left, PitchInterval right) {
+        public static bool operator !=(double left, PitchInterval? right) {
             return !(left == right);
         }
-        public static bool operator <(double left, PitchInterval right) {
+        public static bool operator <(double left, PitchInterval? right) {
             return left.CompareTo(right) < 0;
         }
-        public static bool operator <=(double left, PitchInterval right) {
+        public static bool operator <=(double left, PitchInterval? right) {
             return left.CompareTo(right) <= 0;
         }
-        public static bool operator >(double left, PitchInterval right) {
+        public static bool operator >(double left, PitchInterval? right) {
             return left.CompareTo(right) > 0;
         }
-        public static bool operator >=(double left, PitchInterval right) {
+        public static bool operator >=(double left, PitchInterval? right) {
             return left.CompareTo(right) >= 0;
         }
     
-        public static bool operator ==(PitchInterval left, double right) {
-            return Math.Abs(left.FrequencyRatio - right) < 0.001;
+        public static bool operator ==(PitchInterval? left, double right) {
+            return left is not null && Math.Abs(left.FrequencyRatio - right) < 0.001;
         }
-        public static bool operator !=(PitchInterval left, double right) {
+        public static bool operator !=(PitchInterval? left, double right) {
             return !(left == right);
         }
-        public static bool operator <(PitchInterval left, double right) {
+        public static bool operator <(PitchInterval? left, double right) {
             return left is not null && left.CompareTo(right) < 0;
         }
-        public static bool operator <=(PitchInterval left, double right) {
+        public static bool operator <=(PitchInterval? left, double right) {
             return left is null || left.CompareTo(right) <= 0;
         }
-        public static bool operator >(PitchInterval left, double right) {
+        public static bool operator >(PitchInterval? left, double right) {
             return left is not null && left.CompareTo(right) > 0;
         }
-        public static bool operator >=(PitchInterval left, double right) {
+        public static bool operator >=(PitchInterval? left, double right) {
             return !(left is null) && left.CompareTo(right) >= 0;
         }
     

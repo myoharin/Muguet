@@ -1,12 +1,5 @@
-// namespace SineVita.Muguet {
-//     public abstract partial class PitchInterval {
-
-//     }
-// }
-
 using System.Numerics;
 using System.Globalization;
-using System.Reflection.Metadata.Ecma335;
 
 namespace SineVita.Muguet {
     public abstract partial class PitchInterval
@@ -18,12 +11,13 @@ namespace SineVita.Muguet {
 
         // * IOperators
         public static PitchInterval operator +(PitchInterval left, PitchInterval right) => left.Incremented(right);
-        public static PitchInterval operator checked +(PitchInterval left, PitchInterval right) => checked(left.Incremented(right));
+        public static PitchInterval operator checked +(PitchInterval left, PitchInterval right) => left.Incremented(right);
         public static PitchInterval operator -(PitchInterval left, PitchInterval right) => left.Decremented(right);
-        public static PitchInterval operator checked -(PitchInterval left, PitchInterval right) => checked(left.Decremented(right));
+        public static PitchInterval operator checked -(PitchInterval left, PitchInterval right) => left.Decremented(right);
         public static PitchInterval operator *(PitchInterval left, PitchInterval right) => left.Incremented(right);
-        public static PitchInterval operator checked *(PitchInterval left, PitchInterval right) => checked(left.Incremented(right));
+        public static PitchInterval operator checked *(PitchInterval left, PitchInterval right) => left.Incremented(right);
         public static PitchInterval operator /(PitchInterval left, PitchInterval right) => left.Decremented(right);
+        public static PitchInterval operator checked  /(PitchInterval left, PitchInterval right) => left.Decremented(right);
         public static PitchInterval operator %(PitchInterval left, PitchInterval right) {
             bool sign = IsPositive(left);
             left = Abs((PitchInterval)left.Clone());
@@ -33,7 +27,6 @@ namespace SineVita.Muguet {
             }
             return sign ? left : left.Inverted();
         }
-        public static PitchInterval operator -(PitchInterval value) => value.Inverted();
         
         public static PitchInterval Zero => Default;
         public static PitchInterval One => Default;
@@ -53,10 +46,10 @@ namespace SineVita.Muguet {
             }
         }
         public static PitchInterval Create<TOther>(TOther value) where TOther : INumber<TOther> => new FloatPitchInterval(Convert.ToDouble(value));
-        public static PitchInterval CreateSaturating<TOther>(TOther value) where TOther : System.Numerics.INumberBase<TOther> => new FloatPitchInterval(Convert.ToDouble(value));
+        public static PitchInterval CreateSaturating<TOther>(TOther value) where TOther : INumberBase<TOther> => new FloatPitchInterval(Convert.ToDouble(value));
         
-        public static bool IsNegative(PitchInterval value) => value.FrequencyRatio < 1;
-        public static bool IsPositive(PitchInterval value) => value.FrequencyRatio > 1;
+        public static bool IsNegative(PitchInterval value) => value.FrequencyRatio < 1d;
+        public static bool IsPositive(PitchInterval value) => value.FrequencyRatio > 1d;
         
         public static string ToBase(PitchInterval value) => throw new NotImplementedException(); // TODO
         public static PitchInterval From(string value) => throw new NotImplementedException(); // TODO
@@ -71,22 +64,21 @@ namespace SineVita.Muguet {
         public static PitchInterval Max(PitchInterval x, PitchInterval y) => x <= y ? y : x;
         public static PitchInterval Min(PitchInterval x, PitchInterval y) => x >= y ? y : x;
         
-        // * IParse
-        public static PitchInterval Parse(ReadOnlySpan<char> s) => throw new NotImplementedException(); // TODO
-        public static PitchInterval Parse(string s) => throw new NotImplementedException(); // TODO
-        public static PitchInterval Parse(string s, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
-        public static PitchInterval Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
+        public static PitchInterval operator ++(PitchInterval value) {
+            value.Increment(new MidiPitchInterval(1));
+            return value;
+        }
+        public static PitchInterval operator --(PitchInterval value)  {
+            value.Decrement(new MidiPitchInterval(1));
+            return value;
+        }
+
+        public static PitchInterval operator checked ++(PitchInterval value) => ++value;
+        public static PitchInterval operator checked --(PitchInterval value) => --value;
         
-        public static bool TryParse(string? s, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
-        public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
-        public static bool TryParse(string? s, out PitchInterval result) => throw new NotImplementedException(); // TODO
-        public static bool TryParse(ReadOnlySpan<char> s, out PitchInterval result) => throw new NotImplementedException(); // TODO
-        
-        public static PitchInterval operator ++(PitchInterval value) => throw new NotImplementedException(); // TODO
-        public static PitchInterval operator --(PitchInterval value) => throw new NotImplementedException(); // TODO
-        public static PitchInterval operator checked ++(PitchInterval value) => throw new NotImplementedException(); // TODO
-        public static PitchInterval operator checked --(PitchInterval value) => throw new NotImplementedException(); // TODO
         public static PitchInterval operator +(PitchInterval value) => value;
+        public static PitchInterval operator -(PitchInterval value) => value.Inverted();
+        public static PitchInterval operator checked -(PitchInterval value) => value.Inverted();
         
         // * I-dk
         public static bool IsCanonical(PitchInterval value) => value is FloatPitchInterval;
@@ -108,15 +100,13 @@ namespace SineVita.Muguet {
         public static PitchInterval Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
         public static PitchInterval Parse(string s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
         
+        // * WHAT IS THIS
         public static bool TryConvertFromChecked<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
         public static bool TryConvertFromSaturating<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
         public static bool TryConvertFromTruncating<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
         public static bool TryConvertToChecked<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
         public static bool TryConvertToSaturating<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
         public static bool TryConvertToTruncating<TOther>(PitchInterval value, out TOther result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO
-        
-        public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
-        public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
         
         public string ToString(string? format, IFormatProvider? formatProvider) {  // TODO
             throw new NotImplementedException();

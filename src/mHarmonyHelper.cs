@@ -90,6 +90,8 @@ namespace SineVita.Muguet
         }
 
         public static string MidiToIntervalName(int midiValue) {
+            string sign = midiValue < 0 ? "-" : "";
+            midiValue = Math.Abs(midiValue);
             if (midiValue >= MidiPitchIntervalName.Length) {
                 int octave = (int)Math.Floor((float)midiValue / 12);
                 int modValue = midiValue % 12;
@@ -99,10 +101,10 @@ namespace SineVita.Muguet
                     6 => octave,
                     _ => IntervalNameNumber[modValue] + octave * 7
                 };
-                return $"{IntervalNamePrefix[modValue]}{num}";
+                return sign + $"{IntervalNamePrefix[modValue]}{num}";
             }
             else {
-                return MidiPitchIntervalName[midiValue];
+                return sign +  MidiPitchIntervalName[midiValue];
             }
         }
         public static string HtzToIntervalName(double htz, int rounding = 0) {
