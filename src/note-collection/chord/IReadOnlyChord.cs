@@ -8,5 +8,8 @@
         
         public Chord ToChord();
         public IReadOnlyChord AsReadOnly() => this;
+        
+        // * Derives
+        public IReadOnlyPitch this[int index] => Notes[index];
     }
 }

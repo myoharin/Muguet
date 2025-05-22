@@ -40,9 +40,7 @@
         public PitchInterval RepetitionInterval {
             get => _repetitionInterval;
             set {
-                var valueCloned = (PitchInterval)value.Clone();
-                if (PitchInterval.IsNegative(valueCloned)) valueCloned.Invert();
-                _repetitionInterval = valueCloned;
+                _repetitionInterval = PitchInterval.Abs((PitchInterval)value.Clone());
                 ReferenceChord = _referenceChord; // re-set this to trigger range check
             }
         }

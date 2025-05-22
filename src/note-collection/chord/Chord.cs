@@ -1,6 +1,9 @@
+using System.Collections;
+
 namespace SineVita.Muguet
 {
-    public partial class Chord : IReadOnlyChord
+    public partial class Chord : 
+        IReadOnlyChord, IEnumerable<Pitch>
     {
         private List<Pitch> _notes;
 
@@ -62,8 +65,8 @@ namespace SineVita.Muguet
             Modulate(interval, false);
         }
 
-        public void Modulate(PitchInterval interval, bool up = true) {
-            if (!up) interval.Invert();
+        private void Modulate(PitchInterval interval, bool up = true) {
+            if (!up) interval = interval.Inverted();
             for (var i = 0; i < Notes.Count; i++) _notes[i] += interval;
         }
 
@@ -96,5 +99,9 @@ namespace SineVita.Muguet
         public Chord Clone() {
             return new Chord(_notes);
         }
+        
+        // * IEnumerable
+        IEnumerator<Pitch> System.Collections.Generic.IEnumerable<Pitch>.GetEnumerator() => Notes.GetEnumerator();
+        IEnumerator System.Collections.IEnumerable.GetEnumerator() => Notes.GetEnumerator();
     }
 }

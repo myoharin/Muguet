@@ -22,7 +22,7 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
-        public override void Invert() {
+        protected override void Invert() {
             CentOffsets *= -1;
             PitchIntervalIndex *= -1;
         }
@@ -43,7 +43,7 @@ namespace SineVita.Muguet {
             return new CustomTetPitchInterval(Base, PitchIntervalIndex, CentOffsets);
         }
 
-        public override void Increment(PitchInterval interval) {
+        protected override void Increment(PitchInterval interval) {
             if (interval is CustomTetPitchInterval customInterval && customInterval.Base == this.Base) {
                 this.CentOffsets += customInterval.CentOffsets;
                 this.PitchIntervalIndex += customInterval.PitchIntervalIndex;
@@ -52,7 +52,7 @@ namespace SineVita.Muguet {
                  this.Increment(new CustomTetPitchInterval(this.Base, interval.FrequencyRatio));
             }
         }
-        public override void Decrement(PitchInterval interval) {
+        protected override void Decrement(PitchInterval interval) {
             if (interval is CustomTetPitchInterval customInterval && customInterval.Base == this.Base) {
                 this.CentOffsets -= customInterval.CentOffsets;
                 this.PitchIntervalIndex -= customInterval.PitchIntervalIndex;

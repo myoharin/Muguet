@@ -3,20 +3,12 @@ namespace SineVita.Muguet {
     public sealed class CompoundPitch : Pitch {
         
         // * Properties
-        private CompoundPitchInterval _interval;
+        private PitchInterval _interval;
         private Pitch _basePitch;
 
         // * Derived GS - Handles Compound stacking eliminate recursive behaviours
         public PitchInterval Interval {
-            get {
-                if (this._interval.Intervals.Count == 0) {
-                    return PitchInterval.Unison;
-                }
-                else if (_interval.Intervals.Count == 1) {
-                    return (PitchInterval)_interval.Intervals[0].Clone();
-                }
-                return _interval;
-            }
+            get => _interval;
             set {
                 var valueCloned = (PitchInterval)value.Clone();
                 if (valueCloned is CompoundPitchInterval clonedCompoundInterval) {
@@ -30,13 +22,12 @@ namespace SineVita.Muguet {
             } 
         }
         public Pitch BasePitch {
-            get { return this._basePitch; }
+            get => this._basePitch;
             set {
                 var valueCloned = (Pitch)value.Clone();
                 if (valueCloned is CompoundPitch compoundPitch) { // compile possible additional intervals to the compounder
-                    _interval.Increment(compoundPitch.Interval); // handles compound stacking there
-                    BasePitch = compoundPitch.BasePitch; // possible recursion to reduce stack (if there is one)
-                    // Pitch MUST not be a compound pitch
+                    _interval = (CompoundPitchInterval)_interval.Incremented(compoundPitch.Interval); // handles compound stacking there
+                    BasePitch = compoundPitch.BasePitch;
                 }
                 else {
                     _basePitch = valueCloned;
@@ -62,12 +53,12 @@ namespace SineVita.Muguet {
         
         // * Try Compress
 
-        public bool TryCompress() { // TODO very inefficient
-            // try to compress the intervals into the pitch
+        private bool TryCompress() { // TODO very inefficient // try to compress the intervals into the pitch
             bool updated = false;
             var updatedList = new List<PitchInterval>();
-            foreach(var interval in this._interval.Intervals) {
-                if (!tryCompressIntervalIntoPitch(interval)) {
+            if (_interval is CompoundPitchInterval compoundInterval)
+            foreach(var interval in compoundInterval.Intervals) {
+                if (!TryCompressIntervalIntoPitch(interval)) {
                     updatedList.Add(interval);
                 }
                 else {
@@ -77,8 +68,7 @@ namespace SineVita.Muguet {
             _interval = new CompoundPitchInterval(updatedList);
             return updated;
         }
-        
-        private bool tryCompressIntervalIntoPitch(PitchInterval interval) {
+        private bool TryCompressIntervalIntoPitch(PitchInterval interval) {
             // try to compress the intervals into the pitch
 
             if (interval.IsUnison) {return true;} // check unison
@@ -132,7 +122,7 @@ namespace SineVita.Muguet {
                 "}"
             );
         }
-        public static new CompoundPitch FromJson(string jsonString) {
+        public new static CompoundPitch FromJson(string jsonString) {
             var rootElement = JsonDocument.Parse(jsonString).RootElement;
 
             var pitch = Pitch.FromJson(rootElement.GetProperty("BasePitch").GetString() ?? Pitch.Empty.ToJson());
@@ -147,13 +137,13 @@ namespace SineVita.Muguet {
 
 
         public override void Increment(PitchInterval interval) {
-            if (!tryCompressIntervalIntoPitch(interval)) {
-                _interval.Increment(interval);
+            if (!TryCompressIntervalIntoPitch(interval)) {
+                _interval = _interval.Incremented(interval);
             }
         }
         public override void Decrement(PitchInterval interval) {
-            if (!tryCompressIntervalIntoPitch(interval.Inverted())) {
-                _interval.Decrement(interval);
+            if (!TryCompressIntervalIntoPitch(interval.Inverted())) {
+                _interval = _interval.Decremented(interval);
             }
         }
     

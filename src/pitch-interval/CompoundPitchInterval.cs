@@ -22,6 +22,7 @@ namespace SineVita.Muguet {
             }
             return false;
         }
+        public IReadOnlyPitchInterval this[int i] => Intervals[i];
 
         // * Constructor
         public CompoundPitchInterval(List<PitchInterval>? intervals = null, int centOffsets = 0)
@@ -43,7 +44,7 @@ namespace SineVita.Muguet {
             }
             return origin;
         }
-        public override void Invert() {
+        protected override void Invert() {
             CentOffsets *= -1;
             Intervals = Intervals.Select(x => x.Inverted()).ToList();
         }  
@@ -59,7 +60,7 @@ namespace SineVita.Muguet {
         public override object Clone() {
             return new CompoundPitchInterval(new List<PitchInterval>(Intervals), CentOffsets);
         }
-        public override void Increment(PitchInterval interval) {
+        protected override void Increment(PitchInterval interval) {
             // deal with cents
             this.CentOffsets += interval.CentOffsets;
             interval.CentOffsets = 0;
@@ -78,18 +79,22 @@ namespace SineVita.Muguet {
                         case Type t when t == typeof(CustomTetPitchInterval):
                             if (((CustomTetPitchInterval)existingInterval).Base == 
                                 ((CustomTetPitchInterval)interval).Base) {
-                                existingInterval.Increment(interval);
+                                Intervals.Add(existingInterval.Incremented(interval));
+                                Intervals.Remove(existingInterval);
                                 return;
                             }
                             break; // bass does not match, hence continue on
                         case Type t when t == typeof(JustIntonalPitchInterval): // very easy to
-                            existingInterval.Increment(interval);
+                            Intervals.Add(existingInterval.Incremented(interval));
+                            Intervals.Remove(existingInterval);
                             return;
                         case Type t when t == typeof(MidiPitchInterval): // very easy to
-                            existingInterval.Increment(interval);
+                            Intervals.Add(existingInterval.Incremented(interval));
+                            Intervals.Remove(existingInterval);
                             return;
                         case Type t when t == typeof(FloatPitchInterval): // very easy to
-                            existingInterval.Increment(interval);
+                            Intervals.Add(existingInterval.Incremented(interval));
+                            Intervals.Remove(existingInterval);
                             return;
                         default:
                             throw new NotImplementedException();
@@ -100,7 +105,7 @@ namespace SineVita.Muguet {
             // Compression Unsuccessful, add as new.
             _intervals.Add(interval);
         }
-        public override void Decrement(PitchInterval interval) {
+        protected override void Decrement(PitchInterval interval) {
             // deal with cents
             this.CentOffsets += interval.CentOffsets;
             interval.CentOffsets = 0;
@@ -118,18 +123,22 @@ namespace SineVita.Muguet {
                             case Type t when t == typeof(CustomTetPitchInterval):
                                 if (((CustomTetPitchInterval)existingInterval).Base == 
                                     ((CustomTetPitchInterval)interval).Base) {
-                                    existingInterval.Decrement(interval);
+                                    Intervals.Add(existingInterval.Decremented(interval));
+                                    Intervals.Remove(existingInterval);
                                     return;
                                 }
                                 break; // bass does not match, hence continue on
                             case Type t when t == typeof(JustIntonalPitchInterval): // very easy to
-                                existingInterval.Decrement(interval);
+                                Intervals.Add(existingInterval.Decremented(interval));
+                                Intervals.Remove(existingInterval);
                                 return;
                             case Type t when t == typeof(MidiPitchInterval): // very easy to
-                                existingInterval.Decrement(interval);
+                                Intervals.Add(existingInterval.Decremented(interval));
+                                Intervals.Remove(existingInterval);
                                 return;
                             case Type t when t == typeof(FloatPitchInterval): // very easy to
-                                existingInterval.Decrement(interval);
+                                Intervals.Add(existingInterval.Decremented(interval));
+                                Intervals.Remove(existingInterval);
                                 return;
                             default:
                                 throw new NotImplementedException();

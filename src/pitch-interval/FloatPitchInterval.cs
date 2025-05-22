@@ -10,12 +10,12 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
-        public override void Invert() {
+        protected override void Invert() {
             CentOffsets *= -1;
             _frequencyRatio = 1/_frequencyRatio;
         }
         public new int CentOffsets {
-            get { return 0; }
+            get => 0;
             set { _frequencyRatio *= Math.Pow(2, value/1200d);}
         }
         public override double GetFrequencyRatio() {
@@ -38,10 +38,10 @@ namespace SineVita.Muguet {
             return new FloatPitchInterval(_frequencyRatio);
         }
 
-        public override void Increment(PitchInterval interval) {
+        protected override void Increment(PitchInterval interval) {
             _frequencyRatio *= interval.FrequencyRatio;
         }
-        public override void Decrement(PitchInterval interval) {
+        protected override void Decrement(PitchInterval interval) {
             _frequencyRatio /= interval.FrequencyRatio;
         }
     }

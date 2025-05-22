@@ -18,12 +18,11 @@ namespace SineVita.Muguet
 
         // * Derived Gets
         public virtual bool IsUnison => Math.Abs(FrequencyRatio - 1.0d) < 0.001;
-        public bool IsMagnitude => IsPositive(this) || IsUnison;
         public bool IsAbsolute => IsPositive(this) || IsUnison;
 
         public virtual double FrequencyRatio => GetFrequencyRatio();
         public int ToMidiIndex => (int)MidiPitchInterval.ToIndex(this);
-        public float ToMidiValue => MidiPitchInterval.ToIndex(this, false); 
+        public float ToMidiValue => MidiPitchInterval.ToIndex(this, false);
         
         // ? Harmony Helper Derives
         public virtual string IntervalName => HarmonyHelper.HtzToIntervalName(FrequencyRatio);
@@ -94,9 +93,9 @@ namespace SineVita.Muguet
         public abstract double GetFrequencyRatio();
         public abstract string ToJson();
 
-        public abstract void Invert();
-        public abstract void Increment(PitchInterval interval);
-        public abstract void Decrement(PitchInterval interval);
+        protected abstract void Invert();
+        protected abstract void Increment(PitchInterval interval);
+        protected abstract void Decrement(PitchInterval interval);
 
         // * Abstract Derived
 

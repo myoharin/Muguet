@@ -68,7 +68,7 @@ namespace SineVita.Muguet {
             value.Increment(new MidiPitchInterval(1));
             return value;
         }
-        public static PitchInterval operator --(PitchInterval value)  {
+        public static PitchInterval operator --(PitchInterval value) {
             value.Decrement(new MidiPitchInterval(1));
             return value;
         }

@@ -1,10 +1,12 @@
 ﻿using System.Text.Json;
 namespace SineVita.Muguet
 {
-    public interface IReadOnlyPitchInterval
+    public interface IReadOnlyPitchInterval :
+        IComparable
+        // IComparable<IReadOnlyPitchInterval>, TODO
+        // IEquatable<IReadOnlyPitchInterval>
     {
         public double FrequencyRatio { get; }
-        public bool IsMagnitude { get; }
         public bool IsAbsolute { get; }
 
         public bool IsUnison { get; }
@@ -16,7 +18,8 @@ namespace SineVita.Muguet
         public string ToJson(bool prettyPrint) {
             var json = this.ToJson();
             return prettyPrint
-                ? JsonSerializer.Serialize(JsonSerializer.Deserialize<JsonElement>(json), new JsonSerializerOptions { WriteIndented = true })
+                ? JsonSerializer.Serialize(JsonSerializer.Deserialize<JsonElement>(json), 
+                    new JsonSerializerOptions { WriteIndented = true })
                 : JsonSerializer.Serialize(JsonSerializer.Deserialize<JsonElement>(json));
         }
 
