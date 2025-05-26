@@ -93,9 +93,9 @@ namespace SineVita.Muguet
         public abstract double GetFrequencyRatio();
         public abstract string ToJson();
 
-        protected abstract void Invert();
-        protected abstract void Increment(PitchInterval interval);
-        protected abstract void Decrement(PitchInterval interval);
+        public abstract void Invert();
+        public abstract void Increment(PitchInterval interval);
+        public abstract void Decrement(PitchInterval interval);
 
         // * Abstract Derived
 

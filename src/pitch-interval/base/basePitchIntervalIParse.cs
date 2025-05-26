@@ -19,8 +19,11 @@ namespace SineVita.Muguet
         public static bool TryParse(string? s, out PitchInterval result) => TryParse(s, null, out result);
         public static bool TryParse(ReadOnlySpan<char> s, out PitchInterval result) => TryParse(new string(s), null, out result);
         
-        public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
+        public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => TryParse(new string(s), style, provider, out result);
         public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out PitchInterval result) => throw new NotImplementedException(); // TODO
 
+
+        public static PitchInterval Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider) => Parse(new string(s), style, provider);
+        public static PitchInterval Parse(string s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
     }
 }

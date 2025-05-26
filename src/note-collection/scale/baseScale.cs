@@ -93,7 +93,7 @@ namespace SineVita.Muguet
                     throw new ArgumentException($"ScaleType {type} is not a diatonic scale type.");
             }
 
-            for (var i = 0; i < flatCount; i++) lydianScaleRelativeInterval[6 - i].Down();
+            for (var i = 0; i < flatCount; i++) lydianScaleRelativeInterval[6 - i]--;
 
             var tonicGrounded = lydianScaleRelativeInterval.Select(x => tonic.Incremented(x)).ToList();
             return new PitchClassScale(tonicGrounded);

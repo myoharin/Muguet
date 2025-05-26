@@ -16,6 +16,11 @@ namespace SineVita.Muguet {
                 ? 1
                 : this.FrequencyRatio.CompareTo(other.FrequencyRatio);
         }
+        public int CompareTo(IReadOnlyPitchInterval? other) {
+            return other == null
+                ? 1
+                : this.FrequencyRatio.CompareTo(other.FrequencyRatio);
+        }
         public int CompareTo(object? obj) {
             if (obj == null) return 1; // Null is considered less than any object
             if (obj is PitchInterval otherPitch) {

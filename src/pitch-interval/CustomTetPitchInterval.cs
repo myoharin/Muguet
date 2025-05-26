@@ -22,7 +22,7 @@ namespace SineVita.Muguet {
         }
 
         // * Overrides
-        protected override void Invert() {
+        public override void Invert() {
             CentOffsets *= -1;
             PitchIntervalIndex *= -1;
         }
@@ -43,7 +43,7 @@ namespace SineVita.Muguet {
             return new CustomTetPitchInterval(Base, PitchIntervalIndex, CentOffsets);
         }
 
-        protected override void Increment(PitchInterval interval) {
+        public override void Increment(PitchInterval interval) {
             if (interval is CustomTetPitchInterval customInterval && customInterval.Base == this.Base) {
                 this.CentOffsets += customInterval.CentOffsets;
                 this.PitchIntervalIndex += customInterval.PitchIntervalIndex;
@@ -52,7 +52,7 @@ namespace SineVita.Muguet {
                  this.Increment(new CustomTetPitchInterval(this.Base, interval.FrequencyRatio));
             }
         }
-        protected override void Decrement(PitchInterval interval) {
+        public override void Decrement(PitchInterval interval) {
             if (interval is CustomTetPitchInterval customInterval && customInterval.Base == this.Base) {
                 this.CentOffsets -= customInterval.CentOffsets;
                 this.PitchIntervalIndex -= customInterval.PitchIntervalIndex;
@@ -63,11 +63,22 @@ namespace SineVita.Muguet {
         }
     
         // * TET increment system
-        public void Up(int upBy = 1) {
+        private void Up(int upBy = 1) {
             this.PitchIntervalIndex += upBy;
         }
-        public void Down(int downBy = 1) {
+        private void Down(int downBy = 1) {
             this.PitchIntervalIndex -= downBy;
+        }
+        
+        public CustomTetPitchInterval Incremented(int upBy = 1) {
+            var newInterval = (CustomTetPitchInterval)this.Clone();
+            newInterval.PitchIntervalIndex += upBy;
+            return newInterval;
+        }
+        public CustomTetPitchInterval Decremented(int downBy = 1) {
+            var newInterval = (CustomTetPitchInterval)this.Clone();
+            newInterval.PitchIntervalIndex -= downBy;
+            return newInterval;
         }
 
         public static CustomTetPitchInterval operator ++(CustomTetPitchInterval interval) {
@@ -82,8 +93,9 @@ namespace SineVita.Muguet {
 
         // * To Pitch Index
         public static float ToPitchIndex(int baseValue, double frequencyRatio, bool round = true) {
-            if (round) {return (float)Math.Round(baseValue * Math.Log2(frequencyRatio));}
-            else {return (float)(baseValue * Math.Log2(frequencyRatio));}
+            if (round) return (float)Math.Round(baseValue * Math.Log2(frequencyRatio));
+
+            return (float)(baseValue * Math.Log2(frequencyRatio));
         }
         public float ToPitchIndex(double frequencyRatio, bool round = true) {
             return ToPitchIndex(Base, frequencyRatio, round);

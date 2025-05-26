@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Globalization;
 
 namespace SineVita.Muguet {
     public abstract partial class PitchInterval
@@ -23,7 +22,7 @@ namespace SineVita.Muguet {
             left = Abs((PitchInterval)left.Clone());
             right = Abs(right);
             while (left >= right) {
-                left.Decrement(right);
+                left -= right;
             }
             return sign ? left : left.Inverted();
         }
@@ -96,9 +95,6 @@ namespace SineVita.Muguet {
         public static PitchInterval MaxMagnitudeNumber(PitchInterval x, PitchInterval y) => throw new NotImplementedException();  // TODO
         public static PitchInterval MinMagnitude(PitchInterval x, PitchInterval y) => throw new NotImplementedException(); // TODO
         public static PitchInterval MinMagnitudeNumber(PitchInterval x, PitchInterval y) => throw new NotImplementedException(); // TODO
-        
-        public static PitchInterval Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
-        public static PitchInterval Parse(string s, NumberStyles style, IFormatProvider? provider) => throw new NotImplementedException(); // TODO
         
         // * WHAT IS THIS
         public static bool TryConvertFromChecked<TOther>(TOther value, out PitchInterval result) where TOther : INumberBase<TOther> => throw new NotImplementedException(); // TODO

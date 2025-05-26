@@ -45,7 +45,7 @@ namespace SineVita.Muguet {
         public JustIntonalPitchInterval(double frequencyRatio, ICollection<int>? primeLimits = null, int centOffsets = 0) : this(EstimateRatio(frequencyRatio, primeLimits), centOffsets) { }
 
         // * Overrides
-        protected override void Invert() {
+        public override void Invert() {
             CentOffsets *= -1;
             Ratio = (Ratio.Denominator, Ratio.Numerator);
         }
@@ -77,7 +77,7 @@ namespace SineVita.Muguet {
         private void Increment(PitchInterval interval, int tolerenceCents) {
             Increment(interval, Math.Pow(2,tolerenceCents/1200d));
         }
-        protected override void Increment(PitchInterval interval) {
+        public override void Increment(PitchInterval interval) {
             Increment(interval, DefaultRatioEstimateToleranceCent);
         }
         private void Increment(double ratio, double toleranceRatio = 1) { // ! NOT DONE
@@ -100,7 +100,7 @@ namespace SineVita.Muguet {
         private void Decrement(PitchInterval interval, int tolerenceCents) {
             Decrement(interval, Math.Pow(2,tolerenceCents/1200d));
         }
-        protected override void Decrement(PitchInterval interval) {
+        public override void Decrement(PitchInterval interval) {
             Decrement(interval, DefaultRatioEstimateToleranceCent);
         }
         private void Decrement(double ratio, double toleranceRatio = 1) { // ! NOT DONE
