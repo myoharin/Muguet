@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>SineVita.Muguet</id>
+    <version>1.0.0</version>
+    <authors>SineVita.Muguet</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="4172a074af6ee71d7a51f6e7c99a601d875078dd" />
+    <dependencies>
+      <group targetFramework="net8.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\tomin\OneDrive\Documents\GitHub\SineVita.Muguet\bin\Release\net8.0\SineVita.Muguet.dll" target="lib\net8.0\SineVita.Muguet.dll" />
+  </files>
+</package>
