@@ -3,7 +3,7 @@ using System.Collections;
 namespace SineVita.Muguet
 {
     public partial class Chord : 
-        IReadOnlyChord, IEnumerable<Pitch>
+        IReadOnlyChord
     {
         private List<Pitch> _notes;
 
@@ -12,10 +12,6 @@ namespace SineVita.Muguet
             SetChord(notes is null ? new List<Pitch>() : new List<Pitch>(notes));
             if (_notes == null) _notes = new List<Pitch>();
         }
-        
-        // * IReadOnly
-        IReadOnlyList<IReadOnlyPitch> IReadOnlyChord.Notes => _notes.AsReadOnly();
-        Chord IReadOnlyChord.ToChord() => Clone();
         
         // * Derived Gets
         public List<Pitch> Notes {
@@ -34,6 +30,13 @@ namespace SineVita.Muguet
             get {
                 if (Notes.Count == 0) throw new IndexOutOfRangeException("Root does not exist in empty chord.");
                 return Notes[0];
+            }
+        }
+        
+        public Pitch Terminal {
+            get {
+                if (Notes.Count == 0) throw new IndexOutOfRangeException("Root does not exist in empty chord.");
+                return Notes.Last();
             }
         }
 
@@ -101,7 +104,7 @@ namespace SineVita.Muguet
         }
         
         // * IEnumerable
-        IEnumerator<Pitch> System.Collections.Generic.IEnumerable<Pitch>.GetEnumerator() => Notes.GetEnumerator();
-        IEnumerator System.Collections.IEnumerable.GetEnumerator() => Notes.GetEnumerator();
+        IEnumerator<IReadOnlyPitch> IEnumerable<IReadOnlyPitch>.GetEnumerator() => Notes.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => Notes.GetEnumerator();
     }
 }

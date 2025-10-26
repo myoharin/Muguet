@@ -4,7 +4,6 @@ namespace SineVita.Muguet
 {
     public abstract partial class Pitch : 
             IReadOnlyPitch,
-            IComparable, 
             ICloneable
         {
         // * Properties
@@ -20,6 +19,13 @@ namespace SineVita.Muguet
         public virtual int ToMidiIndex { get {
             return (int)MidiPitch.ToIndex(Frequency);
         } }
+        public virtual float ToMidiValue
+        {
+            get
+            {
+                return (float)MidiPitch.ToIndex(Frequency) / 127f;
+            }
+        }
 
         // * statics
         public static FloatPitch New(double frequency) => new FloatPitch(frequency);

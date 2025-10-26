@@ -79,16 +79,16 @@ namespace SineVita.Muguet {
         public static bool operator !=(Pitch left, double right) {
             return !(left == right);
         }
-        public static bool operator <(Pitch left, double right) {
+        public static bool operator <(Pitch? left, double right) {
             return left is not null && left.Frequency.CompareTo(right) < 0;
         }
-        public static bool operator <=(Pitch left, double right) {
+        public static bool operator <=(Pitch? left, double right) {
             return left is null || left.Frequency.CompareTo(right) <= 0;
         }
-        public static bool operator >(Pitch left, double right) {
+        public static bool operator >(Pitch? left, double right) {
             return left is not null && left.Frequency.CompareTo(right) > 0;
         }
-        public static bool operator >=(Pitch left, double right) {
+        public static bool operator >=(Pitch? left, double right) {
             return left is not null ? left.Frequency.CompareTo(right) >= 0 : false ;
         }
         

@@ -4,7 +4,6 @@ namespace SineVita.Muguet
     public interface IReadOnlyPitchInterval :
         IComparable,
         IComparable<IReadOnlyPitchInterval>
-        // IEquatable<IReadOnlyPitchInterval>
     {
         public double FrequencyRatio { get; }
         public bool IsAbsolute { get; }
@@ -24,8 +23,8 @@ namespace SineVita.Muguet
         }
 
         public PitchInterval Inverted();
-        public PitchInterval Incremented(PitchInterval interval);
-        public PitchInterval Decremented(PitchInterval interval);
+        public PitchInterval Incremented(PitchInterval i);
+        public PitchInterval Decremented(PitchInterval i);
         
         public PitchInterval ToPitchInterval();
         public PitchInterval ToInterval => ToPitchInterval();
