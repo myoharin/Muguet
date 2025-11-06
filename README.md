@@ -258,20 +258,32 @@ Represents the interval between two pitches as a frequency ratio.
 
 ### _Implementation Abstracts_
 - `Protected Constructor` **PitchInterval(`int` centOffset = 0)**
+
+
 - `double` **GetFrequencyRatio()**:
   - A function to returns the frequency ratio, and is the primary override.
+
+    
 - `string` **ToJson()**:
   - A function to convert current class to a json String.
+
+    
 - `void` **Invert()**:
   - A function to alter implementation's values which leads to FrequencyRatio = 1/FrequencyRatio.
+
+
 - `void` **Increment(`PitchInterval` interval)**:
   - A function to alter the implementation's value which leads to the incrementation of the FrequencyRatio by the interval.
+
+
 - `void` **Decrement(`PitchInterval` interval)**:
     - A function to alter the implementation's value which leads to the decrementation of the FrequencyRatio by the interval.
 
 ### _Static Properties_
 - **Unison**: `PitchInterval`
     - Returns a `FloatPitchInterval` of ratio 1.0, otherwise Unison
+- **Octave**: `PitchInterval`
+    - Returns a `JustIntonalPitchInterval` of ratio 2:1.
 - **Perfect5th**: `PitchInterval`
     - Returns a `JustIntonalPitchInterval` of 3:2
 - **Perfect4th**: `PitchInterval`
@@ -329,6 +341,12 @@ Represents a collection of pitches with automatic sorting and manipulation.
 **Implements:**
 - IReadOnlyChord
 
+### _Constructor_
+
+- **Chord(`ICollection<Pitch>?` notes = `null`)**:
+  - Parameters:
+    - `ICollection<Pitch>?` notes: nullable collection of notes that define the chord. If null then chord is empty.
+
 ### _Instance Properties_
 - **Notes**: `List<Pitch>`
     - Returns the notes of the chord as a mutable list.
@@ -383,6 +401,7 @@ Represents a collection of pitches with automatic sorting and manipulation.
         - `Pitch` _root_: The root of the triad.
     - Returns an atomic major triad `Chord` formed according to `MidiPitchIntervals`.
 
+
 - `Chord` **CreateMinorTriad(`Pitch root`)**:
     - Parameters:
         - `Pitch` _root_: The root of the triad.
@@ -393,14 +412,35 @@ Represents a collection of pitches with automatic sorting and manipulation.
 
 ## 1.7 PitchClass
 
-Represents pitch equivalence classes (octave equivalency). Treats all pitches separated by octaves as equivalent.
+Represents pitch equivalence classes (octave equivalency). `PitchClass` treats all pitches separated by octaves as equivalent.
 
-### _Instance Properties_
+**Implements:**
+- ICloneable
+- IEquatable<PitchClass>
+- IEquatable<Pitch>
+
+### _Constructor_
+- **PitchClass(`Pitch` referencePitch)**:
+    - Parameters:
+        - `Pitch` referencePitch: the pitch that serves as reference for this pitch class.
+
+### _Instance Properties_ 
+- **ReferencePitch**: `Pitch`
+
 ### _Instance Methods_
-### _Operators_
-### _Static Properties_
-### _Static Methods_
+- `Pitch` Reduced(`Pitch` octaveMarker, `PitchInterval` reductionInterval, `bool` markerIsRoot = true)
+  - Performing a 'modulus' analogous operation on the referenced pitch to the octaveMarker rather than 0 and returns an incremented or decremented version of the `ReferencePitch` which is within the range of the `octaveMarker`.
+  - Parameters:
+    - `Pitch` octaveMarker: The pitch which marks where the `ReferencedPitch` should reduce towards.
+    - `PitchInterval` reductionInterval: The interval which to increment or decrement the `ReferencedPitch` by. If interval exceeds 1 octave, result may 'overshoot' the octave marker by more than 1 octave.
+    - `bool` markerIsRoot: Signifies whether the result pitch should be within one octave above the marker if true, or lower if false. True as default.
 
+
+- `Pitch` Reduced(`Pitch` octaveMarker, `bool` markerIsRoot = true)
+  - Returns n octave reduced version of the `ReferencedPitch` and corrects it to 1 octave of the `octaveMarker`.
+  - e.g. a `PitchClass` with `referencePitch` of A4 corrected to A8 with paramaters: `new FloatPitch(4180.1)[C8], true`
+    - `Pitch` octaveMarker: The pitch which marks where the `ReferencedPitch` should reduce towards.
+    - `bool` markerIsRoot: Signifies whether the result pitch should be within one octave above the marker if true, or lower if false.
 
 ## 1.8 Scale
 
