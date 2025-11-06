@@ -19,17 +19,12 @@ namespace SineVita.Muguet
         public virtual int ToMidiIndex { get {
             return (int)MidiPitch.ToIndex(Frequency);
         } }
-        public virtual float ToMidiValue
-        {
-            get
-            {
-                return (float)MidiPitch.ToIndex(Frequency) / 127f;
-            }
-        }
+        public virtual float ToMidiValue => (float)MidiPitch.ToIndex(Frequency) / 127f;
 
         // * statics
         public static FloatPitch New(double frequency) => new FloatPitch(frequency);
         public static Pitch Empty => new FloatPitch(256f);
+        public static Pitch A440 => new FloatPitch(400);
         private static readonly string[] noteNames = new string[] {
             "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
         };
@@ -61,7 +56,7 @@ namespace SineVita.Muguet
 
         // * virtual methods
         public virtual double GetFrequency() { return 0; }
-        public virtual string ToJson() {return "";}
+        public abstract string ToJson();
 
         public Pitch ToPitch() => (Pitch)Clone();
 
@@ -76,8 +71,8 @@ namespace SineVita.Muguet
             newPitch.Decrement(interval);
             return newPitch;
         }
-        public PitchInterval CreateInterval(Pitch pitch2, bool absoluteInterval = false) {
-            return PitchInterval.CreateInterval(this, pitch2, absoluteInterval);
+        public PitchInterval CreateInterval(Pitch terminal, bool absoluteInterval = false) {
+            return PitchInterval.CreateInterval(this, terminal, absoluteInterval);
         }
 
         public abstract void Increment(PitchInterval interval);

@@ -91,10 +91,62 @@ Represents a musical pitch with a specific frequency.
 - `IComparable<Pitch>`
 
 ### _Instance Properties_
+- **CentOffsets**: `int`
+    - How many cents to offset the pitch interval by, where 1200 cents makes an octave.
+### _Get-Only Properties_
+- **Frequency**: `double`
+    - The frequency of the class a double, determined by the class's implementation.
+- **NoteName** `string`
+    - Returns the note name as string internal name for the purpose of 12 TET.
+    - In order and increment by 1 at each octave:
+        - C
+        - C#/Db
+        - D
+        - D#/Eb
+        - E
+        - F
+        - F#/Gb
+        - G
+        - G#/Ab
+        - A
+        - A#/Bb
+        - B
+
 ### _Instance Methods_
-### _Operators_
+- `PitchInterval` **CreateInterval(`Pitch` terminal, `bool` absoluteInterval = false)**
+  - Creates a interval based on the difference between `this` and `terminal`
+  - Parameters:
+    - `Pitch` terminal: the terminal pitch in the difference.
+    - `bool` absoluteInterval: if true and the PitchInterval is negative (FrequencyRatio < 0), it will be inverted to yield a positive interval.
+- `Pitch` **Incremented(`PitchInterval` interval)**:
+    - Returns the incremented result of the `Pitch` by `interval` without altering its base value.
+- `Pitch` **Decremented(`PitchInterval` interval)**:
+    - Returns the decremented result of the `Pitch` by `interval` without altering its base value.
+
+### _Implementation Abstracts_
+- `Protected Constructor` **Pitch(`int` centOffset = 0)**
+- `double` **GetFrequency()**:
+    - A function to returns the frequency, and is the primary override.
+- `string` **ToJson()**:
+    - A function to convert current class to a json String.
+- `void` **Increment(`PitchInterval` interval)**:
+    - A function to alter the implementation's value which leads to the incrementation of the FrequencyRatio by the interval.
+- `void` **Decrement(`PitchInterval` interval)**:
+    - A function to alter the implementation's value which leads to the decrementation of the FrequencyRatio by the interval.
+
 ### _Static Properties_
+- **Empty**: `Pitch`
+    - Returns middle C at 256 htz.
+- **A440**: `Pitch`
+    - Returns A4 = 440htz.
 ### _Static Methods_
+- `FloatPitch` **New(`double` frequency)**:
+    - returns a `FloatPitch` with the parameter frequency.
+- `Pitch` **FromJson(`string` jsonString)**:
+    - Takes a json file as a string and return a `Pitch`.
+    - Supports the all PitchInterval implementations in library, but otherwise inflexible.
+    - Parameters:
+        - `string` _jsonString_: The json file as a string.
 
 ## 1.3 IReadOnlyPitchInterval
 
@@ -148,7 +200,6 @@ Represents a musical pitch with a specific frequency.
     - **>**
     - **>=**
 - Returns: `true` if the pitches are equal; otherwise, `false`.
-- Returns: `true` if the pitches are equal; otherwise, `false`.
 
 
 ## 1.4 PitchInterval
@@ -172,7 +223,7 @@ Represents the interval between two pitches as a frequency ratio.
 ### _Instance Properties_
 - **CentOffsets**: `int`
     - How many cents to offset the pitch interval by, where 1200 cents makes an octave.
-### _Derived Gets_
+### _Get-Only Properties_
 - **FrequencyRatio**: `double`
   - The frequency ratio of the class a double, determined by the class's implementation.
 - **IsAbsolute**: `bool`
@@ -217,7 +268,7 @@ Represents the interval between two pitches as a frequency ratio.
   - A function to alter the implementation's value which leads to the incrementation of the FrequencyRatio by the interval.
 - `void` **Decrement(`PitchInterval` interval)**:
     - A function to alter the implementation's value which leads to the decrementation of the FrequencyRatio by the interval.
-### _Operators_
+
 ### _Static Properties_
 - **Unison**: `PitchInterval`
     - Returns a `FloatPitchInterval` of ratio 1.0, otherwise Unison
@@ -236,9 +287,8 @@ Represents the interval between two pitches as a frequency ratio.
     - Returns `Unison`
 ### _Static Methods_
 - `PitchInterval` **FromJson(`string` jsonString)**:
-    - Takes a json file as a string and return a PitchInterval.
-    - json file format is intuitive but still must be
-    - Supports the all PitchInterval implementations in library.
+    - Takes a json file as a string and return a `PitchInterval`.
+    - Supports the all PitchInterval implementations in library, but otherwise inflexible.
     - Parameters:
         - `string` _jsonString_: The json file as a string.
 
@@ -269,7 +319,8 @@ Represents a collection of pitches with automatic sorting and manipulation.
     - Returns the terminal / the highest pitch of the chord.
 
 ### _Methods_
-### _Operators_
+- `IReadOnlyPitch` this[`int` i]
+  - Returns the indexed pitch in the chord.
 
 ## 1.6 Chord
 
