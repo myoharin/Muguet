@@ -170,10 +170,77 @@ Represents the interval between two pitches as a frequency ratio.
 - `INumber`
 
 ### _Instance Properties_
+- **CentOffsets**: `int`
+    - How many cents to offset the pitch interval by, where 1200 cents makes an octave.
+### _Derived Gets_
+- **FrequencyRatio**: `double`
+  - The frequency ratio of the class a double, determined by the class's implementation.
+- **IsAbsolute**: `bool`
+  - Returns true if `FrequencyRatio` is >= 1.
+- **IsUnison**: `bool`
+  - Returns true only if `FrequencyRatio` is equal to 0.
+- **IntervalName** `string`
+  - Returns the interval name as string internal name for the purpose of 12 TET.
+  - In order and increment by 1 at each octave: 
+    - U
+    - m2
+    - M2
+    - m3
+    - M3
+    - P4
+    - T1
+    - P5
+    - m6
+    - M6
+    - m7
+    - M7
+    - U1
+
 ### _Instance Methods_
+
+- `PitchInterval` **Inverted()**:
+  - Returns the inverted result of the `PitchInterval` without altering its base value.
+- `PitchInterval` **Incremented(`PitchInterval` interval)**:
+    - Returns the incremented result of the `PitchInterval` by `interval` without altering its base value.
+- `PitchInterval` **Decremented(`PitchInterval` interval)**:
+    - Returns the decremented result of the `PitchInterval` by `interval` without altering its base value.
+
+### _Implementation Abstracts_
+- `Protected Constructor` **PitchInterval(`int` centOffset = 0)**
+- `double` **GetFrequencyRatio()**:
+  - A function to returns the frequency ratio, and is the primary override.
+- `string` **ToJson()**:
+  - A function to convert current class to a json String.
+- `void` **Invert()**:
+  - A function to alter implementation's values which leads to FrequencyRatio = 1/FrequencyRatio.
+- `void` **Increment(`PitchInterval` interval)**:
+  - A function to alter the implementation's value which leads to the incrementation of the FrequencyRatio by the interval.
+- `void` **Decrement(`PitchInterval` interval)**:
+    - A function to alter the implementation's value which leads to the decrementation of the FrequencyRatio by the interval.
 ### _Operators_
 ### _Static Properties_
+- **Unison**: `PitchInterval`
+    - Returns a `FloatPitchInterval` of ratio 1.0, otherwise Unison
+- **Perfect5th**: `PitchInterval`
+    - Returns a `JustIntonalPitchInterval` of 3:2
+- **Perfect4th**: `PitchInterval`
+    - Returns a `JustIntonalPitchInterval` of 4:3
+- **PerfectFifth**: `PitchInterval`
+    - Returns a `JustIntonalPitchInterval` of 3:2
+- **PerfectFourth**: `PitchInterval`
+    - Returns a `JustIntonalPitchInterval` of 4:3
+
+- **Empty**: `PitchInterval`
+    - Returns `Unison`
+- **Default**: `PitchInterval`
+    - Returns `Unison`
 ### _Static Methods_
+- `PitchInterval` **FromJson(`string` jsonString)**:
+    - Takes a json file as a string and return a PitchInterval.
+    - json file format is intuitive but still must be
+    - Supports the all PitchInterval implementations in library.
+    - Parameters:
+        - `string` _jsonString_: The json file as a string.
 
 ## 1.5 IReadOnlyChord
 
@@ -198,7 +265,7 @@ Represents a collection of pitches with automatic sorting and manipulation.
     - Returns the root / the lowest pitch of the chord.
 
 
-- **Root**: `Pitch`
+- **Terminal**: `Pitch`
     - Returns the terminal / the highest pitch of the chord.
 
 ### _Methods_
@@ -255,8 +322,6 @@ Represents a collection of pitches with automatic sorting and manipulation.
         - `bool` _up_: Indicates whether to modulate up or down.
     - Returns: `Chord` which is a copy of the current chord with the specified interval modulated.
 
-
-### _Operators_
 ### _Static Properties_
 -  **Empty:** `Chord`
     - Returns an empty `Chord` instance.
@@ -271,8 +336,6 @@ Represents a collection of pitches with automatic sorting and manipulation.
     - Parameters:
         - `Pitch` _root_: The root of the triad.
     - Returns an atomic minor triad `Chord` formed according to `MidiPitchIntervals`.
-
-
 
 
 

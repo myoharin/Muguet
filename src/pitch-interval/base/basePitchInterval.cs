@@ -29,16 +29,7 @@ namespace SineVita.Muguet
 
         // * Statics
         public static PitchInterval Empty => new FloatPitchInterval(1.0);
-
-        public static string[] IntervalNames { get; } = new[] {
-            // Populate with actual interval names
-            "R", "m2", "M2", "m3", "M3", "P4", "T1", "P5", "m6", "M6", "m7", "M7",
-            "O1", "m9", "M9", "m10", "M10", "P11", "T2", "P12", "m13", "M13", "m14", "M14",
-            "O2", "m16", "M16", "m17", "M17", "P18", "T3", "P19", "m20", "M20", "m21", "M21",
-            "O3", "m23", "M23", "m24", "M24", "P25", "T4", "P26", "m27", "M27", "m28", "M28",
-            "O4"
-        };
-
+        
         public static PitchInterval Octave => new JustIntonalPitchInterval((2, 1));
         public static PitchInterval Perfect5th => new JustIntonalPitchInterval((3, 2));
         public static PitchInterval Perfect4th => new JustIntonalPitchInterval((4, 3));
